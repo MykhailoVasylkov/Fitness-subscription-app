@@ -35,6 +35,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leader-line"></script>
+
     {% endblock %}
 
     {% block extra_js %}
@@ -44,9 +46,9 @@
 </head>
 
 <body>
-    <header class="container-fluid fixed-top">
-        <div id="topnav" class="row bg-white pt-lg-2 d-none d-lg-flex">
-            <div class="col-12 col-lg-5 my-auto py-1 py-lg-0">
+    <header class="container-fluid fixed-top bg-white">
+        <div id="topnav" class="row pt-lg-2 d-none d-lg-flex">
+            <div class="col-12 col-lg-5 my-auto py-1 py-lg-0 ps-lg-5">
                 <ul class="list-inline list-unstyled d-flex gap-3 text-center my-0">
                     <li class="list-inline-item">
                         <a href="{% url 'home' %}">Home</a>
@@ -65,7 +67,7 @@
 
             <div class="col-12 col-lg-2 my-auto py-1 py-lg-0 text-center text-lg-left">
                 <a href="{% url 'home' %}" class="nav-link main-logo-link">
-                    <h2 class="logo-font text-black my-0"><strong>Fit</strong> Hub</h2>
+                    <h2 class="logo-font text-black my-0 logo "><strong>Fit</strong> Hub</h2>
                 </a>
             </div>
             <div class="col-12 col-lg-3 my-auto py-1 py-lg-0">
@@ -125,13 +127,13 @@
                 </ul>
             </div>
         </div>
-        <div class="row bg-white px-3">
-            <nav class="navbar navbar-expand-lg navbar-light w-100">
+        <div class="row px-3 navbar-custom">
+            <nav class="navbar navbar-expand-lg w-100">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
                     aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                {% include 'includes/mobile-top-header.html' %}  
+                {% include 'includes/mobile-top-header.html' %}
             </nav>
         </div>
     </header>
@@ -139,11 +141,94 @@
 
     {% block page_header %}
     {% endblock %}
+    <main class="container-fluid position-relative px-0" id="back-to-top">
+        {% block content %}
+        {% endblock %}
+        <div><a href="#back-to-top" class="arrow"></a></div>
+    </main>
+    <!-- Footer -->
+    <footer class="footer py-3 position-relative">
+        <div class="row width-rule">
+            <div class="col-lg-3 col-4 text-left mb-3 ps-0 d-lg-flex gap-lg-3">
+                <a class="text-decoration-none" href="https://www.facebook.com/" target="_blank">
+                    <p class="d-inline-block mb-0"><i class="fa-brands fa-facebook ms-3"></i></p>
+                </a>
+                <a class="text-decoration-none" href="https://www.instagram.com/" target="_blank">
+                    <p class="d-inline-block mb-0"><i class="fa-brands fa-instagram ms-3"></i></p>
+                </a>
+                <a class="text-decoration-none" href="https://www.youtube.com/" target="_blank">
+                    <p class="d-inline-block mb-0"><i class="fa-brands fa-youtube ms-3"></i></p>
+                </a>
+            </div>
 
-    {% block content %}
-    {% endblock %}
+
+            <div class="col-lg-2 offset-lg-5 col-4 mb-3 ps-0 d-flex justify-content-end">
+                <a class="text-decoration-none" href="{% url 'home' %}">
+                    <p class="d-inline-block mb-0">Terms Of Use</p>
+                </a>
+            </div>
+            <div class="col-lg-2 col-4 mb-3 ps-0 d-flex justify-content-end">
+                <a class="text-decoration-none" href="{% url 'home' %}">
+                    <p class="d-inline-block mb-0">Privacy Policy</p>
+                </a>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- current_year variable handle dynamic year -->
+        <p class="m-0 text-center text-white">
+            {% block copyright %}
+            &copy; {{ current_year }} Made by Mykhailo Vasylkov
+            {% endblock copyright %}
+        </p>
+    </footer>
 
     {% block postloadjs %}
+    <script>
+
+        var firstElement = document.getElementById('element-1');
+        var secondElement = document.getElementById('element-2');
+        var thirdElement = document.getElementById('element-3');
+        var fourthElement = document.getElementById('element-4');
+
+        var line1 = new LeaderLine(
+            firstElement,
+            LeaderLine.pointAnchor(secondElement, { x: '100%', y: 10 }),
+            {
+                color: 'red', // Начальный цвет линии
+                size: 6, // Толщина линии
+                startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+                gradient: {
+                    startColor: 'blue', // Начальный цвет градиента
+                    endColor: 'green' // Конечный цвет градиента
+                }
+            }
+        ); 
+        var line1 = new LeaderLine(secondElement, LeaderLine.pointAnchor(thirdElement, { x: 0, y: 10 }),
+        {
+                color: 'red', // Начальный цвет линии
+                size: 6, // Толщина линии
+                startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+                gradient: {
+                    startColor: 'blue', // Начальный цвет градиента
+                    endColor: 'green' // Конечный цвет градиента
+                }
+            }
+    );
+        var line1 = new LeaderLine(thirdElement, LeaderLine.pointAnchor(fourthElement, { x: '100%', y: 0 }),
+        {
+                color: 'red', // Начальный цвет линии
+                size: 6, // Толщина линии
+                startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+                gradient: {
+                    startColor: 'blue', // Начальный цвет градиента
+                    endColor: 'green' // Конечный цвет градиента
+                }
+            }
+    );
+
+    </script>
 
     {% endblock %}
 

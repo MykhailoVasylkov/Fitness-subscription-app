@@ -1,0 +1,102 @@
+/*Set Up color variables*/
+:root {
+    --first-color: rgb(35, 36, 43);
+    --second-color: rgb(239, 168, 62);
+    --accent-color: rgb(120, 67, 54);
+    --third-color: rgb(255, 255, 255);
+} 
+  
+  /*Prevent horizontal scrolling and disable overscroll behavior */
+html,
+body {
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    height: 100vh;
+    width: 100%
+    overflow-y: auto !important;
+}
+  
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    position: relative;
+    background: radial-gradient(at 10% 20%, #510a5f, transparent),
+                radial-gradient(at 80% 30%, #350a6a, transparent),
+                radial-gradient(at 50% 80%, #7f0651, transparent),
+                radial-gradient(at 30% 70%, #d1411d, transparent);
+    background-color: #c1d828;
+    min-height: 100vh;
+    margin: 0;
+    width: 100%;
+    font-family: Lato, sans-serif;
+}
+
+main, footer {
+    color: var(--third-color);
+}
+
+#topnav a {
+    text-decoration: none !important;
+}
+
+a {
+    color: inherit;
+}
+  
+.width-rule {
+    width: 80%;
+    margin: 0 auto;
+}
+  
+/* Navbar */
+.logo {
+    font-family: Lato;
+    font-size: 1.8rem;
+    font-style: italic;
+    font-weight: 900;
+}
+
+/*.navbar-custom {
+    width: 100%;
+    background: rgba(35, 36, 43, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 50;
+}*/
+
+.hero-section {
+    height: 70vh;
+    overflow: hidden;
+}
+
+/* Back to top button */
+.arrow {
+    position: fixed;
+    top: 85vh;
+    right: 2%;
+    width: 50px;
+    height: 50px;
+    background: rgba(239, 168, 62);
+    clip-path: polygon(50% 0%, 0 100%, 100% 100%);
+    z-index: 10;
+  }
+
+@media (max-width: 992px) {
+    .width-rule {
+    width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .width-rule {
+    width: 90%;
+    }
+}
+
+
+ /*.custom-input {
+    background-color: transparent;
+    border: 1px solid #ccc; 
+}*/
