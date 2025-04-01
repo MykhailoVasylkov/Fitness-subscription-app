@@ -102,10 +102,10 @@
                             <a href="{% url 'home' %}" class="dropdown-item"> Management</a>
                             {% endif %}
                             <a href="{% url 'home' %}" class="dropdown-item">My Profile</a>
-                            <a href="{% url 'home' %}" class="dropdown-item">Logout</a>
+                            <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
                             {% else %}
-                            <a href="{% url 'home' %}" class="dropdown-item">Register</a>
-                            <a href="{% url 'home' %}" class="dropdown-item">Login</a>
+                            <a href="{% url 'account_signup' %}" class="dropdown-item">Register</a>
+                            <a href="{% url 'account_login' %}" class="dropdown-item">Login</a>
                             {% endif %}
                         </div>
                     </li>
@@ -141,13 +141,14 @@
 
     {% block page_header %}
     {% endblock %}
-    <main class="container-fluid position-relative px-0" id="back-to-top">
+    <main class="container-fluid position-relative px-0 mt-5" id="back-to-top">
         {% block content %}
         {% endblock %}
         <div><a href="#back-to-top" class="arrow"></a></div>
     </main>
     <!-- Footer -->
     <footer class="footer py-3 position-relative">
+        <hr>
         <div class="row width-rule">
             <div class="col-lg-3 col-4 text-left mb-3 ps-0 d-lg-flex gap-lg-3">
                 <a class="text-decoration-none" href="https://www.facebook.com/" target="_blank">
