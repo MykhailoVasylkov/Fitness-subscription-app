@@ -1,6 +1,9 @@
 from django.db import models
 
-
+"""
+I used Boutique Ado project and project #4 code.
+Category model with name and friendly name fields.
+"""
 class Category(models.Model):
 
     class Meta:
@@ -15,6 +18,11 @@ class Category(models.Model):
     def get_friendly_name(self):
         return self.friendly_name
 
+
+"""
+I used Boutique Ado project and project #4 code.
+Product model represents a product item in a shop's system.
+"""
 
 class Product(models.Model):
     STATUS_CHOICES = [
