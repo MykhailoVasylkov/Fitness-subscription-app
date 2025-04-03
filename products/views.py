@@ -50,7 +50,7 @@ def all_products(request):
     all_categories = Category.objects.all()
 
     # Determine the current selected categories
-    selected_categories = request.GET.get('category', '').split(',')
+    selected_categories = request.GET.getlist('category')
 
     context = {
         'products': products,
