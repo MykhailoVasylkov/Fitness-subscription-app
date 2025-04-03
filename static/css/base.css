@@ -87,15 +87,21 @@ a {
     color: white;
   }
 
+  .badge:hover {
+    background: #212529 !important;
+    color: #fff !important;
+}
+
+
 @media (max-width: 992px) {
     .width-rule {
-    width: 100%;
+    width: 90%;
     }
 }
 
 @media (max-width: 768px) {
     .width-rule {
-    width: 90%;
+    width: 100%;
     }
 }
 

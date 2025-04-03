@@ -1,15 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.db.models.functions import Lower
 
 from .models import Product, Category
 
 # Create your views here.
+# Used code from Boutique Ado and Chat-GPT
 
 def all_products(request):
     """ A view to show all products, including sorting queries """
 
     products = Product.objects.all()
-    query = None
     categories = None
     sort = None
     direction = None
@@ -31,16 +31,44 @@ def all_products(request):
             
         if 'category' in request.GET:
             categories = request.GET['category'].split(',')
-            products = products.filter(category__name__in=categories)
-            categories = Category.objects.filter(name__in=categories)
+            
+            # Determine what is transmitted in the GET request: ID (numbers) or names (rows)
+            if categories[0].isdigit():
+                products = products.filter(category__id__in=categories)
+                categories = Category.objects.filter(id__in=categories)
+            else:
+                products = products.filter(category__name__in=categories)
+                categories = Category.objects.filter(name__in=categories)
+        else:
+            categories = Category.objects.all()
 
-    current_sorting = f'{sort}_{direction}'
+        
+    categories = Category.objects.filter(id__in=categories) if categories else Category.objects.all()
+
+    current_sorting = f'{sort or "None"}_{direction or "None"}'
+
+    all_categories = Category.objects.all()
+
+    # Determine the current selected categories
+    selected_categories = request.GET.get('category', '').split(',')
 
     context = {
         'products': products,
-        'search_term': query,
         'current_categories': categories,
+        'all_categories': all_categories,
+        'selected_categories': selected_categories,
         'current_sorting': current_sorting,
     }
 
     return render(request, 'products/products.html', context)
+
+def product_detail(request, product_id):
+    """ A view to show individual product details """
+
+    product = get_object_or_404(Product, pk=product_id)
+
+    context = {
+        'product': product,
+    }
+
+    return render(request, 'products/product_detail.html', context)
