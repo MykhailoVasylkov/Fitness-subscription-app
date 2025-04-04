@@ -128,6 +128,56 @@
         </div>
     </div>
 </section>
+<div class="arrow back-to-top"></div>
 
+
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+<script>
+
+    var firstElement = document.getElementById('element-1');
+    var secondElement = document.getElementById('element-2');
+    var thirdElement = document.getElementById('element-3');
+    var fourthElement = document.getElementById('element-4');
+
+    var line1 = new LeaderLine(
+        firstElement,
+        LeaderLine.pointAnchor(secondElement, { x: '100%', y: 10 }),
+        {
+            color: 'red', // Начальный цвет линии
+            size: 6, // Толщина линии
+            startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+            gradient: {
+                startColor: 'blue', // Начальный цвет градиента
+                endColor: 'green' // Конечный цвет градиента
+            }
+        }
+    );
+    var line1 = new LeaderLine(secondElement, LeaderLine.pointAnchor(thirdElement, { x: 0, y: 10 }),
+        {
+            color: 'red', // Начальный цвет линии
+            size: 6, // Толщина линии
+            startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+            gradient: {
+                startColor: 'blue', // Начальный цвет градиента
+                endColor: 'green' // Конечный цвет градиента
+            }
+        }
+    );
+    var line1 = new LeaderLine(thirdElement, LeaderLine.pointAnchor(fourthElement, { x: '100%', y: 0 }),
+        {
+            color: 'red', // Начальный цвет линии
+            size: 6, // Толщина линии
+            startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+            gradient: {
+                startColor: 'blue', // Начальный цвет градиента
+                endColor: 'green' // Конечный цвет градиента
+            }
+        }
+    );
+
+</script>
 
 {% endblock %}

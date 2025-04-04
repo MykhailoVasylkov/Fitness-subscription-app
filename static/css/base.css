@@ -11,7 +11,6 @@ html,
 body {
     overflow-x: hidden;
     overscroll-behavior: none;
-    height: 100vh;
     width: 100%
     overflow-y: auto !important;
 }
@@ -81,6 +80,11 @@ a {
     background: rgba(239, 168, 62);
     clip-path: polygon(50% 0%, 0 100%, 100% 100%);
     z-index: 10;
+  }
+
+  .arrow:hover {
+    background-color: var(--third-color);
+    transform: scale(1.1);
   }
 
   .form-text {
