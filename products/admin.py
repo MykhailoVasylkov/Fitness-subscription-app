@@ -1,7 +1,15 @@
 from django.contrib import admin
-from .models import Product, Category
+from .models import Product, Category, ProductSize
 
 # Register your models here.
+"""
+Register ProductSize model in admin panel.
+"""
+
+class ProductSizeInline(admin.TabularInline):
+    model = ProductSize
+    extra = 1
+
 
 """
 Register Product model in admin panel.
@@ -23,6 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ('sku',)
     search_fields = ['name', 'description', 'sku']
     list_filter = ('category', 'status', 'price')
+    inlines = [ProductSizeInline]
 
 """
 Register Category model in admin panel.

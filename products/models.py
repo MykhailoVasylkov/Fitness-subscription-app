@@ -44,3 +44,23 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+class ProductSize(models.Model):
+    SIZE_CHOICES = [
+        ('XXS', 'XXS'),
+        ('XS', 'XS'),
+        ('S', 'S'),
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+        ('XXL', 'XXL'),
+        ('3XL', '3XL'),
+        ('4XL', '4XL'),
+    ]
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sizes')
+    size = models.CharField(max_length=4, choices=SIZE_CHOICES)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.size}"

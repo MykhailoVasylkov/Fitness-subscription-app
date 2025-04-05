@@ -93,7 +93,11 @@
                                     <small class="text-muted"><i class="fas fa-star mr-1"></i>{{ product.rating }} /
                                         5</small>
                                     {% endif %}
-
+                                    <p class="small mt-1 mb-0">
+                                        {% for size in product.sizes.all %}
+                                            {{ size.size }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
                                 </div>
                             </div>
                         </div>
