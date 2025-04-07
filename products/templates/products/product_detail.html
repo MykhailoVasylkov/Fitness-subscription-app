@@ -48,7 +48,7 @@
                         {% if s %}
                         <div class="col-12">
                             <p><strong>Size:</strong></p>
-                            <select class="form-control rounded-3 w-50" name="product_size" id='id_product_size'>
+                            <select class="form-control rounded-3 w-50 text-center" name="product_size" id='id_product_size'>
                                 {% for size in product.sizes.all %}
                                 <option value="{{ size.size }}">{{ size.size }}</option>
                                 {% endfor %}
@@ -98,4 +98,5 @@
 
 {% block postloadjs %}
 {{ block.super }}
+{% include 'products/includes/quantity_input_script.html' %}
 {% endblock %}

@@ -44,6 +44,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+"""
+ProductSize model represents a sizes for a linked product.
+"""
     
 class ProductSize(models.Model):
     SIZE_CHOICES = [
