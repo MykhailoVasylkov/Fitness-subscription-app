@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.db.models.functions import Lower
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.forms import inlineformset_factory
 
-from .models import Product, Category
+from .models import Product, Category, ProductSize
+from .forms  import ProductForm
 
 # Create your views here.
 # Used code from Boutique Ado and Chat-GPT
@@ -72,3 +76,34 @@ def product_detail(request, product_id):
     }
 
     return render(request, 'products/product_detail.html', context)
+
+@login_required
+def add_product(request):
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only store owners can do that.')
+        return redirect('home')
+
+    SizesFormset = inlineformset_factory(Product, ProductSize, fields=['size', 'quantity'], extra=9)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        formset = SizesFormset(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            product = form.save()
+            formset.instance = product
+            formset.save()
+            messages.success(request, 'Successfully added product!')
+            return redirect('product_detail', product_id=product.id)
+        else:
+            messages.error(request, 'Failed to add product. Please ensure the form is valid.')
+    else:
+        form = ProductForm()
+        formset = SizesFormset()
+
+    context = {
+        'form': form,
+        'formset': formset,
+    }
+
+    return render(request, 'products/add_product.html', context)
