@@ -144,6 +144,27 @@
     <main class="container-fluid position-relative px-0 mt-5">
         {% block content %}
         {% endblock %}
+        <!-- Delete confirmation modal -->
+        <div class="modal fade text-muted" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete product?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                Are you sure you want to delete this product? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="deleteForm" method="POST" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn btn btn-outline-secondary">Delete</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
     </main>
     <!-- Footer -->
     <footer class="footer py-3 position-relative">
@@ -192,6 +213,20 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
+    </script>
+
+    <script>
+    const deleteButtons = document.getElementsByClassName("delete-btn");
+    const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+    const deleteForm = document.getElementById("deleteForm");
+    
+    for (let button of deleteButtons) {
+        button.addEventListener("click", (e) => {
+            let deleteUrl = button.getAttribute("data-delete-url");
+            deleteForm.setAttribute("action", deleteUrl);
+            deleteModal.show();
+        });
+    }
     </script>
     {% endblock %}
 
