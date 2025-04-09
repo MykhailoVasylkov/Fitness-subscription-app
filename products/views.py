@@ -7,6 +7,7 @@ from django.forms import inlineformset_factory
 from .models import Product, Category, ProductSize
 from .forms  import ProductForm
 
+
 # Create your views here.
 # Used code from Boutique Ado and Chat-GPT
 
@@ -107,3 +108,48 @@ def add_product(request):
     }
 
     return render(request, 'products/add_product.html', context)
+
+
+@login_required
+def edit_product(request, product_id):
+    """ Edit a product in the store """
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only store owners can do that.')
+        return redirect(reverse('home'))
+    
+    SizesFormset = inlineformset_factory(
+    Product, ProductSize,
+    fields=['size', 'quantity'],
+    extra=0,
+    can_delete=True
+    )
+
+    product = get_object_or_404(Product, pk=product_id)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        formset = SizesFormset(request.POST, instance=product)
+
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            messages.success(request, 'Successfully updated product!')
+            return redirect(reverse('product_detail', args=[product.id]))
+        else:
+            print(form.errors)
+            print(formset.errors)
+            messages.error(request, 'Failed to update product. Please ensure the form is valid.')
+    else:
+        form = ProductForm(instance=product)
+        formset = SizesFormset(instance=product)
+        messages.info(request, f'You are editing {product.name}')
+
+    template = 'products/edit_product.html'
+    context = {
+        'form': form,
+        'product': product,
+        'formset': formset,
+        
+    }
+
+    return render(request, template, context)

@@ -6,19 +6,20 @@
 {% endblock %}
 
 {% block content %}
+    <div class="overlay"></div>
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-6 mt-5">
                 <hr>
                 <h2 class="logo-font mb-4">Product Management</h2>
-                <h5 class="text-light">Add a Product</h5>
+                <h5 class="text-light">Edit a Product</h5>
                 <hr>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 col-md-6">
-                <form method="POST" action="{% url 'add_product' %}" class="form mb-2" enctype="multipart/form-data">
+                <form method="POST" action="{% url 'edit_product' product.id %}" class="form mb-2" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% for field in form %}
                         {% if field.name != 'image' %}
@@ -32,19 +33,23 @@
                     <hr>
                     {{ formset.management_form }}
                     {% for form in formset %}
-                        <div class="row border-light rounded-3 mb-1">
-                            <div class="col-md-6 mb-3">
+                        
+                        <div class="row border border-light rounded-3 mb-1">
+                            {{ form.id }} 
+                            <div class="col-md-5 mb-3">
                                 {{ form.size|as_crispy_field }}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-5 mb-3">
                                 {{ form.quantity|as_crispy_field }}
+                            </div>
+                            <div class="col-md-2 mt-5">
+                                {{ form.DELETE|as_crispy_field }}
                             </div>
                         </div>
                     {% endfor %}
-
                     <div class="text-right">
                         <a class="btn btn-secondary rounded-3" href="{% url 'products' %}">Cancel</a>
-                        <button class="btn btn-light rounded-3" type="submit">Add Product</button>
+                        <button class="btn btn-light rounded-3" type="submit">Update Product</button>
                     </div>
                 </form>
             </div>            
@@ -53,5 +58,6 @@
 {% endblock %}
 
 {% block postloadjs %}
-    {{ block.super }}
+{{ block.super }}
+
 {% endblock %}
