@@ -84,7 +84,7 @@ def add_product(request):
         messages.error(request, 'Sorry, only store owners can do that.')
         return redirect('home')
 
-    SizesFormset = inlineformset_factory(Product, ProductSize, fields=['size', 'quantity'], extra=9)
+    SizesFormset = inlineformset_factory(Product, ProductSize, fields=['size', 'quantity'], extra=0)
 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)

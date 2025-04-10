@@ -63,8 +63,8 @@ class ProductSize(models.Model):
     ]
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sizes')
-    size = models.CharField(max_length=4, choices=SIZE_CHOICES)
-    quantity = models.PositiveIntegerField(default=1)
+    size = models.CharField(max_length=4, choices=SIZE_CHOICES, blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=1, blank=True, null=True)
 
     def __str__(self):
         return f"{self.product.name} - {self.size}"
