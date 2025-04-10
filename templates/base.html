@@ -137,6 +137,24 @@
             </nav>
         </div>
     </header>
+    <!--Code snippet from Boutique Ado-->
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+            {% with message.level as level %}
+                {% if level == 40 %}
+                    {% include 'includes/toasts/toast_error.html' %}
+                {% elif level == 30 %}
+                    {% include 'includes/toasts/toast_warning.html' %}
+                {% elif level == 25 %}
+                    {% include 'includes/toasts/toast_success.html' %}
+                {% else %}
+                    {% include 'includes/toasts/toast_info.html' %}
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
 
     {% block page_header %}
@@ -206,6 +224,7 @@
     </footer>
 
     {% block postloadjs %}
+    <!-- Back-to-top Button -->
     <script>
         $(document).ready(function () {
             $('.back-to-top').click(function (e) {
@@ -215,6 +234,7 @@
         });
     </script>
 
+    <!-- Modal -->
     <script>
     const deleteButtons = document.getElementsByClassName("delete-btn");
     const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
@@ -227,6 +247,19 @@
             deleteModal.show();
         });
     }
+    </script>
+
+    <!-- Toasts -->
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var toastElement = document.querySelector('.toast');
+            if (toastElement) { // Ensure the element exists
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            } else {
+                console.error("Toast element not found.");
+            }
+        });
     </script>
     {% endblock %}
 

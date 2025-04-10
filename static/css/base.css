@@ -112,6 +112,13 @@ a {
     cursor: pointer;
 }
 
+.message-container {
+    position: fixed;
+    top: 80px;
+    right: 15px;
+    z-index: 99999999999;
+}
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;
