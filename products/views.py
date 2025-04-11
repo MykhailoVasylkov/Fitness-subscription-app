@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 
-from .models import Product, Category, ProductSize
+from .models import Product, Category, ProductSize, Brand
 from .forms  import ProductForm
 
 
@@ -18,6 +18,9 @@ def all_products(request):
     categories = None
     sort = None
     direction = None
+    selected_brands = []
+    min_price = None
+    max_price = None
 
     if request.GET:
         if 'sort' in request.GET:
@@ -33,7 +36,16 @@ def all_products(request):
                 if direction == 'desc':
                     sortkey = f'-{sortkey}'
             products = products.order_by(sortkey)
-            
+        
+        # Filtering by brand
+        if 'brand' in request.GET and request.GET['brand']:
+            brands = request.GET['brand'].split(',')
+            products = products.filter(brand__name__in=brands)
+            selected_brands = brands
+        else:
+            selected_brands = []
+
+        # Filtering by category   
         if 'category' in request.GET and request.GET['category']:
             categories = request.GET['category'].split(',')
             
@@ -46,9 +58,15 @@ def all_products(request):
                 categories = Category.objects.filter(name__in=categories)
         else:
             categories = Category.objects.all()
-
         
-    categories = Category.objects.filter(id__in=categories) if categories else Category.objects.all()
+        # Filtering by price range
+        if 'min_price' in request.GET and request.GET['min_price']:
+            min_price = int(request.GET['min_price'])
+            products = products.filter(price__gte=min_price)
+        
+        if 'max_price' in request.GET and request.GET['max_price']:
+            max_price = int(request.GET['max_price'])
+            products = products.filter(price__lte=max_price)
 
     current_sorting = f'{sort or "None"}_{direction or "None"}'
 
@@ -57,12 +75,19 @@ def all_products(request):
     # Determine the current selected categories
     selected_categories = request.GET.getlist('category')
 
+    brands = Category.objects.filter(id__in=categories) if categories else Category.objects.all()
+
+    all_brands = Brand.objects.all()
+
     context = {
         'products': products,
-        'current_categories': categories,
         'all_categories': all_categories,
         'selected_categories': selected_categories,
         'current_sorting': current_sorting,
+        'all_brands': all_brands,
+        'selected_brands': selected_brands,
+        'min_price': min_price,
+        'max_price': max_price,
     }
 
     return render(request, 'products/products.html', context)

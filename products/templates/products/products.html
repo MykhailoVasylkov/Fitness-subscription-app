@@ -5,35 +5,103 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-   <div class="row">
-        <div class="col text-center mt-5 px-0">
-            <h2 class="logo-font">Products</h2>
-            <a href="{% url 'products' %}" class="category-badge text-decoration-none">
-                <span class="p-2 mt-2 badge
-                    {% if not selected_categories %} bg-dark text-white {% else %} bg-white text-black {% endif %}">
-                    All Products
-                </span>
-            </a>
-            {% for c in all_categories %}
-            <a class="category-badge text-decoration-none" href="{% url 'products' %}?category={{ c.name }}">
-                <span class="p-2 mt-2 badge
-                    {% if c.name in selected_categories %} bg-dark text-white {% else %} bg-white text-black {% endif %}">
-                    {{ c.friendly_name }}
-                </span>
-            </a>
-            {% endfor %}
-            <hr class="mb-1">
+<!-- Explore Our Products -->
+<div class="container-fluid px-md-0">
+    <section class="pt-md-4 width-rule mt-5">
+        <div class="container-fluid position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-6 center">
+                    <h2 class="display-6 mb-4 mt-5">Explore Our Products</h2>
+                </div>
+                <div class="col-lg-12 center">
+                    <p class="fs-5">
+                        Fuel your fitness journey with high-quality nutrition and exercise products designed to support your goals.
+                    </p>
+                </div>
+            </div>   
         </div>
-    </div>
-
+    </section>
+    <hr class="mb-1">
+    <!-- Filter Section -->
     <div class="row">
-        <div class="product-container col-12 width-rule">
+        <div class="col-12 width-rule">
             <div class="row mt-1 mb-2">
-                <div class="col-12 col-md-6 my-auto order-md-last d-flex justify-content-center justify-content-md-end">
-                    <div class="sort-select-wrapper w-50">
+                <div class="col-12 d-flex flex-wrap justify-content-md-start gap-3 mt-2">
+                    <div class="d-flex align-items-center gap-3">
+                    <div class="text-center mt-1 px-0">
+                        <form method="get" action="{% url 'products' %}">
+                            <button type="submit" class="btn btn-secondary text-nowrap w-100 w-md-auto">Clear Filters</button>
+                        </form>
+                    </div>
+
+                    <!-- Filtering by category -->
+                    <div class="text-center mt-1 px-0">
+                        <form method="get" action="{% url 'products' %}">
+                            <select name="category" class="form-select d-inline-block w-100 w-md-auto" onchange="this.form.submit()">
+                                <option value="" {% if not selected_categories %}selected{% endif %}>All Products</option>
+                                {% for c in all_categories %}
+                                    <option value="{{ c.name }}" {% if c.name in selected_categories %}selected{% endif %}>
+                                        {{ c.friendly_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% for b in selected_brands %}
+                                <input type="hidden" name="brand" value="{{ b }}">
+                            {% endfor %}
+                            {% if min_price %}
+                                <input type="hidden" name="min_price" value="{{ min_price }}">
+                            {% endif %}
+                            {% if max_price %}
+                                <input type="hidden" name="max_price" value="{{ max_price }}">
+                            {% endif %}
+                        </form>
+                    </div>
+
+                    <!-- Filtering by brand -->
+                    <div class="text-center mt-1 px-0">
+                        <form method="get" action="{% url 'products' %}">
+                            <select name="brand" class="form-select d-inline-block w-100 w-md-auto" onchange="this.form.submit()">
+                                <option value="" {% if not selected_brands %}selected{% endif %}>All Brands</option>
+                                {% for brand in all_brands %}
+                                    <option value="{{ brand.name }}" {% if brand.name in selected_brands %}selected{% endif %}>
+                                        {{ brand.friendly_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% for c in selected_categories %}
+                                <input type="hidden" name="category" value="{{ c }}">
+                            {% endfor %}
+                            {% if min_price %}
+                                <input type="hidden" name="min_price" value="{{ min_price }}">
+                            {% endif %}
+                            {% if max_price %}
+                                <input type="hidden" name="max_price" value="{{ max_price }}">
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+
+                    <!-- Filtering by price range -->
+                    <div class="text-center mt-1 px-0">
+                        <form method="get" action="{% url 'products' %}">
+                            <div class="d-flex align-items-center gap-3">
+                                <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="{{ request.GET.min_price }}">
+                                <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="{{ request.GET.max_price }}">
+                                <button type="submit" class="btn btn-primary text-nowrap">Filter by Price</button>
+                            </div>
+                            {% for b in selected_brands %}
+                                <input type="hidden" name="brand" value="{{ b }}">
+                            {% endfor %}
+                            {% for c in selected_categories %}
+                                <input type="hidden" name="category" value="{{ c }}">
+                            {% endfor %}
+                        </form>
+                    </div>   
+                    
+                    <!-- Filtering -->
+                    <div class="mt-1">
                         <select id="sort-selector"
-                            class="form-select form-select-sm border border-{% if current_sorting != 'None_None' %}info{% else %}black{% endif %}">
+                            class="form-select d-inline-block w-100 w-md-auto">
                             <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...
                             </option>
                             <option value="price_asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price
@@ -55,6 +123,15 @@
                         </select>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="mt-1 width-rule">
+
+    <div class="row">
+        <div class="product-container col-12 width-rule">
+            <div class="row mt-1 mb-2">
                 <div class="col-12 col-md-6 order-md-first">
                     <p class="text-light mt-3 text-md-left">
                         {{ products|length }} Products
@@ -82,22 +159,45 @@
                             <div class="row">
                                 <div class="col">
                                     <p class="lead mb-0 text-left font-weight-bold">${{ product.price }}</p>
+                                    {% if product.brand %}
+                                    <p class="small mt-1 mb-0">
+                                        <a class="text-muted"
+                                            href="{% url 'products' %}?brand={{ product.brand.name }}">
+                                            Brand: {{ product.brand.friendly_name }}
+                                        </a>
+                                    </p>
+                                    {% else %}
+                                    <p class="small mt-1 mb-0">
+                                    Brand: N/A                                  
+                                    </p>
+                                    {% endif %}
                                     {% if product.category %}
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
                                             href="{% url 'products' %}?category={{ product.category.name }}">
-                                            <i class="fas fa-tag mr-1"></i>{{ product.category.friendly_name }}
+                                            Category: {{ product.category.friendly_name }}
                                         </a>
+                                    </p>
+                                    {% else %}
+                                    <p class="small mt-1 mb-0 text-muted">                                        
+                                        Category: N/A                                    
                                     </p>
                                     {% endif %}
                                     {% if product.rating %}
-                                    <small class="text-light"><i class="fas fa-star mr-1"></i>{{ product.rating }} /
+                                    <small class="text-light">Raiting: {{ product.rating }} /
                                         5</small>
+                                    {% else %}
+                                        <small class="text-muted">Raiting: N/A</small>
                                     {% endif %}
                                     <p class="small mt-1 mb-0">
-                                        {% for size in product.sizes.all %}
-                                            {{ size.size }}{% if not forloop.last %}, {% endif %}
-                                        {% endfor %}
+                                        {% if product.sizes.all %}
+                                            Sizes:
+                                            {% for size in product.sizes.all %}
+                                                {{ size.size }}{% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            Sizes: N/A
+                                        {% endif %}
                                     </p>
                                     {% if request.user.is_superuser %}
                                     <small class="ml-3">

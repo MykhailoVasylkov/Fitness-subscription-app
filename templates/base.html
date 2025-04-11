@@ -236,29 +236,28 @@
 
     <!-- Modal -->
     <script>
-    const deleteButtons = document.getElementsByClassName("delete-btn");
-    const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
-    const deleteForm = document.getElementById("deleteForm");
-    
-    for (let button of deleteButtons) {
-        button.addEventListener("click", (e) => {
-            let deleteUrl = button.getAttribute("data-delete-url");
-            deleteForm.setAttribute("action", deleteUrl);
-            deleteModal.show();
-        });
-    }
+        const deleteButtons = document.getElementsByClassName("delete-btn");
+        const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+        const deleteForm = document.getElementById("deleteForm");
+        
+        for (let button of deleteButtons) {
+            button.addEventListener("click", (e) => {
+                let deleteUrl = button.getAttribute("data-delete-url");
+                deleteForm.setAttribute("action", deleteUrl);
+                deleteModal.show();
+            });
+        }
     </script>
 
     <!-- Toasts -->
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
-            var toastElement = document.querySelector('.toast');
-            if (toastElement) { // Ensure the element exists
+            var toastElements = document.querySelectorAll('.toast');
+            
+            toastElements.forEach(function(toastElement) {
                 var toast = new bootstrap.Toast(toastElement);
                 toast.show();
-            } else {
-                console.error("Toast element not found.");
-            }
+            });
         });
     </script>
     {% endblock %}
