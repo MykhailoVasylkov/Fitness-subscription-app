@@ -34,7 +34,7 @@ def all_products(request):
                     sortkey = f'-{sortkey}'
             products = products.order_by(sortkey)
             
-        if 'category' in request.GET:
+        if 'category' in request.GET and request.GET['category']:
             categories = request.GET['category'].split(',')
             
             # Determine what is transmitted in the GET request: ID (numbers) or names (rows)

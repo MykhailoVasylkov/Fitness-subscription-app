@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, ProductSize
+from .models import Product, Category, ProductSize, Brand
 
 # Register your models here.
 """
@@ -44,5 +44,17 @@ class CategoryAdmin(admin.ModelAdmin):
         'name',
     )
 
+"""
+Register Brand model in admin panel.
+"""
+
+class BrandAdmin(admin.ModelAdmin):
+    list_display = (
+        'friendly_name',
+        'name',
+    )
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Brand, BrandAdmin)
