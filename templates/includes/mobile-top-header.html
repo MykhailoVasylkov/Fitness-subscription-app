@@ -32,7 +32,7 @@
     <div class="dropdown-menu border-0" aria-labelledby="user-options">
         {% if request.user.is_authenticated %}
         {% if request.user.is_superuser %}
-        <a href="{% url 'home' %}" class="dropdown-item">Product Management</a>
+        <a href="{% url 'add_product' %}" class="dropdown-item">Product Management</a>
         {% endif %}
         <a href="{% url 'home' %}" class="dropdown-item">My Profile</a>
         <a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a>
@@ -44,7 +44,7 @@
 </li>
 <li class="list-inline-item">
     <a class="{% if grand_total %}text-primary font-weight-bold{% else %}text-black{% endif %} nav-link d-block d-lg-none"
-        href="{% url 'home' %}">
+        href="{% url 'view_bag' %}">
         <div class="text-center">
             <div><i class="fas fa-shopping-bag fa-lg"></i></div>
             <p class="my-0">
@@ -72,7 +72,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'home' %}">
+            <a class="logo-font font-weight-bold nav-link text-black mr-5" href="{% url 'products' %}">
                 Shop
             </a>
         </li>
