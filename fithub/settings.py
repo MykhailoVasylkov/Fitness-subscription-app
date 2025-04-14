@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from settings.models import DeliverySettings
 
 
 if os.path.isfile('env.py'):
@@ -47,8 +48,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'solo',
     'home',
     'products',
+    'settings',
 
     'crispy_forms',
     'crispy_bootstrap5'
@@ -201,6 +204,12 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+delivery_settings = DeliverySettings.get_solo()
+
+FREE_DELIVERY_THRESHOLD = delivery_settings.free_delivery_threshold
+STANDARD_DELIVERY_PERCENTAGE = delivery_settings.standard_delivery_percentage
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
