@@ -119,6 +119,24 @@ a {
     z-index: 99999999999;
 }
 
+.img-bag {
+    max-width: 200px;
+}
+
+.img-detail {
+    max-width: 300px;
+}
+
+/* Setup table style */
+.table.bg-transparent,
+.table.bg-transparent td,
+.table.bg-transparent th {
+    --bs-table-bg: transparent;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    color: #f8f9fa !important;
+}
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;
@@ -128,6 +146,14 @@ a {
 @media (max-width: 768px) {
     .width-rule {
     width: 100%;
+    }
+
+    .img-bag {
+        max-width: 100%;
+    }
+
+    .img-detail {
+        max-width: 100%;
     }
 }
 
