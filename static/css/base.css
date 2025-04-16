@@ -137,6 +137,12 @@ a {
     color: #f8f9fa !important;
 }
 
+/* Pointer for bag input group */
+.update-link,
+.remove-item {
+    cursor: pointer;
+}
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;
