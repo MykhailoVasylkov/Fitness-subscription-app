@@ -1,5 +1,8 @@
 from django import forms
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, Field
 from .models import UserProfile
+
 
 
 class UserProfileForm(forms.ModelForm):
@@ -7,13 +10,36 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         exclude = ('user',)
 
+
     def __init__(self, *args, **kwargs):
         """
         Add placeholders and classes, remove auto-generated
         labels and set autofocus on first field
+        Separate fields into two formsets
         """
         super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Fieldset(
+                "User's Info",
+                'nickname',
+                'avatar',
+            ),
+            Fieldset('Default Delivery Information',
+                'default_phone_number',
+                'default_street_address1',
+                'default_street_address2',
+                'default_town_or_city',
+                'default_county',
+                'default_postcode',
+                'default_country',
+            )
+        )
+
+
         placeholders = {
+            'nickname': 'Nickname',
+            'avatar': 'Avatar',
             'default_phone_number': 'Phone Number',
             'default_postcode': 'Postal Code',
             'default_town_or_city': 'Town or City',
@@ -22,7 +48,7 @@ class UserProfileForm(forms.ModelForm):
             'default_county': 'County, State or Locality',
         }
 
-        self.fields['default_phone_number'].widget.attrs['autofocus'] = True
+        self.fields['nickname'].widget.attrs['autofocus'] = True
         for field in self.fields:
             if field != 'default_country':
                 if self.fields[field].required:
@@ -30,5 +56,5 @@ class UserProfileForm(forms.ModelForm):
                 else:
                     placeholder = placeholders[field]
                 self.fields[field].widget.attrs['placeholder'] = placeholder
-            self.fields[field].widget.attrs['class'] = 'border-black rounded-0 profile-form-input'
+            self.fields[field].widget.attrs['class'] = 'border-black rounded-3 profile-form-input'
             self.fields[field].label = False

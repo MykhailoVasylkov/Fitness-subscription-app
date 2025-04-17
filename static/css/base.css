@@ -136,6 +136,7 @@ a {
     cursor: pointer;
 }
 
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;
@@ -155,9 +156,3 @@ a {
         max-width: 100%;
     }
 }
-
-
- /*.custom-input {
-    background-color: transparent;
-    border: 1px solid #ccc; 
-}*/
