@@ -44,6 +44,10 @@ main, footer {
 a {
     color: inherit;
 }
+
+.logo-font {
+    text-transform: uppercase;
+}
   
 .width-rule {
     width: 80%;
@@ -136,6 +140,20 @@ a {
     cursor: pointer;
 }
 
+/* Profile page */
+.custom-table {
+    --bs-table-bg: transparent !important;
+    --bs-table-color: #f8f9fa !important;
+  }
+
+.order-history {
+    max-height: 416px; /* height of profile form + submit button */
+    overflow-y: auto;
+}
+
+legend {
+    font-size: 1.25rem; /* Set up formset haders */
+}
 
 @media (max-width: 992px) {
     .width-rule {

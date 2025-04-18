@@ -1,6 +1,6 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Field
+from crispy_forms.layout import Layout, Fieldset, Submit
 from .models import UserProfile
 
 
@@ -21,9 +21,8 @@ class UserProfileForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Fieldset(
-                "User's Info",
-                'nickname',
-                'avatar',
+                "",
+                'nickname',  
             ),
             Fieldset('Default Delivery Information',
                 'default_phone_number',
@@ -38,8 +37,8 @@ class UserProfileForm(forms.ModelForm):
 
 
         placeholders = {
-            'nickname': 'Nickname',
             'avatar': 'Avatar',
+            'nickname': 'Nickname',
             'default_phone_number': 'Phone Number',
             'default_postcode': 'Postal Code',
             'default_town_or_city': 'Town or City',
