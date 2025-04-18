@@ -1,18 +1,33 @@
-<!-- Code snippet fro Boutique Ado -->
-{% if widget.is_initial %}
+<!-- Code snippet from Boutique Ado -->
+{% if widget.value %}
     <p>{{ widget.initial_text }}:</p>
-    <a href="{{ widget.value.url }}">
-        <img src="{{ widget.value.url }}" class="rounded-circle shadow-sm" width="100" height="100" style="object-fit: cover;" alt="Avatar">
+    <a id="avatar-link" href="{{ widget.value.url }}">
+        <img id="avatar-preview" src="{{ widget.value.url }}" class="rounded-circle shadow-sm" width="150" height="150" style="object-fit: cover;" alt="Avatar">
     </a>
     {% if not widget.required %}
         <div class="custom-control custom-checkbox mt-2">
             <input class="custom-control-input" type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
             <label class="custom-control-label text-danger" for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
         </div>
-    {% endif %}<br>
+    {% endif %}
+    <br>
     {{ widget.input_text }}
+{% else %}
+    <p id="avatar-label">No Avatar Set</p>
+    <a id="avatar-link" href="#" id="avatar-link">
+        <img id="avatar-preview" src="/media/default_avatar.jpg" class="rounded-circle shadow-sm mb-2" width="150" height="150" style="object-fit: cover;" alt="Avatar">
+    </a>
+
+    <!-- Add 'Remove Avatar' checkbox -->
+    <div id="remove-avatar-checkbox" class="custom-control custom-checkbox mb-4" style="display: none;">
+        <input class="custom-control-input" type="checkbox" id="remove-avatar" name="remove_avatar" onchange="toggleAvatar()">
+        <label class="custom-control-label text-danger" for="remove-avatar">Remove Avatar</label>
+    </div>
 {% endif %}
-<span class="btn btn-outline-light rounded-3 btn-file">
-    Select Profile Image <input id="new-image" type="{{ widget.type }}" name="{{ widget.name }}">
-</span>
+
+<div>
+    <span class="btn btn-outline-light rounded-3 btn-file">
+        Select Profile Image <input id="new-image" type="{{ widget.type }}" name="{{ widget.name }}">
+    </span>
+</div>
 <strong><p class="text-danger" id="filename"></p></strong>

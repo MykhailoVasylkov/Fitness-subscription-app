@@ -20,7 +20,8 @@
     <div class="row">
         <div class="col-12 col-lg-6">
             <p class="text-light fs-5">User Information</p>
-            <form class="mt-1" action="{% url 'profile' %}" method="POST" id="profile-update-form" enctype="multipart/form-data">
+            <form class="mt-1" action="{% url 'profile' %}" method="POST" id="profile-update-form"
+                enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-3">
                     {{ form.avatar }}
@@ -42,7 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+
                     </tbody>
                 </table>
             </div>
@@ -52,11 +53,70 @@
 
     {% block postloadjs %}
     {{ block.super }}
-    <script type="text/javascript">
-        $('#new-image').change(function() {
-            var file = $('#new-image')[0].files[0];
-            $('#filename').text(`Image will be set to: ${file.name}`);
+     <!-- Script to show img preview -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.getElementById('new-image');
+            const previewImage = document.getElementById('avatar-preview');
+            const previewLink = document.getElementById('avatar-link');
+
+            // Preview of a photo are displayed if it is chosen by the user
+            if (fileInput) {
+                fileInput.addEventListener('change', function (event) {
+                    const file = event.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            if (previewImage) {
+                                previewImage.src = e.target.result;
+                            }
+                            if (previewLink) {
+                                previewLink.href = e.target.result;
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                    toggleAvatar();
+                });
+            }
         });
     </script>
-    
+
+    <!-- Script to handle removing avatar on the client side -->
+    <script>
+        const defaultAvatar = "/media/default_avatar.jpg";
+
+        function toggleAvatar() {
+            let avatarLabel = document.getElementById('avatar-label');
+            const avatarImage = document.getElementById('avatar-preview');
+            const removeCheckbox = document.getElementById('remove-avatar');
+            const checkboxContainer = document.getElementById('remove-avatar-checkbox');
+            const fileInput = document.getElementById('new-image');
+
+            if (fileInput.files && fileInput.files[0]) {
+                // Show Chekbox
+                checkboxContainer.style.display = "block";
+                avatarLabel.innerText = 'Selected Profile Image';
+
+                if (removeCheckbox.checked) {
+                    avatarImage.src = defaultAvatar;
+                    fileInput.value = "";
+                    removeCheckbox.checked = false;
+                    checkboxContainer.style.display = "none";
+                    avatarLabel.innerText = 'No Avatar Set';
+                }
+            } else {
+                // Hide Chekbox, return the default img
+                checkboxContainer.style.display = "none";
+                avatarImage.src = defaultAvatar;
+                avatarLabel.innerText = 'No Avatar Set';
+                
+            }
+        }
+
+    </script>
+        
     {% endblock %}
+
+
+    
