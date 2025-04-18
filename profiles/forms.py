@@ -10,7 +10,6 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         exclude = ('user',)
 
-
     def __init__(self, *args, **kwargs):
         """
         Add placeholders and classes, remove auto-generated
@@ -19,6 +18,10 @@ class UserProfileForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_enctype = 'multipart/form-data'
+        self.helper.form_tag = False
+
         self.helper.layout = Layout(
             Fieldset(
                 "",
