@@ -1,6 +1,6 @@
 <!-- Code snippet from Boutique Ado -->
 {% if widget.value %}
-    <p>{{ widget.initial_text }}:</p>
+    <p>{{ widget.initial_text }}</p>
     <a id="avatar-link" href="{{ widget.value.url }}">
         <img id="avatar-preview" src="{{ widget.value.url }}" class="rounded-circle shadow-sm" width="150" height="150" style="object-fit: cover;" alt="Avatar">
     </a>
@@ -30,4 +30,3 @@
         Select Profile Image <input id="new-image" type="{{ widget.type }}" name="{{ widget.name }}">
     </span>
 </div>
-<strong><p class="text-danger" id="filename"></p></strong>

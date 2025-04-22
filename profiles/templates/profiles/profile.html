@@ -53,6 +53,8 @@
 
     {% block postloadjs %}
     {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/countryfield.js' %}"></script>
+
      <!-- Script to show img preview -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
