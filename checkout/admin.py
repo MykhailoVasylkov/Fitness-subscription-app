@@ -1,3 +1,4 @@
+# I used code snippet form Boutique Ado 
 from django.contrib import admin
 from .models import Order, OrderLineItem
 
