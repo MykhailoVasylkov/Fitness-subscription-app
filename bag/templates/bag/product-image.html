@@ -1,6 +1,8 @@
 <!-- I used code snippet form Boutique Ado -->
+<a href="{% url 'product_detail' item.product.id %}">
 {% if item.product.image %}
 <img class="img-fluid rounded img-bag" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
 {% else %}
 <img class="img-fluid rounded img-bag" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.product.name }}">
 {% endif %}
+</a>
