@@ -178,6 +178,11 @@ legend {
     color: #aab7c4;
 }
 
+select:invalid,
+select option[value=""] {
+    color: #aab7c4 !important;
+}
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;
