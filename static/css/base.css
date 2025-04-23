@@ -183,6 +183,11 @@ select option[value=""] {
     color: #aab7c4 !important;
 }
 
+/* Custome light muted font color */
+.text-muted-light {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;

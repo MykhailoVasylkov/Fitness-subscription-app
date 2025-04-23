@@ -9,6 +9,7 @@ from django_countries.fields import CountryField
 
 from products.models import Product
 from profiles.models import UserProfile
+from settings.models import DeliverySettings
 
 
 class Order(models.Model):
@@ -43,8 +44,9 @@ class Order(models.Model):
         accounting for delivery costs.
         """
         self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
-        if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
-            self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
+        settings = DeliverySettings.get_solo()
+        if self.order_total < settings.free_delivery_threshold:
+            self.delivery_cost = self.order_total * settings.free_delivery_threshold / 100
         else:
             self.delivery_cost = 0
         self.grand_total = self.order_total + self.delivery_cost
