@@ -188,6 +188,18 @@ select option[value=""] {
     color: rgba(255, 255, 255, 0.6);
   }
 
+/* Toasts */
+
+.bag-notification-wrapper {
+    height: 100px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.custom-toast {
+    overflow: visible;
+}
+
 @media (max-width: 992px) {
     .width-rule {
     width: 90%;
