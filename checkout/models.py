@@ -13,7 +13,15 @@ from settings.models import DeliverySettings
 
 
 class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('shipped', 'Shipped'),
+        ('completed', 'Completed'),
+    ]
     order_number = models.CharField(max_length=32, null=False, editable=False)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending'
+    )
     user_profile = models.ForeignKey(UserProfile, on_delete=models.SET_NULL,
                                      null=True, blank=True, related_name='orders')
     full_name = models.CharField(max_length=50, null=False, blank=False)
