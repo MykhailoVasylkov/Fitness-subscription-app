@@ -1,0 +1,1 @@
+Fit Hub Confirmation that Order Number {{ order.order_number }} is Completed! 
