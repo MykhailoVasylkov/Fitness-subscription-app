@@ -1,0 +1,1 @@
+web: gunicorn fithub.wsgi:application
