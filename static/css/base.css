@@ -147,7 +147,7 @@ a {
   }
 
 .order-history {
-    max-height: 416px; /* height of profile form + submit button */
+    max-height: 400px;
     overflow-y: auto;
 }
 
