@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'plans',
 
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5',
+    'django_json_widget',
 ]
 
 MIDDLEWARE = [
