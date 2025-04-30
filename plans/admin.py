@@ -12,7 +12,7 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
         'category',
         'level',
         'price',
-        'duration_months',
+        'duration_weeks',
         'rating',
 
     )

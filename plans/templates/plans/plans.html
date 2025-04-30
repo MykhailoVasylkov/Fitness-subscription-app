@@ -35,11 +35,11 @@
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 border-0">
                         {% if plan.image %}
-                        <a href="">
+                        <a href="{% url 'plan_detail' plan.id %}">
                             <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
                         </a>
                         {% else %}
-                        <a href="">
+                        <a href="{% url 'plan_detail' plan.id %}">
                             <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
                                 alt="{{ plan.name }}">
                         </a>
@@ -66,11 +66,11 @@
                                     </p>
                                     {% endif %}
                                     <!-- Duration -->
-                                    {% if plan.duration_months %}
+                                    {% if plan.duration_weeks %}
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
                                             href="{% url 'plans' %}?duration={{ plan.duration_months }}">
-                                            Duration: {{ plan.duration_months }} months
+                                            Duration: {{ plan.duration_weeks }} weeks
                                         </a>
                                     </p>
                                     {% else %}
@@ -87,7 +87,7 @@
                                     {% endif %}
                                     <div class="mt-2">
                                         <a href="" class="btn btn-primary w-100">
-                                            <span class="text-uppercase rounded-3">Subscibe</span>
+                                            <span class="text-uppercase rounded-3">Subscibe Now</span>
                                         </a>
                                     </div>
                                 </div>
@@ -175,7 +175,7 @@
                                     {% endif %}
                                     <div class="mt-2">
                                         <a href="" class="btn btn-primary w-100">
-                                            <span class="text-uppercase rounded-3">Subscibe</span>
+                                            <span class="text-uppercase rounded-3">Subscibe Now</span>
                                         </a>
                                     </div>
                                 </div>

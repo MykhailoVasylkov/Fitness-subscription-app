@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 offset-lg-2">
+            <div class="image-container my-5">
+                {% if plan.image %}
+                <a href="{{ plan.image.url }}" target="_blank">
+                    <img class="card-img-top img-fluid img-detail" src="{{ plan.image.url }}" alt="{{ plan.name }}">
+                </a>
+                {% else %}
+                <a href="">
+                    <img class="card-img-top img-fluid img-detail" src="{{ MEDIA_URL }}noimage.png" alt="{{ plan.name }}">
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="product-details-container mb-5 mt-md-5">
+                <!-- Name -->
+                <p class="mb-0">{{ plan.name }}</p>
+                <!-- Price -->
+                <p class="lead mb-0 text-left font-weight-bold">${{ plan.price }}</p>
+                <!-- Category -->
+                {% if plan.category %}
+                <p class="small mt-1 mb-0">
+                    <a class="text-light" href="{% url 'plans' %}?category={{ plan.category }}">
+                        <i class="fas fa-tag mr-1"></i> Category: {{ plan.get_category_display }}
+                    </a>
+                </p>
+                {% endif %}
+                <!-- Level -->
+                {% if plan.level %}
+                <p class="small mt-1 mb-0">
+                    <a class="text-light"
+                        href="{% url 'plans' %}?level={{ plan.level }}">
+                        <i class="fas fa-tag mr-1"></i> Current Level: {{ plan.get_level_display }}
+                    </a>
+                </p>
+                {% else %}
+                <p class="small mt-1 mb-0 text-light">                                        
+                    <i class="fas fa-tag mr-1"></i> Current Level: N/A                                    
+                </p>
+                {% endif %}
+                <!-- Next Plan -->
+                {% if plan.next_plan %}
+                <p class="small mt-1 mb-0">
+                    <a class="text-light"
+                        href="{% url 'plan_detail' plan.next_plan.id %}">
+                        <i class="fas fa-tag mr-1"></i> Next Plan: {{ plan.next_plan }}
+                    </a>
+                </p>
+                {% else %}
+                <p class="small mt-1 mb-0 text-light">                                        
+                    <i class="fas fa-tag mr-1"></i> Next Plan: N/A                                    
+                </p>
+                {% endif %}
+                <!-- Duration -->
+                {% if plan.duration_weeks %}
+                <p class="small mt-1 mb-0">
+                    <a class="text-light"
+                        href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
+                        <i class="fas fa-tag mr-1"></i> Duration: {{ plan.duration_weeks }} weeks
+                    </a>
+                </p>
+                {% else %}
+                <p class="text-light">                                        
+                    <i class="fas fa-tag mr-1"></i> Duration: N/A                                    
+                </p>
+                {% endif %}
+                <!-- Raiting-->
+                {% if plan.rating %}
+                <small class="text-light"><i class="fas fa-star mr-1"></i> {{ plan.rating }} / 5</small>
+                {% endif %}
+                <!-- Description -->
+                <p class="mt-3">{{ plan.description }}</p>
+                <!-- Plan Content -->
+               
+
+                <form class="form" action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        
+            
+                        <div class="col{% if s %}-12 mt-2{% endif %}">
+                            <a href="{% url 'plans' %}" class="btn btn-outline-light rounded-3 mt-5">
+                                <span class="icon">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span>
+                                <span class="text-uppercase rounded-3">Back to Plans</span>
+                            </a>
+                            <input type="submit" class="btn btn-primary rounded-3 text-uppercase mt-5" value="Subscibe">
+                        </div>
+                        <input type="hidden" name="redirect_url" value="{{ request.path }}">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+
+{% endblock %}
