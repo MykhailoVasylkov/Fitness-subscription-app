@@ -1,12 +1,30 @@
 from django.contrib import admin
-from django_json_widget.widgets import JSONEditorWidget
-from .models import SubscriptionPlan
-from django.db import models
+import nested_admin
+from .models import SubscriptionPlan, Week, Day, DayContentItem
 
 
 # Register your models here.
 
-class SubscriptionPlanAdmin(admin.ModelAdmin):
+class DayContentInline(nested_admin.NestedTabularInline):
+    model = DayContentItem
+    extra = 1
+
+
+class DayInline(nested_admin.NestedStackedInline):
+    model = Day
+    inlines = [DayContentInline]
+    extra = 1
+
+
+class WeekInline(nested_admin.NestedStackedInline):
+    model = Week
+    inlines = [DayInline]
+    extra = 1
+
+
+class SubscriptionPlanAdmin(nested_admin.NestedModelAdmin):
+    inlines = [WeekInline]
+
     list_display = (
         'name',
         'category',
@@ -14,17 +32,10 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
         'price',
         'duration_weeks',
         'rating',
-
     )
-
     ordering = ('level',)
-    search_fields = ['name', 'description',]
+    search_fields = ['name', 'description']
     list_filter = ('category', 'level', 'price')
 
-    formfield_overrides = {
-        models.JSONField: {'widget': JSONEditorWidget},
-    }
 
 admin.site.register(SubscriptionPlan, SubscriptionPlanAdmin)
-
-

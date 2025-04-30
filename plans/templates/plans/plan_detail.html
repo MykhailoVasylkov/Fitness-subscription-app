@@ -15,7 +15,8 @@
                 </a>
                 {% else %}
                 <a href="">
-                    <img class="card-img-top img-fluid img-detail" src="{{ MEDIA_URL }}noimage.png" alt="{{ plan.name }}">
+                    <img class="card-img-top img-fluid img-detail" src="{{ MEDIA_URL }}noimage.png"
+                        alt="{{ plan.name }}">
                 </a>
                 {% endif %}
             </div>
@@ -37,40 +38,37 @@
                 <!-- Level -->
                 {% if plan.level %}
                 <p class="small mt-1 mb-0">
-                    <a class="text-light"
-                        href="{% url 'plans' %}?level={{ plan.level }}">
+                    <a class="text-light" href="{% url 'plans' %}?level={{ plan.level }}">
                         <i class="fas fa-tag mr-1"></i> Current Level: {{ plan.get_level_display }}
                     </a>
                 </p>
                 {% else %}
-                <p class="small mt-1 mb-0 text-light">                                        
-                    <i class="fas fa-tag mr-1"></i> Current Level: N/A                                    
+                <p class="small mt-1 mb-0 text-light">
+                    <i class="fas fa-tag mr-1"></i> Current Level: N/A
                 </p>
                 {% endif %}
                 <!-- Next Plan -->
                 {% if plan.next_plan %}
                 <p class="small mt-1 mb-0">
-                    <a class="text-light"
-                        href="{% url 'plan_detail' plan.next_plan.id %}">
+                    <a class="text-light" href="{% url 'plan_detail' plan.next_plan.id %}">
                         <i class="fas fa-tag mr-1"></i> Next Plan: {{ plan.next_plan }}
                     </a>
                 </p>
                 {% else %}
-                <p class="small mt-1 mb-0 text-light">                                        
-                    <i class="fas fa-tag mr-1"></i> Next Plan: N/A                                    
+                <p class="small mt-1 mb-0 text-light">
+                    <i class="fas fa-tag mr-1"></i> Next Plan: N/A
                 </p>
                 {% endif %}
                 <!-- Duration -->
                 {% if plan.duration_weeks %}
                 <p class="small mt-1 mb-0">
-                    <a class="text-light"
-                        href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
+                    <a class="text-light" href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
                         <i class="fas fa-tag mr-1"></i> Duration: {{ plan.duration_weeks }} weeks
                     </a>
                 </p>
                 {% else %}
-                <p class="text-light">                                        
-                    <i class="fas fa-tag mr-1"></i> Duration: N/A                                    
+                <p class="text-light">
+                    <i class="fas fa-tag mr-1"></i> Duration: N/A
                 </p>
                 {% endif %}
                 <!-- Raiting-->
@@ -78,15 +76,36 @@
                 <small class="text-light"><i class="fas fa-star mr-1"></i> {{ plan.rating }} / 5</small>
                 {% endif %}
                 <!-- Description -->
+                <h2 class="text-light">Description</h2>
                 <p class="mt-3">{{ plan.description }}</p>
+
                 <!-- Plan Content -->
-               
+                <h2 class="text-light">
+                    <a class="text-light text-decoration-none" data-bs-toggle="collapse" href="#planPreview"
+                        role="button">
+                        Plan Preview <i class="fa-solid fa-caret-down"></i>
+                    </a>
+                </h2>
+
+                <div class="collapse" id="planPreview">
+                    {% for week in plan.weeks.all|slice:":1"  %}
+                    <h3 class="text-light">Week {{ week.number }}</h3>
+                    {% for day in week.days.all %}
+                    <h4 class="text-light">{{ day.get_name_display }}</h4>
+                    {% for content_item in day.content_items.all %}
+                    <p class="text-light">
+                        {{ content_item.key }}: {{ content_item.value }}
+                    </p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% endfor %}
+                </div>
 
                 <form class="form" action="" method="POST">
                     {% csrf_token %}
                     <div class="form-row">
-                        
-            
+
+
                         <div class="col{% if s %}-12 mt-2{% endif %}">
                             <a href="{% url 'plans' %}" class="btn btn-outline-light rounded-3 mt-5">
                                 <span class="icon">
