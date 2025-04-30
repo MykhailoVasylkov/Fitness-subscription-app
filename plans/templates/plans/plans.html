@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+{% endblock %}
+
+{% block content %}
+<!-- Explore Our Products -->
+<div class="container-fluid px-md-0">
+    <section class="pt-md-4 width-rule mt-5">
+        <div class="container-fluid position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-6 center">
+                    <h2 class="display-6 mb-4 mt-5">Explore Our Plans</h2>
+                </div>
+                <div class="col-lg-12 center">
+                    <p class="fs-5">
+                        Unlock your potential with expertly crafted nutrition and workout plans tailored to help you reach your fitness goals.
+                    </p>
+                </div>
+            </div>   
+        </div>
+    </section>
+    <hr class="mb-1">
+
+    <div class="row">
+        <div class="product-container col-12">
+            
+            <!-- Nutrition Plans -->
+
+            <div class="row width-rule">
+                <div><h1 class="text-end">Nutrition Plans</h1></div>
+                <hr class="mt-1">
+                {% for plan in nutrition_plans %}
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card h-100 border-0">
+                        {% if plan.image %}
+                        <a href="">
+                            <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
+                        </a>
+                        {% else %}
+                        <a href="">
+                            <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
+                                alt="{{ plan.name }}">
+                        </a>
+                        {% endif %}
+                        <div class="card-body pb-0">
+                            <p class="mb-0">{{ plan.name }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent pt-0 border-0 text-left">
+                            <div class="row">
+                                <div class="col">
+                                    <!-- Price -->
+                                    <p class="lead mb-0 text-left font-weight-bold">${{ plan.price }}</p>
+                                    <!-- Level -->
+                                    {% if plan.level %}
+                                    <p class="small mt-1 mb-0">
+                                        <a class="text-muted"
+                                            href="{% url 'plans' %}?level={{ plan.level }}">
+                                            Level: {{ plan.get_level_display }}
+                                        </a>
+                                    </p>
+                                    {% else %}
+                                    <p class="small mt-1 mb-0 text-muted">                                        
+                                        Level: N/A                                    
+                                    </p>
+                                    {% endif %}
+                                    <!-- Duration -->
+                                    {% if plan.duration_months %}
+                                    <p class="small mt-1 mb-0">
+                                        <a class="text-muted"
+                                            href="{% url 'plans' %}?duration={{ plan.duration_months }}">
+                                            Duration: {{ plan.duration_months }} months
+                                        </a>
+                                    </p>
+                                    {% else %}
+                                    <p class="small mt-1 mb-0 text-muted">                                        
+                                        Duration: N/A                                    
+                                    </p>
+                                    {% endif %}
+                                    <!-- Raiting -->
+                                    {% if product.rating %}
+                                    <small class="text-light text-muted">Raiting: {{ plan.rating }} /
+                                        5</small>
+                                    {% else %}
+                                        <small class="text-muted">Raiting: N/A</small>
+                                    {% endif %}
+                                    <div class="mt-2">
+                                        <a href="" class="btn btn-primary w-100">
+                                            <span class="text-uppercase rounded-3">Subscibe</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                <div class="col-12 d-sm-block d-md-block d-lg-none mb-3">
+                    <hr>
+                </div>
+                {% endif %}
+                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                <div class="col-12 d-none d-lg-block d-xl-none mb-3">
+                    <hr>
+                </div>
+                {% endif %}
+                {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                <div class="col-12 d-none d-xl-block mb-3">
+                    <hr>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Exercise Plans -->
+            <hr class="mt-4">
+            <div class="row width-rule">
+                <div><h1 class="text-end">Exercise Plans</h1></div>
+                <hr class="mt-1">
+                {% for plan in exercises_plans %}
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card h-100 border-0">
+                        {% if plan.image %}
+                        <a href="">
+                            <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
+                        </a>
+                        {% else %}
+                        <a href="">
+                            <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
+                                alt="{{ plan.name }}">
+                        </a>
+                        {% endif %}
+                        <div class="card-body pb-0">
+                            <p class="mb-0">{{ plan.name }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent pt-0 border-0 text-left">
+                            <div class="row">
+                                <div class="col">
+                                    <!-- Price -->
+                                    <p class="lead mb-0 text-left font-weight-bold">${{ plan.price }}</p>
+                                    <!-- Level -->
+                                    {% if plan.level %}
+                                    <p class="small mt-1 mb-0">
+                                        <a class="text-muted"
+                                            href="{% url 'plans' %}?level={{ plan.level }}">
+                                            Level: {{ plan.get_level_display }}
+                                        </a>
+                                    </p>
+                                    {% else %}
+                                    <p class="small mt-1 mb-0 text-muted">                                        
+                                        Level: N/A                                    
+                                    </p>
+                                    {% endif %}
+                                    <!-- Duration -->
+                                    {% if plan.duration_months %}
+                                    <p class="small mt-1 mb-0">
+                                        <a class="text-muted"
+                                            href="{% url 'plans' %}?duration={{ plan.duration_months }}">
+                                            Duration: {{ plan.duration_months }} months
+                                        </a>
+                                    </p>
+                                    {% else %}
+                                    <p class="small mt-1 mb-0 text-muted">                                        
+                                        Duration: N/A                                    
+                                    </p>
+                                    {% endif %}
+                                    <!-- Raiting -->
+                                    {% if product.rating %}
+                                    <small class="text-light text-muted">Raiting: {{ plan.rating }} /
+                                        5</small>
+                                    {% else %}
+                                        <small class="text-muted">Raiting: N/A</small>
+                                    {% endif %}
+                                    <div class="mt-2">
+                                        <a href="" class="btn btn-primary w-100">
+                                            <span class="text-uppercase rounded-3">Subscibe</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                <div class="col-12 d-sm-block d-md-block d-lg-none mb-3">
+                    <hr>
+                </div>
+                {% endif %}
+                {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                <div class="col-12 d-none d-lg-block d-xl-none mb-3">
+                    <hr>
+                </div>
+                {% endif %}
+                {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                <div class="col-12 d-none d-xl-block mb-3">
+                    <hr>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="arrow back-to-top"></div>
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{% endblock %}
