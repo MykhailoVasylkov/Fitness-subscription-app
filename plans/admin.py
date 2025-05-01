@@ -7,19 +7,19 @@ from .models import SubscriptionPlan, Week, Day, DayContentItem
 
 class DayContentInline(nested_admin.NestedTabularInline):
     model = DayContentItem
-    extra = 1
+    extra = 0
 
 
 class DayInline(nested_admin.NestedStackedInline):
     model = Day
     inlines = [DayContentInline]
-    extra = 1
+    extra = 0
 
 
 class WeekInline(nested_admin.NestedStackedInline):
     model = Week
     inlines = [DayInline]
-    extra = 1
+    extra = 0
 
 
 class SubscriptionPlanAdmin(nested_admin.NestedModelAdmin):
@@ -36,6 +36,7 @@ class SubscriptionPlanAdmin(nested_admin.NestedModelAdmin):
     ordering = ('level',)
     search_fields = ['name', 'description']
     list_filter = ('category', 'level', 'price')
+    save_as = True
 
 
 admin.site.register(SubscriptionPlan, SubscriptionPlanAdmin)
