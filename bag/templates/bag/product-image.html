@@ -1,8 +1,18 @@
 <!-- I used code snippet form Boutique Ado -->
-<a href="{% url 'product_detail' item.product.id %}">
-{% if item.product.image %}
-<img class="img-fluid rounded img-bag" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-{% else %}
-<img class="img-fluid rounded img-bag" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.product.name }}">
+{% if item.product %}
+    <a href="{% url 'product_detail' item.product.id %}">
+    {% if item.product.image %}
+    <img class="img-fluid rounded img-bag" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+    {% else %}
+    <img class="img-fluid rounded img-bag" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.product.name }}">
+    {% endif %}
+    </a>
+{% elif item.plan %}
+    <a href="{% url 'plan_detail' item.plan.id %}">
+    {% if item.plan.image %}
+    <img class="img-fluid rounded img-bag" src="{{ item.plan.image.url }}" alt="{{ item.plan.name }}">
+    {% else %}
+    <img class="img-fluid rounded img-bag" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.plan.name }}">
+    {% endif %}
+    </a>
 {% endif %}
-</a>

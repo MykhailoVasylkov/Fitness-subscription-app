@@ -128,3 +128,22 @@ def remove_from_bag(request, item_id):
 
         messages.error(request, f'Error removing item: {e}')
         return HttpResponse(status=500)
+
+def remove_plan_from_bag(request, plan_id):
+    """ Remove the item from the shopping bag """
+
+    plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
+
+    try:
+        plan_bag = request.session.get('plan_bag', {})
+        
+        plan_bag.pop(plan_id)
+        messages.success(request, f'Removed {plan.name} from your bag')
+
+        request.session['plan_bag'] = plan_bag
+        return HttpResponse(status=200)
+    
+    except Exception as e:
+
+        messages.error(request, f'Error removing plan: {e}')
+        return HttpResponse(status=500)

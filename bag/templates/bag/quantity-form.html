@@ -1,4 +1,5 @@
 <!-- I used code snippet form Boutique Ado  -->
+{% if item.product %}
 <form class="form update-form" method="POST" action="{% url 'adjust_bag' item.item_id %}">
     {% csrf_token %}
     <div class="form-group">
@@ -35,5 +36,10 @@
     </div>
 </form>
 <a class="update-link text-info"><small>Update</small></a>
-<a class="remove-item text-danger float-end" data-item-id="{{ item.item_id }}"
+<a class="remove-product text-danger float-end" data-item-id="{{ item.item_id }}"
     data-product_size="{{ item.size }}"><small>Remove</small></a>
+
+{% elif item.plan %}
+<a class="remove-plan text-danger float-end" data-plan_id="{{ item.plan_id }}"
+    data-product_size="{{ item.size }}"><small>Remove</small></a>
+{% endif %}

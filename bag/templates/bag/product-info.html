@@ -1,4 +1,10 @@
 <!-- I used code snippet form Boutique Ado -->
+{% if item.product %}
 <p class="my-0"><strong>{{ item.product.name }}</strong></p>
 <p class="my-0"><strong>Size: </strong>{% if item.product.has_sizes %}{{ item.size|upper }}{% else %}N/A{% endif %}</p>
 <p class="my-0 small">SKU: {{ item.product.sku|upper }}</p>
+{% elif item.plan %}
+<p class="my-0"><strong>{{ item.plan.name }}</strong></p>
+<p class="my-0 small">Level: {{ item.plan.get_level_display }}</p>
+<p class="my-0 small">Duration: {{ plan.duration_weeks }} weeks</p>
+{% endif %}

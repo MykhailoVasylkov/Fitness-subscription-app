@@ -136,7 +136,8 @@ a {
 
 /* Pointer for bag input group */
 .update-link,
-.remove-item {
+.remove-product
+.remove-plan {
     cursor: pointer;
 }
 
