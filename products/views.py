@@ -75,8 +75,6 @@ def all_products(request):
     # Determine the current selected categories
     selected_categories = request.GET.getlist('category')
 
-    brands = Category.objects.filter(id__in=categories) if categories else Category.objects.all()
-
     all_brands = Brand.objects.all()
 
     context = {
