@@ -28,19 +28,19 @@ def all_plans(request):
 
         # Filtering by duration
         if 'duration_weeks' in request.GET and request.GET['duration_weeks']:
-            durations = request.GET['duration_weeks'].split(',')
-            nutrition_plans = nutrition_plans.filter(duration_weeks__in=durations)
-            exercises_plans = exercises_plans.filter(duration_weeks__in=durations)
-            selected_durations = durations
+            duration = int(request.GET['duration_weeks'])
+            nutrition_plans = nutrition_plans.filter(duration_weeks=duration)
+            exercises_plans = exercises_plans.filter(duration_weeks=duration)
+            selected_durations = [duration]
         else:
             selected_durations = []
 
         # Filtering by level
         if 'level' in request.GET and request.GET['level']:
-            levels = request.GET['level'].split(',')
-            nutrition_plans = nutrition_plans.filter(level__in=levels)
-            exercises_plans = exercises_plans.filter(level__in=levels)
-            selected_levels = levels
+            level = int(request.GET['level'])
+            nutrition_plans = nutrition_plans.filter(level=level)
+            exercises_plans = exercises_plans.filter(level=level)
+            selected_levels = [level]
         else:
             selected_levels = []
 

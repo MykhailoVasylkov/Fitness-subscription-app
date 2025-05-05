@@ -26,31 +26,107 @@
     <!-- Filter Section -->
     <div class="row">
         <div class="col-12 width-rule">
-            <!-- Filtering -->
-            <div class="mt-1">
-                <select id="sort-selector"
-                    class="form-select d-inline-block w-100 w-md-auto">
-                    <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...
-                    </option>
-                    <option value="price_asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price
-                        (low to high)</option>
-                    <option value="price_desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price
-                        (high to low)</option>
-                    <option value="rating_asc" {% if current_sorting == 'rating_asc' %}selected{% endif %}>Rating
-                        (low to high)</option>
-                    <option value="rating_desc" {% if current_sorting == 'rating_desc' %}selected{% endif %}>
-                        Rating (high to low)</option>
-                    <option value="level_asc" {% if current_sorting == 'level_asc' %}selected{% endif %}>Level (low to hight)
-                    </option>
-                    <option value="level_desc" {% if current_sorting == 'level_desc' %}selected{% endif %}>Level (hight to low)</option>
-                    <option value="duration_weeks_asc" {% if current_sorting == 'duration_weeks_asc' %}selected{% endif %}>
-                        Duration (low to hight)</option>
-                    <option value="duration_weeks_desc" {% if current_sorting == 'duration_weeks_desc' %}selected{% endif %}>
-                        Duration (hight to low)</option>
-                </select>
+            <div class="row mt-1 mb-2">
+                <div class="col-12 d-flex flex-wrap justify-content-md-start gap-3 mt-2">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-center mt-1 px-0">
+                            <form method="get" action="{% url 'plans' %}">
+                                <button type="submit" class="btn btn-secondary text-nowrap w-100 w-md-auto">Clear Filters</button>
+                            </form>
+                        </div>
+
+                        <!-- Filtering by level -->
+                        <div class="text-center mt-1 px-0">
+                            <form method="get" action="{% url 'plans' %}">
+                                <select name="level" class="form-select d-inline-block w-100 w-md-auto" onchange="this.form.submit()">
+                                    <option value="" {% if not selected_levels %}selected{% endif %}>All Levels</option>
+                                    {% for value, label in all_levels %}
+                                        <option value="{{ value }}" {% if value in selected_levels %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                                {% for duration in selected_durations %}
+                                    <input type="hidden" name="duration_weeks" value="{{ duration }}">
+                                {% endfor %}
+                                {% if min_price %}
+                                    <input type="hidden" name="min_price" value="{{ min_price }}">
+                                {% endif %}
+                                {% if max_price %}
+                                    <input type="hidden" name="max_price" value="{{ max_price }}">
+                                {% endif %}
+                            </form>
+                        </div>
+
+                        <!-- Filtering by duration -->
+                        <div class="text-center mt-1 px-0">
+                            <form method="get" action="{% url 'plans' %}">
+                                <select name="duration_weeks" class="form-select d-inline-block w-100 w-md-auto" onchange="this.form.submit()">
+                                    <option value="" {% if not selected_durations %}selected{% endif %}>All Durations</option>
+                                    {% for duration in all_durations %}
+                                        <option value="{{ duration }}" {% if duration in selected_durations %}selected{% endif %}>
+                                            {{ duration }} Weeks
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% for value in selected_levels %}
+                                    <input type="hidden" name="level" value="{{ value }}">
+                                {% endfor %}
+                                {% if min_price %}
+                                    <input type="hidden" name="min_price" value="{{ min_price }}">
+                                {% endif %}
+                                {% if max_price %}
+                                    <input type="hidden" name="max_price" value="{{ max_price }}">
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Filtering by price range -->
+                    <div class="text-center mt-1 px-0">
+                        <form method="get" action="{% url 'plans' %}">
+                            <div class="d-flex align-items-center gap-3">
+                                <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="{{ request.GET.min_price }}">
+                                <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="{{ request.GET.max_price }}">
+                                <button type="submit" class="btn btn-primary text-nowrap">Filter by Price</button>
+                            </div>
+                            {% for value in selected_levels %}
+                                    <input type="hidden" name="level" value="{{ value }}">
+                            {% endfor %}
+                            {% for duration in selected_durations %}
+                                    <input type="hidden" name="duration_weeks" value="{{ duration }}">
+                            {% endfor %}
+                        </form>
+                    </div>   
+                     <!-- Filtering -->
+                    <div class="mt-1">
+                        <select id="sort-selector"
+                            class="form-select d-inline-block w-100 w-md-auto">
+                            <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...
+                            </option>
+                            <option value="price_asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price
+                                (low to high)</option>
+                            <option value="price_desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price
+                                (high to low)</option>
+                            <option value="rating_asc" {% if current_sorting == 'rating_asc' %}selected{% endif %}>Rating
+                                (low to high)</option>
+                            <option value="rating_desc" {% if current_sorting == 'rating_desc' %}selected{% endif %}>
+                                Rating (high to low)</option>
+                            <option value="level_asc" {% if current_sorting == 'level_asc' %}selected{% endif %}>Level (low to hight)
+                            </option>
+                            <option value="level_desc" {% if current_sorting == 'level_desc' %}selected{% endif %}>Level (hight to low)</option>
+                            <option value="duration_weeks_asc" {% if current_sorting == 'duration_weeks_asc' %}selected{% endif %}>
+                                Duration (low to hight)</option>
+                            <option value="duration_weeks_desc" {% if current_sorting == 'duration_weeks_desc' %}selected{% endif %}>
+                                Duration (hight to low)</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
     <!--Plans section-->
     <div class="row">
@@ -218,7 +294,7 @@
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
                                             href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
-                                            Duration: {{ plan.duration_weeks}} months
+                                            Duration: {{ plan.duration_weeks}} weeks
                                         </a>
                                     </p>
                                     {% else %}
