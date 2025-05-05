@@ -23,14 +23,56 @@
     </section>
     <hr class="mb-1">
 
+    <!-- Filter Section -->
+    <div class="row">
+        <div class="col-12 width-rule">
+            <!-- Filtering -->
+            <div class="mt-1">
+                <select id="sort-selector"
+                    class="form-select d-inline-block w-100 w-md-auto">
+                    <option value="reset" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...
+                    </option>
+                    <option value="price_asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price
+                        (low to high)</option>
+                    <option value="price_desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price
+                        (high to low)</option>
+                    <option value="rating_asc" {% if current_sorting == 'rating_asc' %}selected{% endif %}>Rating
+                        (low to high)</option>
+                    <option value="rating_desc" {% if current_sorting == 'rating_desc' %}selected{% endif %}>
+                        Rating (high to low)</option>
+                    <option value="level_asc" {% if current_sorting == 'level_asc' %}selected{% endif %}>Level (low to hight)
+                    </option>
+                    <option value="level_desc" {% if current_sorting == 'level_desc' %}selected{% endif %}>Level (hight to low)</option>
+                    <option value="duration_weeks_asc" {% if current_sorting == 'duration_weeks_asc' %}selected{% endif %}>
+                        Duration (low to hight)</option>
+                    <option value="duration_weeks_desc" {% if current_sorting == 'duration_weeks_desc' %}selected{% endif %}>
+                        Duration (hight to low)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!--Plans section-->
     <div class="row">
         <div class="product-container col-12">
-            
+
             <!-- Nutrition Plans -->
 
             <div class="row width-rule">
                 <div><h1 class="text-end">Nutrition Plans</h1></div>
                 <hr class="mt-1">
+                <div class="row mt-1 mb-2">
+                    <div class="col-12 col-md-6 order-md-first">
+                        <p class="text-light mt-3 text-md-left">
+                            {{ nutrition_plans|length }}
+                            {% if nutrition_plans|length == 1 %}
+                            Plan
+                            {% else %}
+                            Plans
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
                 {% for plan in nutrition_plans %}
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 border-0">
@@ -69,7 +111,7 @@
                                     {% if plan.duration_weeks %}
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
-                                            href="{% url 'plans' %}?duration={{ plan.duration_months }}">
+                                            href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
                                             Duration: {{ plan.duration_weeks }} weeks
                                         </a>
                                     </p>
@@ -79,7 +121,7 @@
                                     </p>
                                     {% endif %}
                                     <!-- Raiting -->
-                                    {% if product.rating %}
+                                    {% if plan.rating %}
                                     <small class="text-light text-muted">Raiting: {{ plan.rating }} /
                                         5</small>
                                     {% else %}
@@ -125,6 +167,18 @@
             <div class="row width-rule">
                 <div><h1 class="text-end">Exercise Plans</h1></div>
                 <hr class="mt-1">
+                <div class="row mt-1 mb-2">
+                    <div class="col-12 col-md-6 order-md-first">
+                        <p class="text-light mt-3 text-md-left">
+                            {{ exercises_plans|length }}
+                            {% if exercises_plans|length == 1 %}
+                            Plan
+                            {% else %}
+                            Plans
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
                 {% for plan in exercises_plans %}
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 border-0">
@@ -160,11 +214,11 @@
                                     </p>
                                     {% endif %}
                                     <!-- Duration -->
-                                    {% if plan.duration_months %}
+                                    {% if plan.duration_weeks %}
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
-                                            href="{% url 'plans' %}?duration={{ plan.duration_months }}">
-                                            Duration: {{ plan.duration_months }} months
+                                            href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
+                                            Duration: {{ plan.duration_weeks}} months
                                         </a>
                                     </p>
                                     {% else %}
@@ -173,7 +227,7 @@
                                     </p>
                                     {% endif %}
                                     <!-- Raiting -->
-                                    {% if product.rating %}
+                                    {% if plan.rating %}
                                     <small class="text-light text-muted">Raiting: {{ plan.rating }} /
                                         5</small>
                                     {% else %}
@@ -224,4 +278,24 @@
 
 {% block postloadjs %}
 {{ block.super }}
+<!--Code snippet from Boutique Ado-->
+<script type="text/javascript">
+    $('#sort-selector').change(function() {
+        var selector = $(this);
+        var currentUrl = new URL(window.location);
+        var selectedVal = selector.val();
+        if(selectedVal != "reset"){
+            var splitVal = selectedVal.lastIndexOf('_');
+            var sort = selectedVal.substring(0, splitVal);
+            var direction = selectedVal.substring(splitVal + 1);
+            currentUrl.searchParams.set("sort", sort);
+            currentUrl.searchParams.set("direction", direction);
+            window.location.replace(currentUrl);
+        } else {
+            currentUrl.searchParams.delete("sort");
+            currentUrl.searchParams.delete("direction");
+            window.location.replace(currentUrl);
+        }
+    })
+</script>
 {% endblock %}

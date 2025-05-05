@@ -13,10 +13,11 @@ class SubscriptionPlan(models.Model):
     duration_weeks = models.PositiveIntegerField(default=1)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
-    level = models.CharField(max_length=20, choices=[
-        ('beginner', 'Beginner'),
-        ('intermediate', 'Intermediate'),
-        ('advanced', 'Advanced'),
+    level = models.IntegerField(choices=[
+        (1, 'Beginner'),
+        (2, 'Intermediate'),
+        (3, 'Advanced'),
+        (4, 'Pro'),
     ])
     next_plan = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
 
