@@ -60,6 +60,8 @@ def bag_contents(request):
             'plan_id': plan_id,
             'quantity': plan_data['quantity'],
             'plan': plan,
+            'duration_weeks': plan.duration_weeks,
+            'level': plan.level,
         })
     
     total = total_product + total_plan
@@ -79,6 +81,7 @@ def bag_contents(request):
         'total': total,
         'product_count': product_count,
         'plan_count': plan_count,
+        'total_count': product_count + plan_count,
         'delivery': delivery,
         'free_delivery_delta': free_delivery_delta,
         'free_delivery_threshold': delivery_settings_data['FREE_DELIVERY_THRESHOLD'],

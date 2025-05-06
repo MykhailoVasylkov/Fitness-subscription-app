@@ -6,5 +6,10 @@
 {% elif item.plan %}
 <p class="my-0"><strong>{{ item.plan.name }}</strong></p>
 <p class="my-0 small">Level: {{ item.plan.get_level_display }}</p>
-<p class="my-0 small">Duration: {{ plan.duration_weeks }} weeks</p>
+<p class="my-0 small">Duration: {{ item.plan.duration_weeks }}
+    {% if item.plan.duration_weeks == 1 %}
+        Week
+    {% else %}
+        Weeks</p>
+    {% endif %}
 {% endif %}

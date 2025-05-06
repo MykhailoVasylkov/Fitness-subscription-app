@@ -63,7 +63,11 @@
                 {% if plan.duration_weeks %}
                 <p class="small mt-1 mb-0">
                     <a class="text-light" href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
-                        <i class="fas fa-tag mr-1"></i> Duration: {{ plan.duration_weeks }} weeks
+                        <i class="fas fa-tag mr-1"></i> Duration: {{ plan.duration_weeks }}{% if plan.duration_weeks|length == 1 %}
+                        Week
+                        {% else %}
+                        Weeks
+                        {% endif %}
                     </a>
                 </p>
                 {% else %}
