@@ -4,12 +4,14 @@ import uuid
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
+from datetime import timedelta
 
 from django_countries.fields import CountryField
 
 from products.models import Product
 from profiles.models import UserProfile
 from settings.models import DeliverySettings
+from plans.models import SubscriptionPlan
 
 
 class Order(models.Model):
@@ -90,3 +92,30 @@ class OrderLineItem(models.Model):
 
     def __str__(self):
         return f'SKU {self.product.sku} on order {self.order.order_number}'
+    
+
+class Subscription(models.Model):
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('canceled', 'Canceled'),
+        ('expired', 'Expired'),
+        ('paused', 'Paused'),
+    ]
+    subscription_number = models.CharField(max_length=255, unique=True, default=uuid.uuid4)
+    full_name = models.CharField(max_length=50, null=False, blank=False)
+    email = models.EmailField(max_length=254, null=False, blank=False)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='subscriptions')
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name='subscriptions')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    original_bag = models.TextField(null=False, blank=False, default='')
+    stripe_sid = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"Subscription {self.subscription_id} - {self.plan.name} ({self.user_profile.user.username})"
+    
+    def save(self, *args, **kwargs):
+        if self.plan and not self.end_date:
+            self.end_date = self.start_date + timedelta(weeks=self.plan.duration_weeks)
+        super().save(*args, **kwargs)

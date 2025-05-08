@@ -30,7 +30,7 @@
                         <p class="mb-1 mt-0 small text-light">Subtotal</p>
                     </div>
                 </div>
-                {% for item in bag_items %}
+                {% for item in product_items %}
                     <div class="row">
                         <div class="col-2 mb-1">
                             <a href="{% url 'product_detail' item.product.id %}">
@@ -141,6 +141,7 @@
 {% block postloadjs %}
     {{ block.super }}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
-    {{ client_secret|json_script:"id_client_secret" }}
+    {{ product_client_secret|json_script:"id_product_client_secret" }} <!--был простро id_client_secret-->
+    {{ subscription_client_secret|json_script:"id_subscription_client_secret" }}
     <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}
