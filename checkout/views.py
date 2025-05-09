@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .forms import OrderForm, SubscriptionForm
-from .models import Order, OrderLineItem
+from .models import Order, OrderLineItem, Subscription
 from products.models import Product
 from profiles.forms import UserProfileForm
 from profiles.models import UserProfile
@@ -60,11 +60,12 @@ def checkout(request):
     plan_bag = request.session.get('plan_bag', {})
 
     if request.method == 'POST':
+        form_type = request.POST.get('form_type', '')
         if not product_bag and not plan_bag:
             messages.error(request, "There's nothing in your bag at the moment")
             return redirect(reverse('home'))
         
-        if product_bag:
+        if form_type == 'product':
             form_data = {
                 'full_name': request.POST['full_name'],
                 'email': request.POST['email'],
@@ -80,7 +81,7 @@ def checkout(request):
 
             if order_form.is_valid():
                 order = order_form.save(commit=False)
-                pid = request.POST.get('client_secret').split('_secret')[0]
+                pid = request.POST.get('product_client_secret').split('_secret')[0]
                 order.stripe_pid = pid
                 order.original_bag = json.dumps(product_bag)
                 order.save()
@@ -122,7 +123,15 @@ def checkout(request):
                 messages.error(request, 'There was an error with your form. Please double check your information.')
 
         # Subscription processing
-        if plan_bag:
+        elif form_type == 'subscription':
+
+            # Get or create user profile for authenticated users
+            if request.user.is_authenticated:
+                user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+            else:
+                # If user not logged in
+                user_profile = None
+                
             form_data = {
                 'full_name': request.POST.get('full_name', ''),
                 'email': request.POST.get('email', ''),
@@ -130,7 +139,7 @@ def checkout(request):
             subscription_form = SubscriptionForm(form_data)
 
             if subscription_form.is_valid():
-                pid = request.POST.get('client_secret', '').split('_secret')[0]
+                pid = request.POST.get('subscription_client_secret', '').split('_secret')[0]
                 original_bag = json.dumps(plan_bag)
 
                 try:
@@ -170,6 +179,8 @@ def checkout(request):
             
             else:
                 messages.error(request, 'There was an error with your form. Please double check your information.')
+        else:
+            messages.error(request, 'Unknown form type. Please try again.')
 
     # If the request is not post, prepare forms for the render
     if request.user.is_authenticated:
@@ -219,13 +230,18 @@ def checkout(request):
 
     if plan_bag:
         # Calculate the amount for subscriptions
-        subscription_total = current_bag['grand_plan_total']
+        subscription_total = current_bag['total_plan']
         stripe_subscription_total = round(subscription_total * 100)
 
         # Create a payment intention for subscriptions
         subscription_intent = stripe.PaymentIntent.create(
             amount=stripe_subscription_total,
             currency=settings.STRIPE_CURRENCY,
+            metadata={
+                'user_email': request.user.email if request.user.is_authenticated else form_data['email'],
+                'plan_bag': json.dumps(plan_bag),
+                'username': request.user.username if request.user.is_authenticated else form_data['full_name'],
+            },
         )
 
 
@@ -235,6 +251,9 @@ def checkout(request):
         'stripe_public_key': stripe_public_key,
         'product_client_secret': product_intent.client_secret if product_bag else '',
         'subscription_client_secret': subscription_intent.client_secret if plan_bag else '',
+        'product_bag': product_bag,
+        'plan_bag': plan_bag,
+    
     }
 
     return render(request, 'checkout/checkout.html', context)
@@ -279,7 +298,7 @@ def checkout_success(request, order_number=None, subscription_number=None):
 
     elif subscription_number:
         # Successful subscription processing
-        subscription = get_object_or_404(Subscription, id=subscription_number)
+        subscription = get_object_or_404(Subscription, subscription_number=subscription_number)
         context['subscription'] = subscription
 
         if request.user.is_authenticated:

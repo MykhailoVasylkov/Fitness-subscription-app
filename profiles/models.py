@@ -16,6 +16,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, help_text='Upload your image', default='avatars/default_avatar.png')
     nickname = models.CharField(max_length=30, null=True, blank=True)
+    full_name = models.CharField(max_length=30, null=True, blank=True)
+    email = models.EmailField(max_length=254, unique=True, blank=True, null=True)
     default_phone_number = models.CharField(max_length=20, null=True, blank=True)
     default_street_address1 = models.CharField(max_length=80, null=True, blank=True)
     default_street_address2 = models.CharField(max_length=80, null=True, blank=True)

@@ -28,7 +28,9 @@ class UserProfileForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 "",
-                'nickname',  
+                'nickname',
+                'full_name',
+                'email',
             ),
             Fieldset('Default Delivery Information',
                 'default_phone_number',
@@ -45,6 +47,8 @@ class UserProfileForm(forms.ModelForm):
         placeholders = {
             'avatar': 'Avatar',
             'nickname': 'Nickname',
+            'full_name': 'Full Name',
+            'email': 'Email',
             'default_phone_number': 'Phone Number',
             'default_postcode': 'Postal Code',
             'default_town_or_city': 'Town or City',

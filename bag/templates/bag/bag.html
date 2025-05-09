@@ -106,8 +106,11 @@
                     <!--Products-->
 
                     {% if product_items %}
-                    <hr>
                     <thead>
+                        <tr>
+                            <td colspan="5">
+                                <hr>
+                            </td>
                         <tr>
                             <td colspan="5">
                                 <p class="my-2">{{ product_items|length }}
@@ -153,8 +156,12 @@
                     <!--Plans-->
 
                     {% if plan_items %}
-                    <hr>
+                    
                     <thead>
+                        <tr>
+                            <td colspan="5">
+                                <hr> 
+                            </td>
                         <tr>
                             <td colspan="5">
                                 <p class="my-2">{{ plan_items|length }}

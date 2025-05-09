@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 from settings.models import DeliverySettings
 from products.models import Product
 from plans.models import SubscriptionPlan
@@ -25,6 +26,9 @@ def bag_contents(request):
 
     product_bag = request.session.get('product_bag', {})
     plan_bag = request.session.get('plan_bag', {})
+
+    if len(plan_bag) > 1:
+        messages.error(request, "You can only purchase one subscription plan at a time.")
 
     delivery_settings_data = delivery_settings(request)
 
@@ -75,7 +79,6 @@ def bag_contents(request):
     
     grand_total = delivery + total
     grand_product_total = delivery + total_product
-    grand_plan_total = total_plan
     
     context = {
         'product_items': product_items,
@@ -89,7 +92,8 @@ def bag_contents(request):
         'free_delivery_threshold': delivery_settings_data['FREE_DELIVERY_THRESHOLD'],
         'grand_total': grand_total,
         'grand_product_total': grand_product_total,
-        'grand_plan_total': grand_plan_total,
+        'total_plan': total_plan,
+        'total_product': total_product,
         
     }
 
