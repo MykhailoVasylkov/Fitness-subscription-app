@@ -1,6 +1,6 @@
 # I used code snippet form Boutique Ado 
 from django.contrib import admin
-from .models import Order, OrderLineItem
+from .models import Order, OrderLineItem, Subscription, SubscriptionLineItem
 
 
 class OrderLineItemAdminInline(admin.TabularInline):
@@ -30,3 +30,24 @@ class OrderAdmin(admin.ModelAdmin):
     ordering = ('-date',)
 
 admin.site.register(Order, OrderAdmin)
+
+
+class SubscriptionLineItemInline(admin.TabularInline):
+    model = SubscriptionLineItem
+    readonly_fields = ('plan', 'quantity')
+    extra = 0
+
+
+class SubscriptionAdmin(admin.ModelAdmin):
+    inlines = [SubscriptionLineItemInline]
+
+    readonly_fields = ('subscription_number', 'original_bag', 'stripe_pid', 'subscription_total', 'date',)
+    
+    fields = ('subscription_number', 'date', 'user_profile', 'full_name',
+              'email', 'original_bag', 'stripe_pid', 'subscription_total')
+    
+    list_display = ('subscription_number', 'subscription_total', 'full_name', 'email', 'date',)
+    
+    ordering = ('-date',)
+
+admin.site.register(Subscription, SubscriptionAdmin)
