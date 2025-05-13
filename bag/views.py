@@ -59,17 +59,16 @@ def add_plan_to_bag(request, plan_id):
     quantity = int(request.POST.get('quantity', 1))
     plan_bag = request.session.get('plan_bag', {})
 
-    if len(plan_bag) >= 1:
-        messages.error(request, "You can only add one subscription plan to your bag.")
-    else:
+    if plan:
         if plan_id in plan_bag:
             messages.info(request, f'Plan {plan.name} already in the bag')
         else:
-            plan_bag[plan_id] = {'quantity': quantity}
+            plan_bag[plan_id] = {'quantity': 1}
             messages.success(request, f'Added plan {plan.name} to your bag')
        
     request.session['plan_bag'] = plan_bag
     return redirect(redirect_url)
+
 
 
 def adjust_bag(request, item_id):

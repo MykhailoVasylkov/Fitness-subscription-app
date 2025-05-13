@@ -102,7 +102,7 @@
                         <!-- A Stripe card element will go here -->
                         <div class="mb-3" id="product-card-element"></div>
                         <!-- Used to display form errors -->
-                        <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                        <div class="mb-3 text-danger" id="product-card-errors" role="alert"></div>
                         <!-- Pass the client secret to the view so we can get the payment intent id -->
                         <input type="hidden" value="{{ product_client_secret }}" name="product_client_secret">
                     </fieldset>
@@ -134,7 +134,7 @@
 
             {% if plan_bag %}
             <div class="col-12 col-lg-6 mb-5">
-                <h3 class="text-uppercase mb-4">Plan Checkout</h3>
+                <h3 class="text-uppercase mb-4">Plans Checkout</h3>
                 <p class="text-light">Order Summary ({{ plan_count }})</p>
                 <div class="row">
                     <div class="col-7 offset-2">
@@ -206,7 +206,7 @@
                         <!-- A Stripe card element will go here -->
                         <div class="mb-3" id="subscription-card-element"></div>
                         <!-- Used to display form errors -->
-                        <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                        <div class="mb-3 text-danger" id="subscription-card-errors" role="alert"></div>
                         <!-- Pass the client secret to the view so we can get the payment intent id -->
                         <input type="hidden" value="{{ subscription_client_secret }}" name="subscription_client_secret">
                     </fieldset>
@@ -248,7 +248,7 @@
 {% block postloadjs %}
     {{ block.super }}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
-    {{ product_client_secret|json_script:"id_product_client_secret" }} <!--был простро id_client_secret-->
+    {{ product_client_secret|json_script:"id_product_client_secret" }}
     {{ subscription_client_secret|json_script:"id_subscription_client_secret" }}
     <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}

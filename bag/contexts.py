@@ -27,9 +27,6 @@ def bag_contents(request):
     product_bag = request.session.get('product_bag', {})
     plan_bag = request.session.get('plan_bag', {})
 
-    if len(plan_bag) > 1:
-        messages.error(request, "You can only purchase one subscription plan at a time.")
-
     delivery_settings_data = delivery_settings(request)
 
     for item_id, item_data in product_bag.items():
@@ -79,6 +76,7 @@ def bag_contents(request):
     
     grand_total = delivery + total
     grand_product_total = delivery + total_product
+    grand_plan_total = total_plan
     
     context = {
         'product_items': product_items,
@@ -94,7 +92,9 @@ def bag_contents(request):
         'grand_product_total': grand_product_total,
         'total_plan': total_plan,
         'total_product': total_product,
-        
+        'grand_plan_total': grand_plan_total,
+        'product_bag': product_bag,
+        'plan_bag': plan_bag,    
     }
 
     return context

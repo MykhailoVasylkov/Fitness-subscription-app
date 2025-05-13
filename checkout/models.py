@@ -4,7 +4,6 @@ import uuid
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
-from datetime import timedelta
 
 from django_countries.fields import CountryField
 
@@ -95,27 +94,45 @@ class OrderLineItem(models.Model):
     
 
 class Subscription(models.Model):
-    STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('canceled', 'Canceled'),
-        ('expired', 'Expired'),
-        ('paused', 'Paused'),
-    ]
-    subscription_number = models.CharField(max_length=255, unique=True, default=uuid.uuid4)
+    subscription_number = models.CharField(max_length=32, null=False, editable=False)
+    date = models.DateTimeField(auto_now_add=True)
     full_name = models.CharField(max_length=50, null=False, blank=False)
     email = models.EmailField(max_length=254, null=False, blank=False)
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='subscriptions')
-    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name='subscriptions')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
-    start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(null=True, blank=True)
+    subscription_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     original_bag = models.TextField(null=False, blank=False, default='')
-    stripe_sid = models.CharField(max_length=255, null=True, blank=True)
+    stripe_pid = models.CharField(max_length=255, null=True, blank=True)
+
+    def _generate_subscription_number(self):
+        """
+        Generate a random, unique subscription number using UUID
+        """
+        return uuid.uuid4().hex.upper()
+
+    def save(self, *args, **kwargs):
+        # Generate subscription number if it is not set
+        if not self.subscription_number:
+            self.subscription_number = self._generate_subscription_number()
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Subscription {self.subscription_id} - {self.plan.name} ({self.user_profile.user.username})"
-    
+        return f"Subscription {self.subscription_number} ({self.user_profile.user.username})"
+
+
+class SubscriptionLineItem(models.Model):
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE, related_name='lineitems')
+    plan = models.ForeignKey(SubscriptionPlan, null=False, blank=False, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    lineitem_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
+
     def save(self, *args, **kwargs):
-        if self.plan and not self.end_date:
-            self.end_date = self.start_date + timedelta(weeks=self.plan.duration_weeks)
+        """
+        Override the original save method to set the lineitem total
+        and update the order total.
+        """
+        self.lineitem_total = self.plan.price * self.quantity
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.plan.name} (x{self.quantity})"
