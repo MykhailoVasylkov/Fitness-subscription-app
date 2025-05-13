@@ -75,9 +75,6 @@ if (subscriptionCardElement) {
     });
 }
 
-
-
-
 // Handle form submissions
 ['product-payment-form', 'subscription-payment-form'].forEach(function(formId) {
     var form = document.getElementById(formId);

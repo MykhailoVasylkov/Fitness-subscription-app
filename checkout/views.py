@@ -5,11 +5,13 @@ from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpR
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
+from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
 
 from .forms import OrderForm, SubscriptionForm
-from .models import Order, OrderLineItem, Subscription
+from .models import Order, OrderLineItem, Subscription, SubscriptionLineItem
+from plans.models import SubscriptionPlan
 from products.models import Product
 from profiles.forms import UserProfileForm
 from profiles.models import UserProfile
@@ -33,6 +35,7 @@ def cache_checkout_data(request):
             stripe.PaymentIntent.modify(product_pid, metadata={
                 'product_bag': json.dumps(request.session.get('product_bag', {})),
                 'save_info': request.POST.get('save_info'),
+                'bag_type': 'product',
                 'username': request.user,
             })
 
@@ -41,6 +44,7 @@ def cache_checkout_data(request):
             stripe.PaymentIntent.modify(subscription_pid, metadata={
                 'plan_bag': json.dumps(request.session.get('plan_bag', {})),
                 'save_info': request.POST.get('save_info'),
+                'bag_type': 'subscription',
                 'username': request.user,
             })
 
@@ -51,7 +55,6 @@ def cache_checkout_data(request):
         return HttpResponse(content=e, status=400)
 
 
-
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
@@ -60,12 +63,11 @@ def checkout(request):
     plan_bag = request.session.get('plan_bag', {})
 
     if request.method == 'POST':
-        form_type = request.POST.get('form_type', '')
         if not product_bag and not plan_bag:
             messages.error(request, "There's nothing in your bag at the moment")
             return redirect(reverse('home'))
         
-        if form_type == 'product':
+        if product_bag:
             form_data = {
                 'full_name': request.POST['full_name'],
                 'email': request.POST['email'],
@@ -123,15 +125,7 @@ def checkout(request):
                 messages.error(request, 'There was an error with your form. Please double check your information.')
 
         # Subscription processing
-        elif form_type == 'subscription':
-
-            # Get or create user profile for authenticated users
-            if request.user.is_authenticated:
-                user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
-            else:
-                # If user not logged in
-                user_profile = None
-                
+        if plan_bag:
             form_data = {
                 'full_name': request.POST.get('full_name', ''),
                 'email': request.POST.get('email', ''),
@@ -141,46 +135,60 @@ def checkout(request):
             if subscription_form.is_valid():
                 pid = request.POST.get('subscription_client_secret', '').split('_secret')[0]
                 original_bag = json.dumps(plan_bag)
+                print(plan_bag)
+
+                user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
 
                 try:
-                                           
-                    for item_id, quantity in plan_bag.items():
+                    # Create a subscription object
+                    subscription = subscription_form.save(commit=False)
+                    subscription.stripe_pid = pid
+                    subscription.original_bag = original_bag
+                    subscription.user_profile = user_profile
+                    subscription.save()
+
+                    for item_id, item_data in plan_bag.items():
                         try:
                             plan = SubscriptionPlan.objects.get(id=item_id)
 
-                            # Creating a subscription
-                            subscription = subscription_form.save(commit=False)
-                            subscription.plan = plan
-                            subscription.stripe_sid = pid
-                            subscription.original_bag = original_bag
-                            subscription.user_profile = user_profile
-                            subscription.start_date = timezone.now()
-                            subscription.end_date = timezone.now() + timedelta(weeks=plan.duration_weeks)
-                            subscription.save()
-                        
+                            quantity = item_data.get('quantity', 1)
+
+                            # Create a line item for the plan
+                            line_item = SubscriptionLineItem(
+                                subscription=subscription,
+                                plan=plan,
+                                quantity=quantity,
+                            )
+                            line_item.save()
+
                         except SubscriptionPlan.DoesNotExist:
                             messages.error(request, (
                                 f"Plan with ID {item_id} wasn't found in our database. "
                                 "Please call us for assistance!")
                             )
-                            subscription.delete()
+                            subscription.delete()  # Rollback subscription if any plan is missing
                             return redirect(reverse('view_bag'))
-                    
-                        # Save user information (if necessary)
+
+                    # Get the subscription number
+                    subscription_number = subscription.subscription_number
+
+                    # Update the total subscription amount after adding all lineitems
+                    subscription.subscription_total = subscription.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
+                    subscription.save()
+
+                    # Save user information (if necessary)
                     request.session['save_info'] = 'save-info' in request.POST
 
-                    # Redirecting to the page of successful ordering
-                    return redirect(reverse('subscription_success', args=[subscription.subscription_number]))
+                    # Redirect to the successful subscription page
+                    return redirect(reverse('subscription_success', args=[subscription_number]))
 
-                
                 except Exception as e:
-                    messages.error(request, f"An error occurred while processing your subscriptions: {str(e)}")
+                    messages.error(request, f"An error occurred while processing your order: {str(e)}")
                     return redirect(reverse('view_bag'))
-            
+
             else:
                 messages.error(request, 'There was an error with your form. Please double check your information.')
-        else:
-            messages.error(request, 'Unknown form type. Please try again.')
+
 
     # If the request is not post, prepare forms for the render
     if request.user.is_authenticated:
@@ -230,20 +238,14 @@ def checkout(request):
 
     if plan_bag:
         # Calculate the amount for subscriptions
-        subscription_total = current_bag['total_plan']
+        subscription_total = current_bag['grand_plan_total']
         stripe_subscription_total = round(subscription_total * 100)
 
         # Create a payment intention for subscriptions
         subscription_intent = stripe.PaymentIntent.create(
             amount=stripe_subscription_total,
             currency=settings.STRIPE_CURRENCY,
-            metadata={
-                'user_email': request.user.email if request.user.is_authenticated else form_data['email'],
-                'plan_bag': json.dumps(plan_bag),
-                'username': request.user.username if request.user.is_authenticated else form_data['full_name'],
-            },
         )
-
 
     context = {
         'order_form': order_form,
@@ -251,9 +253,6 @@ def checkout(request):
         'stripe_public_key': stripe_public_key,
         'product_client_secret': product_intent.client_secret if product_bag else '',
         'subscription_client_secret': subscription_intent.client_secret if plan_bag else '',
-        'product_bag': product_bag,
-        'plan_bag': plan_bag,
-    
     }
 
     return render(request, 'checkout/checkout.html', context)
@@ -306,8 +305,9 @@ def checkout_success(request, order_number=None, subscription_number=None):
             subscription.user_profile = profile
             subscription.save()
 
-        messages.success(request, f'Subscription successfully processed! \
-            You have successfully subscribed to {subscription.plan.name}.')
+        messages.success(request, f'Order successfully processed! \
+            Your order number is {subscription_number}. A confirmation \
+            email will be sent to {subscription.email}.')
 
         # Cleaning the basket of subscriptions
         if 'plan_bag' in request.session:
