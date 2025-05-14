@@ -19,7 +19,7 @@
     </div>
     <div class="row">
         <div class="col-12 col-lg-6">
-            <p class="text-light fs-5">User Information</p>
+            <p class="text-light fs-4">User Information</p>
             <form class="mt-1" action="{% url 'profile' %}" method="POST" id="profile-update-form"
                 enctype="multipart/form-data">
                 {% csrf_token %}
@@ -32,48 +32,167 @@
         </div>
 
         <div class="col-12 col-lg-6">
-            <p class="text-light fs-5">Order History</p>
-            <div class="order-history table-responsive">
-                <table class="table custom-table table-sm table-borderlesst">
-                    <thead>
-                            <tr>
-                                <th>Order Number</th>
-                                <th>Date</th>
-                                <th>Items</th>
-                                <th>OrderTotal</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for order in orders %}
+            {% if orders %}
+            <div>
+                <p class="text-light fs-4">
+                    <a class="text-light text-decoration-none mt-3" data-bs-toggle="collapse" href="#order-collapse"
+                        role="button">
+                        Order History <i class="fa-solid fa-caret-down"></i>
+                    </a>
+                </p>
+                <div class="order-history table-responsive collapse" id="order-collapse">
+                    <table class="table custom-table table-sm table-borderless">
+                        <thead>
                                 <tr>
-                                    <td>
-                                        <a href="{% url 'order_history' order.order_number %}"
-                                        title="{{ order.order_number }}">
-                                            {{ order.order_number|truncatechars:6 }}
-                                        </a>
-                                    </td>
-                                    <td>{{ order.date }}</td>
-                                    <td>
-                                        <ul class="list-unstyled">
-                                            {% for item in order.lineitems.all %}
-                                                <li class="small">
-                                                    {% if item.product.has_sizes %}
-                                                        Size {{ item.product_size|upper }}
-                                                    {% endif %}{{ item.product.name }} x{{ item.quantity }}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </td>
-                                    <td>${{ order.grand_total }}</td>
-                                    <td>{{ order.get_status_display }}</td>
+                                    <th>Order Number</th>
+                                    <th>Date</th>
+                                    <th>Items</th>
+                                    <th>Order Total</th>
+                                    <th>Status</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'order_history' order.order_number %}"
+                                            title="{{ order.order_number }}">
+                                                {{ order.order_number|truncatechars:6 }}
+                                            </a>
+                                        </td>
+                                        <td>{{ order.date }}</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                {% for item in order.lineitems.all %}
+                                                    <li class="small">
+                                                        {% if item.product.has_sizes %}
+                                                            Size {{ item.product_size|upper }}
+                                                        {% endif %}{{ item.product.name }} x{{ item.quantity }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td>${{ order.grand_total }}</td>
+                                        <td>{{ order.get_status_display }}</td>
+                                    </tr>
+                                    {% if not forloop.last %}
+                                        <tr>
+                                            <td colspan="4">
+                                                <hr class="m-0 border-top border-light">
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr>
+            {% endif %}
+
+            {% if subscriptions %}
+            <div>
+                <p class="text-light fs-4 {% if orders %} mt-5 {% endif %}">
+                    <a class="text-light text-decoration-none mt-3" data-bs-toggle="collapse" href="#plans-order-collapse"
+                        role="button">
+                        Plans Order History <i class="fa-solid fa-caret-down"></i>
+                    </a>
+                </p>
+                <div class="order-history table-responsive collapse" id="plans-order-collapse">
+                    <table class="table custom-table table-sm table-borderless">
+                        <thead>
+                                <tr>
+                                    <th>Order Number</th>
+                                    <th>Date</th>
+                                    <th>{% if subscriptions.lineitems.all|length == 1 %}Plan{% else %}Plans{% endif %}</th>
+                                    <th>Order Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subscription in subscriptions %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'plan_order_history' subscription.subscription_number %}"
+                                            title="{{ subscription.subscription_number }}">
+                                                {{ subscription.subscription_number|truncatechars:6 }}
+                                            </a>
+                                        </td>
+                                        <td>{{ subscription.date }}</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                {% for item in subscription.lineitems.all %}
+                                                    <li class="small">
+                                                    {{ item.plan.name }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td>${{ subscription.subscription_total }}</td>
+                                    </tr>
+                                    {% if not forloop.last %}
+                                        <tr>
+                                            <td colspan="4">
+                                                <hr class="m-0 border-top border-light">
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr>
+
+                <!--Plans content-->
+            <div>
+                <p class="text-light fs-4 mt-5">Plans Content</p>
+
+                <div id="planPreview">
+                    {% for subscription in subscriptions %}
+                        {% for lineitem in subscription.lineitems.all %}
+                            <div class="mb-3">
+                                <!-- Subscription Header -->
+                                <p class="text-light fs-5">
+                                    <a class="text-light text-decoration-none" data-bs-toggle="collapse" 
+                                        href="#subscription-{{ lineitem.id }}" role="button">
+                                        {{ lineitem.plan.name }} <i class="fa-solid fa-caret-down"></i>
+                                    </a>
+                                </p>
+
+                                <!-- Collapsible Content -->
+                                <div class="collapse" id="subscription-{{ lineitem.id }}">
+                                    <ul>
+                                        {% for week in lineitem.plan.weeks.all %}
+                                            <li>
+                                                <h3 class="text-light">Week {{ week.number }}</h3>
+                                                <ul>
+                                                    {% for day in week.days.all %}
+                                                        <li>
+                                                            <h4 class="text-light">{{ day.get_name_display }}</h4>
+                                                            <ul>
+                                                                {% for content_item in day.content_items.all %}
+                                                                    <li class="text-light">
+                                                                        {{ content_item.key }}: {{ content_item.value }}
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% if not forloop.last %}
+                            <hr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
 
-            
+            {% endif %}
         </div>
     </div>
     {% endblock %}

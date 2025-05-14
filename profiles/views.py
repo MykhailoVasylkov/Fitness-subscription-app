@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import UserProfile
 from .forms import UserProfileForm
 
-from checkout.models import Order
+from checkout.models import Order, Subscription
 
 @login_required
 def profile(request):
@@ -46,6 +46,22 @@ def order_history(request, order_number):
     template = 'checkout/checkout_success.html'
     context = {
         'order': order,
+        'from_profile': True,
+    }
+
+    return render(request, template, context)
+
+def plan_order_history(request, subscription_number):
+    subscription = get_object_or_404(Subscription, subscription_number=subscription_number)
+
+    messages.info(request, (
+        f'This is a past confirmation for order number {subscription_number}. '
+        'A confirmation email was sent on the order date.'
+    ))
+
+    template = 'checkout/checkout_success.html'
+    context = {
+        'subscription': subscription,
         'from_profile': True,
     }
 
