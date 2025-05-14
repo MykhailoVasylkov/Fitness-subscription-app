@@ -30,17 +30,17 @@ Hello {{ subscription.full_name }}!
 
 This is a confirmation of your order at Fit Hub. Your order information is below:
 
-Subscription Number: {{ subscription.subscription_number }}
-Subscription Date: {{ subscription.date }}
+Order Number: {{ subscription.subscription_number }}
+Order Date: {{ subscription.date }}
 
-Subscription Total: ${{ subscription.subscription_total }}
+Order Total: ${{ subscription.subscription_total }}
 
-Subscription {% if subscription.lineitems.all|length == 1 %}Plan{% else %}Plans{% endif %}: 
+Order {% if subscription.lineitems.all|length == 1 %}Plan{% else %}Plans{% endif %}: 
 {% for item in subscription.lineitems.all %}
 - {{ item.plan.name }}
 {% endfor %}
 
-Your subscription {% if subscription.lineitems.all|length == 1 %}plan is{% else %}plans are{% endif %} available on your profile page.
+Your {% if subscription.lineitems.all|length == 1 %}plan is{% else %}plans are{% endif %} available on your profile page.
 
 If you have any questions, feel free to contact us at {{ contact_email }}.
 
