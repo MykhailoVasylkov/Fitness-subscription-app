@@ -6,8 +6,6 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
 from django.db.models import Sum
-from django.utils import timezone
-from datetime import timedelta
 
 from .forms import OrderForm, SubscriptionForm
 from .models import Order, OrderLineItem, Subscription, SubscriptionLineItem
@@ -67,7 +65,7 @@ def checkout(request):
             messages.error(request, "There's nothing in your bag at the moment")
             return redirect(reverse('home'))
         
-        if product_bag:
+        if product_bag and not plan_bag:
             form_data = {
                 'full_name': request.POST['full_name'],
                 'email': request.POST['email'],

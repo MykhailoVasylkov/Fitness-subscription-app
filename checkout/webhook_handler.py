@@ -27,10 +27,27 @@ class StripeWH_Handler:
         cust_email = order.email
         subject = render_to_string(
             'checkout/confirmation_emails/confirmation_email_subject.txt',
-            {'order': order})
+            {'order': order}).strip()
         body = render_to_string(
             'checkout/confirmation_emails/confirmation_email_body.txt',
             {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL})
+        
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [cust_email]
+        )
+
+    def _send_confirmation_email_subscription(self, subscription):
+        """Send the user a confirmation email"""
+        cust_email = subscription.email
+        subject = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_subject.txt',
+            {'subscription': subscription}).strip()
+        body = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_body.txt',
+            {'subscription': subscription, 'contact_email': settings.DEFAULT_FROM_EMAIL})
         
         send_mail(
             subject,
@@ -197,7 +214,7 @@ class StripeWH_Handler:
                     attempt += 1
                     time.sleep(1)
             if subscription_exists:
-                self._send_confirmation_email(subscription)
+                self._send_confirmation_email_subscription(subscription)
                 return HttpResponse(
                     content=f'Webhook received: {event["type"]} | SUCCESS: Verified order already in database',
                     status=200)
@@ -227,7 +244,7 @@ class StripeWH_Handler:
                     return HttpResponse(
                         content=f'Webhook received: {event["type"]} | ERROR: {e}',
                         status=500)
-            self._send_confirmation_email(subscription)
+            self._send_confirmation_email_subscription(subscription)
             return HttpResponse(
                 content=f'Webhook received: {event["type"]} | SUCCESS: Created order in webhook',
                 status=200)

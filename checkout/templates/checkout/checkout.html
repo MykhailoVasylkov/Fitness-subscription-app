@@ -195,8 +195,14 @@
 							{% else %}
 								<label class="form-check-label" for="id-save-info">
                                     <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or 
-                                    <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
+                                    <a class="text-info" href="{% url 'account_login' %}">login</a> to complete your order
                                 </label>
+                                <!-- Script to disable form fields for not authenticated users -->
+                                <script>
+                                    document.querySelectorAll('#subscription-payment-form input, #subscription-payment-form button, #subscription-payment-form select, #subscription-payment-form textarea').forEach(function(el) {
+                                        el.disabled = true;
+                                    });
+                                </script>
 							{% endif %}
 						</div>
                     </fieldset>

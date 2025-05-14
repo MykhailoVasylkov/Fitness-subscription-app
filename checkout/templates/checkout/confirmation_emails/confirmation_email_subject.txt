@@ -1,1 +1,5 @@
+{% if order %}
 Fit Hub Confirmation for Order Number {{ order.order_number }}
+{% elif subscription %}
+Fit Hub Confirmation for Subscription Number {{ subscription.subscription_number }}
+{% endif %}
