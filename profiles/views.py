@@ -46,7 +46,7 @@ def profile(request):
         'orders': orders,
         'subscriptions': subscriptions,
         'on_profile_page': True,
-        "completed_tokens_json": completed_tokens_json,
+        'completed_tokens_json': completed_tokens_json,
     }
 
     return render(request, template, context)
