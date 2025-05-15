@@ -83,3 +83,35 @@ def plan_order_history(request, subscription_number):
     }
 
     return render(request, template, context)
+
+
+@login_required
+def save_achievement(request):
+    if request.method == "POST":
+        user = request.user
+        plan_name = request.POST.get("plan_name")
+        week_number = request.POST.get("week_number")
+        day_name = request.POST.get("day_name")
+        content_item = request.POST.get("content_key")
+        checked = request.POST.get("checked") == 'true'
+
+        if checked:
+            # If cheked - add 
+            achievement, created = Achievement.objects.get_or_create(
+                user=user,
+                plan_name=plan_name,
+                week_number=week_number,
+                day_name=day_name,
+                content_item=content_item
+            )
+        else:
+            # If removed - delete
+            Achievement.objects.filter(
+                user=user,
+                plan_name=plan_name,
+                week_number=week_number,
+                day_name=day_name,
+                content_item=content_item
+            ).delete()
+
+        return JsonResponse({"success": True})

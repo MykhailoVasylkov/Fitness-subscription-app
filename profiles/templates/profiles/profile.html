@@ -175,7 +175,13 @@
                                             <ul>
                                                 {% for content_item in day.content_items.all %}
                                                 <li class="text-light">
-                                                
+                                                    <input type="checkbox" class="content-checkbox"
+                                                        id="chk-{{ lineitem.id }}-{{ week.id }}-{{ day.id }}-{{ content_item.id }}"
+                                                        name="achievement-{{ lineitem.id }}-{{ week.id }}-{{ day.id }}"
+                                                        data-plan="{{ lineitem.plan.name }}"
+                                                        data-week="{{ week.number }}"
+                                                        data-day="{{ day.get_name_display }}"
+                                                        data-key="{{ content_item.key }}">
                                                     {{ content_item.key }}: {{ content_item.value }}
                                                 </li>
                                                 {% endfor %}
@@ -264,6 +270,68 @@
             }
         }
 
+    </script>
+
+    <!-- Script saving progress. Used Chat-GPT -->
+    <script>
+        const saveAchievementUrl = "{% url 'save_achievement' %}";
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkboxes = document.querySelectorAll(".content-checkbox");
+            const csrfToken = document.querySelector("#csrf-form input[name='csrfmiddlewaretoken']").value;
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", function () {
+                    const isChecked = this.checked;
+                    const planName = this.dataset.plan;
+                    const weekNumber = this.dataset.week;
+                    const dayName = this.dataset.day;
+                    const contentKey = this.dataset.key;
+
+                    // Forming the request body with a checked flag (true or false)
+                    const body = `plan_name=${encodeURIComponent(planName)}&week_number=${encodeURIComponent(weekNumber)}&day_name=${encodeURIComponent(dayName)}&content_key=${encodeURIComponent(contentKey)}&checked=${isChecked}`;
+
+                    fetch(saveAchievementUrl, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrfToken,
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: body
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert("Failed to save the achievement. Please try again.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+
+                    });
+                });
+            });
+        });
+    </script>
+
+    <!-- Script compares checked day content records with those existing in the DB -->
+    <script>
+        const completedTokens = JSON.parse('{{ completed_tokens_json|default:"[]"|escapejs }}');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.content-checkbox').forEach(checkbox => {
+            const plan = checkbox.dataset.plan;
+            const week = checkbox.dataset.week;
+            const day = checkbox.dataset.day;
+            const key = checkbox.dataset.key;
+
+            const token = `${plan}|${week}|${day}|${key}`;
+
+            if (completedTokens.includes(token)) {
+                checkbox.checked = true;
+            }
+            });
+        });
     </script>
 
     {% endblock %}
