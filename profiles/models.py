@@ -39,3 +39,15 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(user=instance)
     # Existing users: just save the profile
     instance.userprofile.save()
+
+
+class Achievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    plan_name = models.CharField(max_length=255)
+    week_number = models.IntegerField()
+    day_name = models.CharField(max_length=255)
+    content_item = models.CharField(max_length=255)
+    date_completed = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.plan_name} - Week {self.week_number} - {self.day_name} - {self.content_item}"

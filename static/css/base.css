@@ -220,3 +220,10 @@ select option[value=""] {
         max-width: 100%;
     }
 }
+
+/* Border on the midle in the profile page */
+@media (min-width: 992px) {
+    .custom-border-left-lg {
+      border-left: 1px solid #ffffff;
+    }
+}
