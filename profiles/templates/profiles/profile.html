@@ -3,9 +3,11 @@
 
 {% block extra_css %}
 {% endblock %}
+{% block extra_js %}
+    <script src="{% static 'path/to/your/websocet.js' %}"></script>
+{% endblock %}
 
 {% block page_header %}
-
 {% endblock %}
 
 {% block content %}
@@ -209,7 +211,7 @@
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/countryfield.js' %}"></script>
 
-    <!-- Script to show img preview -->
+    <!-- Script to show img preview. Used Chat-GPT -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const fileInput = document.getElementById('new-image');
@@ -238,7 +240,7 @@
         });
     </script>
 
-    <!-- Script to handle removing avatar on the client side -->
+    <!-- Script to handle removing avatar on the client side. Used Chat-GPT -->
     <script>
         const defaultAvatar = "/media/default_avatar.jpg";
 
@@ -314,7 +316,7 @@
         });
     </script>
 
-    <!-- Script compares checked day content records with those existing in the DB -->
+    <!-- Script compares checked day content records with those existing in the DB. Used Chat-GPT -->
     <script>
         const completedTokens = JSON.parse('{{ completed_tokens_json|default:"[]"|escapejs }}');
 
@@ -333,5 +335,6 @@
             });
         });
     </script>
+
 
     {% endblock %}

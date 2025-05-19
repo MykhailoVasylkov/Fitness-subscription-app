@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -21,6 +21,7 @@ def profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated successfully')
+            return redirect('profile')
         else:
             messages.error(request, 'Update failed. Please ensure the form is valid.')
     else:
@@ -96,7 +97,7 @@ def save_achievement(request):
         checked = request.POST.get("checked") == 'true'
 
         if checked:
-            # If cheked - add 
+            # If cheked - add
             achievement, created = Achievement.objects.get_or_create(
                 user=user,
                 plan_name=plan_name,
