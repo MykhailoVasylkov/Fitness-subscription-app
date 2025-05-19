@@ -47,10 +47,10 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
 
             # Forming a message for broadcasting to the community
             community_message = {
-                "user": profile.nickname if profile else (user.username if user.is_authenticated else "Anonymous"),
+                "user": (profile.nickname if profile and profile.nickname else user.username) if user.is_authenticated else "Anonymous",
                 "message": f"The goal '{data.get('content_item', '')}' in plan '{data.get('plan_name', '')}' for week {data.get('week_number', '')} (on {day_name}) was {data.get('status', '')}",
                 "timestamp": now,
-                "avatar": data.get('avatar', '/media/default_avatar.jpg') 
+                "avatar": data.get('avatar', '/media/avatars/default_avatar.jpg') 
             }
 
             # Save massage to db 

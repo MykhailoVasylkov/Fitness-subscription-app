@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     delivery information and order history
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, help_text='Upload your image', default='avatars/default_avatar.png')
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, help_text='Upload your image', default='avatars/default_avatar.jpg')
     nickname = models.CharField(max_length=30, null=True, blank=True)
     full_name = models.CharField(max_length=30, null=True, blank=True)
     email = models.EmailField(max_length=254, unique=True, blank=True, null=True)
