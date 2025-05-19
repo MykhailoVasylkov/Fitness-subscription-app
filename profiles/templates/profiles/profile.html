@@ -173,7 +173,7 @@
                                     <ul>
                                         {% for day in week.days.all %}
                                         <li>
-                                            <h4 class="text-light">{{ day.get_name_display }}</h4>
+                                            <h4 class="text-light">{{ day.name|capfirst }}</h4>
                                             <ul>
                                                 {% for content_item in day.content_items.all %}
                                                 <li class="text-light">
@@ -182,7 +182,7 @@
                                                         name="achievement-{{ lineitem.id }}-{{ week.id }}-{{ day.id }}"
                                                         data-plan="{{ lineitem.plan.name }}"
                                                         data-week="{{ week.number }}"
-                                                        data-day="{{ day.get_name_display }}"
+                                                        data-day="{{ day.name }}"
                                                         data-key="{{ content_item.key }}">
                                                     {{ content_item.key }}: {{ content_item.value }}
                                                 </li>

@@ -9,7 +9,7 @@ from django.db.models import Sum
 
 from .forms import OrderForm, SubscriptionForm
 from .models import Order, OrderLineItem, Subscription, SubscriptionLineItem
-from plans.models import SubscriptionPlan
+from plans.models import SubscriptionPlan, clone_plan
 from products.models import Product
 from profiles.forms import UserProfileForm
 from profiles.models import UserProfile
@@ -150,7 +150,7 @@ def checkout(request):
 
                     for item_id, item_data in plan_bag.items():
                         try:
-                            plan = SubscriptionPlan.objects.get(id=item_id)
+                            plan = clone_plan(SubscriptionPlan.objects.get(id=item_id))
 
                             quantity = item_data.get('quantity', 1)
 

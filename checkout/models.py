@@ -10,7 +10,7 @@ from django_countries.fields import CountryField
 from products.models import Product
 from profiles.models import UserProfile
 from settings.models import DeliverySettings
-from plans.models import SubscriptionPlan
+from plans.models import SubscriptionPlanSnapshot
 
 
 class Order(models.Model):
@@ -123,7 +123,7 @@ class Subscription(models.Model):
 
 class SubscriptionLineItem(models.Model):
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE, related_name='lineitems')
-    plan = models.ForeignKey(SubscriptionPlan, null=False, blank=False, on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlanSnapshot, null=False, blank=False, on_delete=models.CASCADE, default=1)
     quantity = models.PositiveIntegerField(default=1)
     lineitem_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
 

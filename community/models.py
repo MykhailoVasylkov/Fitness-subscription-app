@@ -7,4 +7,4 @@ class CommunityMessage(models.Model):
     avatar = models.URLField(default='/media/avatars/default_avatar.jpg')
 
     def __str__(self):
-        return f"{self.user}: {self.message[:50]}"
+        return f"{self.user}: {self.message[:10]}"
