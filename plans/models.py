@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import Avg
+from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class SubscriptionPlan(models.Model):
@@ -23,6 +26,10 @@ class SubscriptionPlan(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def average_rating(self):
+        return self.plan_reviews.filter(approved=True).aggregate(Avg('rating'))['rating__avg'] or 0
+    
 
 class Week(models.Model):
     plan = models.ForeignKey(SubscriptionPlan, related_name="weeks", on_delete=models.CASCADE)
@@ -57,7 +64,7 @@ class SubscriptionPlanSnapshot(models.Model):
 
     def __str__(self):
         return f"{self.name} (Snapshot)"
-    
+
 
 class WeekSnapshot(models.Model):
     plan_snapshot = models.ForeignKey(SubscriptionPlanSnapshot, related_name="weeks", on_delete=models.CASCADE)
@@ -113,3 +120,29 @@ def clone_plan(plan):
                 )
 
     return plan_snapshot
+
+"""
+Plan Review model for storing user reviews with rating (1-5),
+body, approval status, and timestamps.
+"""
+class PlanReview(models.Model):
+    plan = models.ForeignKey(SubscriptionPlan, related_name="plan_reviews", on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Rating must be between 1 and 5"
+    )
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    approved = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_on"]
+
+    def __str__(self):
+        return f"Review by {self.author.username} - {self.rating}⭐"
