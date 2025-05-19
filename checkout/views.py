@@ -61,11 +61,14 @@ def checkout(request):
     plan_bag = request.session.get('plan_bag', {})
 
     if request.method == 'POST':
+        is_product_order = bool(product_bag) and 'product_client_secret' in request.POST
+        is_subscription_order = bool(plan_bag) and 'subscription_client_secret' in request.POST
+								
         if not product_bag and not plan_bag:
             messages.error(request, "There's nothing in your bag at the moment")
             return redirect(reverse('home'))
         
-        if product_bag and not plan_bag:
+        if is_product_order:
             form_data = {
                 'full_name': request.POST['full_name'],
                 'email': request.POST['email'],
@@ -123,7 +126,7 @@ def checkout(request):
                 messages.error(request, 'There was an error with your form. Please double check your information.')
 
         # Subscription processing
-        if plan_bag:
+        elif is_subscription_order:
             form_data = {
                 'full_name': request.POST.get('full_name', ''),
                 'email': request.POST.get('email', ''),
@@ -193,7 +196,7 @@ def checkout(request):
         try:
             profile = UserProfile.objects.get(user=request.user)
             order_form = OrderForm(initial={
-                'full_name': profile.user.get_full_name(),
+                'full_name': profile.full_name,
                 'email': profile.user.email,
                 'phone_number': profile.default_phone_number,
                 'country': profile.default_country,
@@ -205,7 +208,7 @@ def checkout(request):
             })
 
             subscription_form = SubscriptionForm(initial={
-                'full_name': profile.user.get_full_name(),
+                'full_name': profile.full_name,
                 'email': profile.user.email,
             })
 
@@ -273,6 +276,8 @@ def checkout_success(request, order_number=None, subscription_number=None):
 
             if save_info:
                 profile_data = {
+                    'full_name': order.full_name,
+                    'email': order.email,
                     'default_phone_number': order.phone_number,
                     'default_country': order.country,
                     'default_postcode': order.postcode,
@@ -294,6 +299,7 @@ def checkout_success(request, order_number=None, subscription_number=None):
             del request.session['product_bag']
 
     elif subscription_number:
+        save_info = request.session.get('save_info')
         # Successful subscription processing
         subscription = get_object_or_404(Subscription, subscription_number=subscription_number)
         context['subscription'] = subscription
@@ -302,6 +308,12 @@ def checkout_success(request, order_number=None, subscription_number=None):
             profile = UserProfile.objects.get(user=request.user)
             subscription.user_profile = profile
             subscription.save()
+
+            if save_info:
+                # Update only full_name and email
+                profile.full_name = subscription.full_name
+                profile.email = subscription.email
+                profile.save()
 
         messages.success(request, f'Order successfully processed! \
             Your order number is {subscription_number}. A confirmation \
