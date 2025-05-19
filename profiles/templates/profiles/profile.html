@@ -336,5 +336,58 @@
         });
     </script>
 
+    <!-- WebSocket. Used Chat-GPT -->
+    <script>
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const socket = new WebSocket(`${wsProtocol}://${window.location.host}/ws/achievements/`);
+        const avatar = document.getElementById('avatar-preview').src;
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("Received from server:", data);
+        };
+
+        socket.onerror = function(event) {
+            console.error("WebSocket error:", event);
+        };
+
+        socket.onclose = function(event) {
+            console.log("WebSocket closed:", event);
+        };
+
+        document.querySelectorAll('.content-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const planName = this.dataset.plan;
+                const weekNumber = this.dataset.week;
+                const dayName = this.dataset.day;
+                const contentKey = this.dataset.key;
+                const status = this.checked ? "completed" : "removed";
+
+                const message = {
+                    plan_name: planName,
+                    week_number: weekNumber,
+                    day_name: dayName,
+                    content_item: contentKey,
+                    status: status,
+                    avatar: avatar,
+                };
+
+                console.log("Sending message:", message);
+                console.log("WebSocket readyState:", socket.readyState);
+
+
+                if (socket.readyState === WebSocket.OPEN) {
+                    try {
+                        socket.send(JSON.stringify(message));
+                        console.log("Message sent:", message);
+                    } catch (error) {
+                        console.error("Error sending message:", error);
+                    }
+                } else {
+                    console.error("WebSocket is not open. Ready state:", socket.readyState);
+                }
+            });
+        });
+    </script>
 
     {% endblock %}
