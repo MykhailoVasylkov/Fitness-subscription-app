@@ -8,10 +8,116 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="container-fluid px-md-0">
+    <section class="pt-md-4 width-rule mt-5">
+        <div class="container-fluid position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-8 center"></div>
+                <div class="col-lg-4 center">
+                    <div id="community-messages" class="mt-4 border-light">
+                        
+                    </div> 
+                </div>
+            </div>   
+        </div>
+    </section>
+</div>
 {% endblock %}
 
 {% block postloadjs %}
 {{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const messagesContainer = document.getElementById('community-messages');
+        if (!messagesContainer) {
+            console.error("No messages container found!");
+            return;
+        }
+        console.log("Messages container found");
+
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        const wsUrl = `${wsProtocol}://${window.location.host}/ws/achievements/`;
+        console.log("WebSocket URL:", wsUrl);
+
+        window.socket = new WebSocket(wsUrl);
+        
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("Received from server:", data);
+
+            // The main card
+            const card = document.createElement('div');
+            card.className = 'card mb-2 p-2';
+
+            // Wrap for flex content
+            const cardBody = document.createElement('div');
+            cardBody.className = 'd-flex align-items-start gap-2 flex-wrap flex-md-nowrap';
+
+            // Avatar container
+            const avatarContainer = document.createElement('div');
+            avatarContainer.className = 'flex-shrink-0 rounded-circle overflow-hidden';
+            avatarContainer.style.width = '48px';
+            avatarContainer.style.height = '48px';
+
+            const avatarImg = document.createElement('img');
+            avatarImg.src = data.avatar;
+            avatarImg.alt = `${data.user} avatar`;
+            avatarImg.style.width = '100%';
+            avatarImg.style.height = '100%';
+            avatarImg.style.objectFit = 'cover';
+
+            avatarContainer.appendChild(avatarImg);
+
+            // The contents container
+            const messageContent = document.createElement('div');
+            messageContent.className = 'flex-grow-1';
+
+            const userEl = document.createElement('h6');
+            userEl.className = 'mb-1 fw-bold';
+            userEl.textContent = data.user;
+
+            const textEl = document.createElement('p');
+            textEl.className = 'mb-1 small text-break';
+            textEl.textContent = data.message;
+
+            const timeEl = document.createElement('small');
+            timeEl.className = 'text-muted d-block'; // d-block for transfer
+
+            timeEl.textContent = data.timestamp;
+
+            messageContent.appendChild(userEl);
+            messageContent.appendChild(textEl);
+            messageContent.appendChild(timeEl);
+
+            // Add everything to the body of the card
+            cardBody.appendChild(avatarContainer);
+            cardBody.appendChild(messageContent);
+
+            card.appendChild(cardBody);
+
+            // Add to the container
+            messagesContainer.prepend(card);
+            
+        };
+
+        socket.onopen = function() {
+            console.log('WebSocket connected');
+        };
+
+        socket.onclose = function() {
+            console.log('WebSocket disconnected');
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
+
+        // Limit the number of messages
+        if (messagesContainer.childElementCount > 20) {
+            messagesContainer.removeChild(messagesContainer.lastChild);
+        }
+    });
+</script>
 
 {% endblock %}
