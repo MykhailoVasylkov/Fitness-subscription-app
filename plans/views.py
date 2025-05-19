@@ -88,3 +88,33 @@ def plan_detail(request, plan_id):
     }
 
     return render(request, 'plans/plan_detail.html', context)
+
+
+def review_create(request):
+    """
+    A view to render PlanReviewForm and existing reviews to the plans/plan_detail.html
+    """
+    reviews = PlanReview.objects.filter(approved=True).order_by("-created_on")
+
+    user_reviews = None
+    if request.user.is_authenticated:
+        user_reviews = PlanReview.objects.filter(author=request.user)
+
+    if request.method == 'POST':
+        form = PlanReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.author = request.user
+            review.save()
+            messages.success(request, 'Review submitted and awaiting approval')
+            return redirect('contact')
+        else:
+            messages.error(request, f'Failed to submit review!')
+    else:
+        form = PlanReviewForm()
+
+    return render(request, 'plans/plan_detail.html', {
+        'form': form,
+        'reviews': reviews,
+        'user_reviews': user_reviews,
+    })

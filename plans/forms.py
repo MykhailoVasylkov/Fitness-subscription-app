@@ -2,7 +2,7 @@ from django import forms
 from .models import PlanReview
 
 
-class ReviewForm(forms.ModelForm):
+class PlanReviewForm(forms.ModelForm):
     """
     A form for creating a single review.
     """
