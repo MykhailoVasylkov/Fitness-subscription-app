@@ -10,4 +10,4 @@ class PlanReviewForm(forms.ModelForm):
 
     class Meta:
         model = PlanReview
-        fields = ['author', 'rating', 'body', ]
+        fields = ['rating', 'body', ]

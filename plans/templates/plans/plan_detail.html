@@ -78,6 +78,8 @@
                 <!-- Raiting-->
                 {% if plan.rating %}
                 <small class="text-light"><i class="fas fa-star mr-1"></i> {{ plan.rating }} / 5</small>
+                {% else %}
+                <small class="text-light"><i class="fas fa-star mr-1"></i> Raiting: N/A</small>
                 {% endif %}
                 <!-- Description -->
                 <h2 class="text-light mt-3">Description</h2>
@@ -131,6 +133,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 {% endblock %}

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import SubscriptionPlan
-
+from django.contrib import messages
+from .models import SubscriptionPlan, PlanReview
+from .forms import PlanReviewForm
 
 # Used code from Boutique Ado and Chat-GPT
 
@@ -79,42 +80,47 @@ def all_plans(request):
 
 
 def plan_detail(request, plan_id):
-    """ A view to show individual plan details """
+    """ A view to show individual plan details. Render review form and reviews """
 
     plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
-
-    context = {
-        'plan': plan,
-    }
-
-    return render(request, 'plans/plan_detail.html', context)
-
-
-def review_create(request):
-    """
-    A view to render PlanReviewForm and existing reviews to the plans/plan_detail.html
-    """
-    reviews = PlanReview.objects.filter(approved=True).order_by("-created_on")
+    reviews = plan.plan_reviews.filter(approved=True).order_by("-created_on")
 
     user_reviews = None
     if request.user.is_authenticated:
-        user_reviews = PlanReview.objects.filter(author=request.user)
+        user_reviews = plan.plan_reviews.filter(author=request.user)
+
+    user_profile = None
+    if request.user.is_authenticated:
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            pass
 
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'You must be logged in to submit a review.')
+            return redirect('account_login') 
         form = PlanReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             review.author = request.user
+            review.plan = plan
             review.save()
+            print(f"✅ REVIEW SAVED: id={review.id}, author={review.author}, plan={review.plan}")
+
             messages.success(request, 'Review submitted and awaiting approval')
-            return redirect('contact')
+            return redirect('plan_detail', plan_id=plan.id)
         else:
-            messages.error(request, f'Failed to submit review!')
+            messages.error(request, 'Failed to submit review!')
     else:
         form = PlanReviewForm()
 
-    return render(request, 'plans/plan_detail.html', {
+    context = {
+        'plan': plan,
         'form': form,
         'reviews': reviews,
         'user_reviews': user_reviews,
-    })
+        'user_profile': user_profile,
+    }
+
+    return render(request, 'plans/plan_detail.html', context)

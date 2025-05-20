@@ -28,8 +28,7 @@ class SubscriptionPlan(models.Model):
         return self.name
     
     def average_rating(self):
-        return self.plan_reviews.filter(approved=True).aggregate(Avg('rating'))['rating__avg'] or 0
-    
+        return self.plan_reviews.filter(approved=True).aggregate(Avg('rating'))['rating__avg'] or 0  
 
 class Week(models.Model):
     plan = models.ForeignKey(SubscriptionPlan, related_name="weeks", on_delete=models.CASCADE)
