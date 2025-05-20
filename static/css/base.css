@@ -201,6 +201,45 @@ select option[value=""] {
     overflow: visible;
 }
 
+/* Review form */
+.star-rating {
+    display: flex;
+    flex-direction: row;
+}
+
+.star {
+    font-size: 30px;
+    cursor: pointer;
+    color: gray;
+}
+
+.star.selected {
+    color: gold;
+}
+
+.star:hover {
+    color: rgb(255, 255, 195);
+}
+
+.star-display {
+    color: gold;
+    font-size: 1.5rem;
+}
+
+.invalid-feedback {
+    display: none;
+    color: red;
+}
+
+.cancelled {
+    color: #ff3300;
+    font-weight: bold;
+}
+.is-invalid .invalid-feedback {
+    display: block;
+
+}
+
 /* Media queries */
 
 @media (max-width: 992px) {
