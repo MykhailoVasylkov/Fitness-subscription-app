@@ -136,6 +136,39 @@ def product_detail(request, product_id):
 
     return render(request, 'products/product_detail.html', context)
 
+
+def edit_product_review(request, product_id, pk):
+    """
+    Edit an existing instance of model:`products.ProductReview`.
+
+    """
+    review = get_object_or_404(ProductReview, pk=pk)
+    product = review.product
+
+    if request.method == 'POST':
+
+        form = ProductReviewForm(data=request.POST, instance=review)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Your review has been updated.'
+            )
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Error updating review!'
+            )
+    else:
+        form = ProductReview(instance=review)
+
+    return redirect('product_detail', product_id=product.id)
+
+
+
+
 @login_required
 def add_product(request):
     if not request.user.is_superuser:

@@ -194,11 +194,11 @@
                             {% endif %}
                             <div class="d-flex justify-content-start mt-2">
                                 <button class="delete-btn btn btn-danger btn-sm me-2"
-                                data-plan-id="{{ product.id }}"
+                                data-product-id="{{ product.id }}"
                                     data-review-id="{{ review.id }}">Delete</button>
                                 <a href="#reviewForm">
                                     <button class="btn btn-warning btn-sm me-2"
-                                    data-plan-id="{{ product.id }}"
+                                    data-product-id="{{ product.id }}"
                                         data-review-id="{{ review.id }}">Edit</button>
                                 </a>
                             </div>
@@ -257,6 +257,8 @@
     const ratingInput = document.getElementById('rating-value');
     const reviewBody = document.getElementById('review');
     const form = document.getElementById('reviewForm');
+
+    const editButtons = document.getElementsByClassName('btn-warning');
 
 
     // Handler for clicks on the stars
@@ -325,6 +327,44 @@
             updateStars(currentRating);
         }
     });
+
+    /* I used CodeStar project as a reference and Chatgpt
+
+    /**
+     * Initializes edit functionality for the provided edit buttons.
+     * 
+     * For each button in the `editButtons` collection:
+     * - Retrieves the associated review's ID upon click.
+     * - Fetches the content of the corresponding review.
+     * - Populates the form filds with the review's content for editing.
+     * - Updates the submit button's text to "Update".
+     * - Sets the form's action attribute to the `edit_review/{reviewId}` endpoint.
+     */
+
+    for (let button of editButtons) {
+        button.addEventListener("click", (e) => {
+            // Get the review ID from the data-review_id attribute
+            let reviewId = e.target.getAttribute("data-review-id");
+            let productId = e.target.getAttribute("data-product-id");
+
+            // Fill in the form fields using the review data
+            let reviewRatingValue = document.getElementById(`rating-value-${reviewId}`).value;
+            ratingInput.value = reviewRatingValue;
+
+            // Call updateStars to visually fill the stars based on the rating
+            updateStars(reviewRatingValue);
+
+            let reviewBodyValue = document.getElementById(`body${reviewId}`).innerText;
+            reviewBody.value = reviewBodyValue;
+
+            // Update the text on the button
+            submitButton.innerText = "Update";
+
+            // Update the form action for editing
+            form.setAttribute("action", `/shop/${productId}/edit/${reviewId}`);
+        });
+    }
+
 
 
 </script>
