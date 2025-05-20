@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 
-from .models import Product, Category, ProductSize, Brand
-from .forms  import ProductForm
+from .models import Product, Category, ProductSize, Brand, ProductReview
+from .forms  import ProductForm, ProductReviewForm
 
 
 # Create your views here.
@@ -91,12 +91,47 @@ def all_products(request):
     return render(request, 'products/products.html', context)
 
 def product_detail(request, product_id):
-    """ A view to show individual product details """
+    """ A view to show individual product details, review form and existing reviews """
 
     product = get_object_or_404(Product, pk=product_id)
 
+    reviews = product.product_reviews.filter(approved=True).order_by("-created_on")
+
+    user_reviews = None
+    if request.user.is_authenticated:
+        user_reviews = product.product_reviews.filter(author=request.user)
+
+    user_profile = None
+    if request.user.is_authenticated:
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            pass
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'You must be logged in to submit a review.')
+            return redirect('account_login') 
+        form = ProductReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.author = request.user
+            review.product = product
+            review.save()
+
+            messages.success(request, 'Review submitted and awaiting approval')
+            return redirect('product_detail', product_id=product.id)
+        else:
+            messages.error(request, 'Failed to submit review!')
+    else:
+        form = ProductReviewForm()
+
     context = {
         'product': product,
+        'form': form,
+        'reviews': reviews,
+        'user_reviews': user_reviews,
+        'user_profile': user_profile,
     }
 
     return render(request, 'products/product_detail.html', context)

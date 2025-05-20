@@ -106,7 +106,6 @@ def plan_detail(request, plan_id):
             review.author = request.user
             review.plan = plan
             review.save()
-            print(f"✅ REVIEW SAVED: id={review.id}, author={review.author}, plan={review.plan}")
 
             messages.success(request, 'Review submitted and awaiting approval')
             return redirect('plan_detail', plan_id=plan.id)

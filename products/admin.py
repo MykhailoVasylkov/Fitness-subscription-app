@@ -54,16 +54,16 @@ class BrandAdmin(admin.ModelAdmin):
         'name',
     )
 
-
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Brand, BrandAdmin)
 
+
 class ProductReviewAdmin(admin.ModelAdmin):
     model = ProductReview
 
-    list_display = ('author', 'plan', 'rating', 'created_on', 'approved',)
-    search_fields = ['plan', 'author', 'body', ]
-    list_filter = ('plan', 'rating', 'approved',)
+    list_display = ('author', 'product', 'rating', 'created_on', 'approved',)
+    search_fields = ['product', 'author', 'body', ]
+    list_filter = ('product', 'rating', 'approved',)
 
 admin.site.register(ProductReview, ProductReviewAdmin)

@@ -1,6 +1,6 @@
 from django import forms
 from .widgets import CustomClearableFileInput
-from .models import Product, Category
+from .models import Product, Category, ProductReview
 
 
 class ProductForm(forms.ModelForm):
@@ -19,3 +19,14 @@ class ProductForm(forms.ModelForm):
         self.fields['category'].choices = friendly_names
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'border-dark rounded-3'
+
+
+class ProductReviewForm(forms.ModelForm):
+    """
+    A form for creating a single review.
+    """
+    rating = forms.IntegerField(min_value=1, max_value=5, required=True)
+
+    class Meta:
+        model = ProductReview
+        fields = ['rating', 'body', ]

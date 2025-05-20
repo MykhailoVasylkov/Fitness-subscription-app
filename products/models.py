@@ -93,7 +93,7 @@ Product Review model for storing user reviews with rating (1-5),
 body, approval status, and timestamps.
 """
 class ProductReview(models.Model):
-    plan = models.ForeignKey(Product, related_name="product_reviews", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name="product_reviews", on_delete=models.CASCADE)
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
