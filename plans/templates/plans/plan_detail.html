@@ -147,9 +147,9 @@
                     {% if user_profile %}
                     <div class="d-flex align-items-center mb-3">
                     {% if user_profile.avatar %}
-                        <img src="{{ user_profile.avatar.url }}" alt="avatar" class="rounded-circle me-2" width="75" height="75">
+                        <img src="{{ user_profile.avatar.url }}" alt="avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                     {% else %}
-                        <img src="/media/avatars/default_avatar.jpg" alt="avatar" class="rounded-circle me-2" width="75" height="75">
+                        <img src="/media/avatars/default_avatar.jpg" alt="avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                     {% endif %}
                         <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
                     </div>
@@ -203,9 +203,9 @@
                         {% if user_profile %}
                         <div class="d-flex align-items-center mt-2 ms-2">
                         {% if user_profile.avatar %}
-                            <img src="{{ user_profile.avatar.url }}" alt="avatar" class="rounded-circle me-2" width="75" height="75">
+                            <img src="{{ user_profile.avatar.url }}" alt="user avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                         {% else %}
-                            <img src="/media/avatars/default_avatar.jpg" alt="avatar" class="rounded-circle me-2" width="75" height="75">
+                            <img src="/media/avatars/default_avatar.jpg" alt="user avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                         {% endif %}
                             <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
                         </div>
@@ -275,6 +275,33 @@
             </div>
         </div>
     </div>
+    <!-- Delete confirmation modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="deleteModalLabel">Delete review?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-dark">
+                Are you sure you want to delete your review?<br>
+                This action cannot be undone.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="deleteForm" method="POST" action="">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}
@@ -395,6 +422,28 @@
 
             // Update the form action for editing
             form.setAttribute("action", `/plans/${planId}/edit/${reviewId}`);
+        });
+    }
+
+    /**
+     * Initializes deletion functionality for the provided delete buttons.
+     * 
+     * For each button in the `deleteButtons` collection:
+     * - Retrieves the associated review's ID upon click.
+     * - Updates the `deleteConfirm` link's href to point to the 
+     * deletion endpoint for the specific booking.
+     * - Displays a confirmation modal (`deleteModal`) to prompt 
+     * the user for confirmation before deletion.
+     */
+
+    for (let button of deleteButtons) {
+        button.addEventListener("click", (e) => {
+            let reviewId = e.target.getAttribute("data-review-id");
+            let planId = e.target.getAttribute("data-plan-id");
+            deleteForm.setAttribute("action", `/plans/${planId}/delete/${reviewId}`);
+
+            deleteModal.show();
+
         });
     }
 </script>

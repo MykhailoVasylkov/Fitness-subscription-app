@@ -128,7 +128,7 @@ def plan_detail(request, plan_id):
 
 def edit_review(request, plan_id, pk):
     """
-    Edit an existing :model:`plans.PlanReview`.
+    Edit an existing instance of model:`plans.PlanReview`.
 
     """
     review = get_object_or_404(PlanReview, pk=pk)
@@ -152,5 +152,28 @@ def edit_review(request, plan_id, pk):
             )
     else:
         form = PlanReviewForm(instance=review)
+
+    return redirect('plan_detail', plan_id=plan.id)
+
+
+def delete_review(request, plan_id, pk):
+    """
+    Delete an existing instance of model:`plans.PlanReview`.
+
+    """
+    review = get_object_or_404(PlanReview, pk=pk)
+    plan = review.plan
+    if request.method == "POST":
+        if review.author == request.user:
+            review.delete()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Your review has been deleted.'
+            )
+        else:
+            messages.add_message(
+                request, messages.ERROR,
+                'Error deleting review!'
+            )
 
     return redirect('plan_detail', plan_id=plan.id)
