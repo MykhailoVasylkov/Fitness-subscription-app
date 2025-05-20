@@ -167,6 +167,27 @@ def edit_product_review(request, product_id, pk):
     return redirect('product_detail', product_id=product.id)
 
 
+def delete_product_review(request, product_id, pk):
+    """
+    Delete an existing instance of model:`products.ProductReview`.
+
+    """
+    review = get_object_or_404(ProductReview, pk=pk)
+    product = review.product
+    if request.method == "POST":
+        if review.author == request.user:
+            review.delete()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Your review has been deleted.'
+            )
+        else:
+            messages.add_message(
+                request, messages.ERROR,
+                'Error deleting review!'
+            )
+
+    return redirect('product_detail', product_id=product.id)
 
 
 @login_required

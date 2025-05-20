@@ -195,11 +195,13 @@
                             <div class="d-flex justify-content-start mt-2">
                                 <button class="delete-btn btn btn-danger btn-sm me-2"
                                 data-product-id="{{ product.id }}"
-                                    data-review-id="{{ review.id }}">Delete</button>
+                                data-review-id="{{ review.id }}">Delete
+                            </button>
                                 <a href="#reviewForm">
                                     <button class="btn btn-warning btn-sm me-2"
                                     data-product-id="{{ product.id }}"
-                                        data-review-id="{{ review.id }}">Edit</button>
+                                    data-review-id="{{ review.id }}">Edit
+                                </button>
                                 </a>
                             </div>
                             {% endif %}
@@ -242,6 +244,32 @@
             </div>
         </div>
     </div>
+    <!-- Delete confirmation modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="deleteModalLabel">Delete review?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-dark">
+                Are you sure you want to delete your review?<br>
+                This action cannot be undone.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="deleteForm" method="POST" action="">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
@@ -259,7 +287,7 @@
     const form = document.getElementById('reviewForm');
 
     const editButtons = document.getElementsByClassName('btn-warning');
-
+    const submitButton = document.getElementById('submitButton');
 
     // Handler for clicks on the stars
     stars.forEach(star => {
@@ -365,7 +393,27 @@
         });
     }
 
+    /**
+     * Initializes deletion functionality for the provided delete buttons.
+     * 
+     * For each button in the `deleteButtons` collection:
+     * - Retrieves the associated review's ID upon click.
+     * - Updates the `deleteConfirm` link's href to point to the 
+     * deletion endpoint for the specific booking.
+     * - Displays a confirmation modal (`deleteModal`) to prompt 
+     * the user for confirmation before deletion.
+     */
 
+    for (let button of deleteButtons) {
+        button.addEventListener("click", (e) => {
+            let reviewId = e.target.getAttribute("data-review-id");
+            let productId = e.target.getAttribute("data-product-id");
+            deleteForm.setAttribute("action", `/shop/${productId}/delete/${reviewId}`);
+
+            deleteModal.show();
+
+        });
+    }
 
 </script>
 {% endblock %}
