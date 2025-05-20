@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, ProductSize, Brand
+from .models import Product, Category, ProductSize, Brand, ProductReview
 
 # Register your models here.
 """
@@ -58,3 +58,12 @@ class BrandAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Brand, BrandAdmin)
+
+class ProductReviewAdmin(admin.ModelAdmin):
+    model = ProductReview
+
+    list_display = ('author', 'plan', 'rating', 'created_on', 'approved',)
+    search_fields = ['plan', 'author', 'body', ]
+    list_filter = ('plan', 'rating', 'approved',)
+
+admin.site.register(ProductReview, ProductReviewAdmin)

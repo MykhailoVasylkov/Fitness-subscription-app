@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 """
 I used Boutique Ado project and project #4 code.
@@ -83,3 +86,30 @@ class Brand(models.Model):
 
     def get_friendly_name(self):
         return self.friendly_name
+
+
+"""
+Product Review model for storing user reviews with rating (1-5),
+body, approval status, and timestamps.
+"""
+class ProductReview(models.Model):
+    plan = models.ForeignKey(Product, related_name="product_reviews", on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_reviews'
+    )
+    rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Rating must be between 1 and 5"
+    )
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    approved = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_on"]
+
+    def __str__(self):
+        return f"Review by {self.author.username} - {self.rating}⭐"
