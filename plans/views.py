@@ -124,3 +124,33 @@ def plan_detail(request, plan_id):
     }
 
     return render(request, 'plans/plan_detail.html', context)
+
+
+def edit_review(request, plan_id, pk):
+    """
+    Edit an existing :model:`plans.PlanReview`.
+
+    """
+    review = get_object_or_404(PlanReview, pk=pk)
+    plan = review.plan
+
+    if request.method == 'POST':
+
+        form = PlanReviewForm(data=request.POST, instance=review)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Your review has been updated.'
+            )
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Error updating review!'
+            )
+    else:
+        form = PlanReviewForm(instance=review)
+
+    return redirect('plan_detail', plan_id=plan.id)

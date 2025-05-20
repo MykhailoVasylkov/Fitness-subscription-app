@@ -237,7 +237,6 @@ select option[value=""] {
 }
 .is-invalid .invalid-feedback {
     display: block;
-
 }
 
 /* Media queries */
