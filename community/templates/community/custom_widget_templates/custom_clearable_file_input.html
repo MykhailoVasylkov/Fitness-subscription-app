@@ -1,0 +1,32 @@
+<!-- Code snippet from Boutique Ado -->
+{% if widget.value %}
+    <p>{{ widget.initial_text }}</p>
+    <a id="avatar-link" href="{{ widget.value.url }}">
+        <img id="avatar-preview" src="{{ widget.value.url }}" class="shadow-sm img-preview" alt="Post image">
+    </a>
+    {% if not widget.required %}
+        <div class="custom-control custom-checkbox mt-2">
+            <input class="custom-control-input" type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
+            <label class="custom-control-label text-danger" for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
+        </div>
+    {% endif %}
+    <br>
+    {{ widget.input_text }}
+{% else %}
+    <p id="avatar-label">No Post Image Set</p>
+    <a id="avatar-link" href="#" id="avatar-link" style="display: none;">
+        <img id="avatar-preview" src="/media/posts/default_post_img.png" class="shadow-sm mb-2 img-preview" alt="Post image">
+    </a>
+
+    <!-- Add 'Remove Avatar' checkbox -->
+    <div id="remove-avatar-checkbox" class="custom-control custom-checkbox mb-4" style="display: none;">
+        <input class="custom-control-input" type="checkbox" id="remove-avatar" name="remove_avatar" onchange="toggleAvatar()">
+        <label class="custom-control-label text-danger" for="remove-avatar">Remove Post Image</label>
+    </div>
+{% endif %}
+
+<div>
+    <span class="btn btn-outline-light rounded-3 btn-file">
+        Select Post Image <input id="new-image" type="{{ widget.type }}" name="{{ widget.name }}">
+    </span>
+</div>

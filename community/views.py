@@ -11,7 +11,7 @@ def community(request):
      """ 
      A view to return the community page, with community posts and messages.
      """
-     community_posts = CommunityPost.objects.filter(approved=True).annotate(total_likes=Count('likes'))
+     community_posts = CommunityPost.objects.filter(approved=True).annotate(total_likes=Count('likes')).order_by("-created_on")
      community_messages = CommunityMessage.objects.order_by('-timestamp')[:10]
 
      user_posts = None
