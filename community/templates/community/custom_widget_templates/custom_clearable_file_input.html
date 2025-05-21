@@ -18,10 +18,16 @@
         <img id="avatar-preview" src="/media/posts/default_post_img.png" class="shadow-sm mb-2 img-preview" alt="Post image">
     </a>
 
-    <!-- Add 'Remove Avatar' checkbox -->
+    <!-- Add 'Remove Post Img Preview' checkbox -->
     <div id="remove-avatar-checkbox" class="custom-control custom-checkbox mb-4" style="display: none;">
         <input class="custom-control-input" type="checkbox" id="remove-avatar" name="remove_avatar" onchange="toggleAvatar()">
-        <label class="custom-control-label text-danger" for="remove-avatar">Remove Post Image</label>
+        <label class="custom-control-label text-danger" for="remove-avatar">Remove Post Image Preview</label>
+    </div>
+
+    <!-- Add 'Remove Post Img' checkbox -->
+    <div id="remove-image-checkbox" class="custom-control custom-checkbox mb-4" style="display: none;">
+        <input class="custom-control-input" type="checkbox" id="remove-image" name="remove_image">
+        <label class="custom-control-label text-danger" for="remove-image">Remove Post Image</label>
     </div>
 {% endif %}
 

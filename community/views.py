@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Count
 from .models import CommunityMessage, CommunityPost
@@ -50,3 +50,34 @@ def community(request):
           'form': form,
      }
      return render(request, 'community/community.html', context)
+
+
+def edit_post(request, pk):
+     """
+     Edit an existing instance of model:`community.CommunityPost`.
+     """
+     post = get_object_or_404(CommunityPost, pk=pk, author=request.user)
+
+     if request.method == 'POST':
+          form = CommunityPostForm(request.POST, request.FILES, instance=post)
+
+          if form.is_valid():
+               # Delete image if user checks the box
+               if 'remove_image' in request.POST and post.image:
+                    post.image.delete(save=False)
+                    post.image = None
+
+               form.save()
+               messages.success(request, 'Your post has been updated.')
+               return redirect('community')
+          else:
+               messages.add_message(
+                    request,
+                    messages.ERROR,
+                    'Error updating post!'
+               )
+          return redirect('community')
+     else:
+          form = CommunityPostForm(instance=post)
+
+     return redirect('community')

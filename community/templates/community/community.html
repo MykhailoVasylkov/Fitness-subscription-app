@@ -31,7 +31,6 @@
                 <div class="col-lg-8 col-md-7 center">
                     <h1 class="mb-3">Stories of<br>community members</h1>
 
-                    <!--Code snippet from Project 4-->
 
                     <form method="post" id="reviewForm" action="{% url 'community' %}" class="needs-validation mt-4 border border-light px-3 py-3 rounded-3"
                         enctype="multipart/form-data">
@@ -102,7 +101,7 @@
                                             <!-- Img -->
                                             {% if post.image %}
                                             <div class="mb-3">
-                                                <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded post-img">
+                                                <img src="{{ post.image.url }}" alt="Post image" id="img{{ post.id }}" class="img-fluid rounded post-img">
                                             </div>
                                             {% endif %}
                                             <!-- Body -->
@@ -358,7 +357,49 @@
         }
     });
 
+</script>
 
+<script>
+    const reviewBody = document.getElementById('review');
+    const reviewImg = document.getElementById('avatar-preview');
+    const form = document.getElementById('reviewForm');
+
+    const editButtons = document.getElementsByClassName('btn-warning');
+    const submitButton = document.getElementById('submitButton');
+    /* I used CodeStar project as a reference and Chatgpt
+
+    /**
+     * Initializes edit functionality for the provided edit buttons.
+     * 
+     * For each button in the `editButtons` collection:
+     * - Retrieves the associated post's ID upon click.
+     * - Fetches the content of the corresponding post.
+     * - Populates the form filds with the post's content for editing.
+     * - Updates the submit button's text to "Update".
+     * - Sets the form's action attribute to the `edit/{postId}` endpoint.
+     */
+    for (let button of editButtons) {
+        button.addEventListener("click", (e) => {
+             // Update the text on the button
+            submitButton.innerText = "Update";
+
+            // Get the post ID from the data-post_id attribute
+            let postId = e.target.getAttribute("data-post-id");
+
+            let reviewBodyValue = document.getElementById(`body${postId}`).innerText;
+            reviewBody.value = reviewBodyValue;
+
+            let reviewImgValue = document.getElementById(`img${postId}`).src;
+            if (reviewImgValue) {
+                reviewImg.src = reviewImgValue;
+                document.getElementById('avatar-link').style.display = "block";
+                document.getElementById('remove-image-checkbox').style.display = "block";
+            }
+            
+            // Update the form action for editing
+            form.setAttribute("action", `edit/${postId}`);
+        });
+    }
 </script>
 
 {% endblock %}
