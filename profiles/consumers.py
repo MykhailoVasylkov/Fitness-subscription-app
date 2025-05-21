@@ -2,6 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.utils import timezone
+from django.utils.formats import date_format
 from profiles.models import UserProfile
 from community.models import CommunityMessage
 
@@ -40,7 +41,7 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
             except UserProfile.DoesNotExist:
                 profile = None
 
-            now = timezone.now().strftime("%m/%d/%Y %I:%M %p")
+            now = date_format(timezone.now(), "N j, Y, P")
             day_name = timezone.now().strftime("%A")  # Get the full day name
 
             print(f"Received data from {profile.nickname if profile else (user.username if user.is_authenticated else 'Anonymous')}: {data}")

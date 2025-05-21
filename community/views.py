@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Count
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from .models import CommunityMessage, CommunityPost
 from .forms import CommunityPostForm
 
@@ -103,3 +105,26 @@ def delete_post(request, pk):
             )
 
     return redirect('community')
+
+
+@login_required
+def ajax_like_post(request):
+     """ 
+     A view to add or delete like.
+     Used Chat-GPT
+     """
+     if request.method == 'POST':
+          post_id = request.POST.get('post_id')
+          post = get_object_or_404(CommunityPost, id=post_id)
+
+          liked = False
+          if request.user in post.likes.all():
+               post.likes.remove(request.user)
+          else:
+               post.likes.add(request.user)
+               liked = True
+
+          return JsonResponse({
+               'liked': liked,
+               'likes_count': post.total_likes(),
+          })

@@ -35,7 +35,7 @@
                     <form method="post" id="reviewForm" action="{% url 'community' %}" class="needs-validation mt-4 border border-light px-3 py-3 rounded-3"
                         enctype="multipart/form-data">
                         {% csrf_token %}
-                        <h2 class="mb-3 text-center">Share your story with us!</h2>
+                        
                         {% if user_profile %}
                         <div class="d-flex align-items-center mb-3">
                             {% if user_profile.avatar %}
@@ -77,7 +77,7 @@
                         </div>
                     </form>
 
-                    <!-- User Reviews -->
+                    <!-- User Posts -->
                     {% if user_posts %}
                         <div class="mt-4 border border-light px-3 py-3 rounded-3">
                             <div class="">
@@ -93,7 +93,10 @@
                                         <img src="/media/avatars/default_avatar.jpg" alt="user avatar"
                                             class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                         {% endif %}
+                                        <div>
                                         <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
+                                        <p class="text-muted"><small>{{ post.created_on }}</small></p> 
+                                        </div>
                                     </div>
                                     {% endif %}
                                     <div class="card-body me-2">
@@ -105,9 +108,12 @@
                                             </div>
                                             {% endif %}
                                             <!-- Body -->
-                                            <p id="body{{ post.id }}">{{ post.body }}</p>
-                                            <p><small>{{ post.created_on }}</small></p>                                            
-                                    
+                                            <div class="border border-dark px-3 py-3 rounded-3">
+                                                <p id="body{{ post.id }}">{{ post.body }}</p>
+                                                <button class="btn btn-outline-danger btn-like" data-post-id="{{ post.id }}">
+                                                    ❤️ <span class="like-count">{{ post.total_likes }}</span>
+                                                </button>                                          
+                                            </div>
                                             {% if not post.approved %}
                                             <!-- Show pending review message only for the author -->
                                             <p class="cancelled">This post is pending approval.</p>
@@ -142,7 +148,10 @@
                                 <img src="/media/avatars/default_avatar.jpg" alt="avatar"
                                     class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                 {% endif %}
+                                <div>
                                 <h5 class="mb-0">{{ post.author.userprofile.nickname|default:post.author }}</h5>
+                                <p><small>{{ post.created_on }}</small></p>
+                                </div>
                             </div>
                             <div class="card-body me-2">
                                 {% if post.image %}
@@ -150,9 +159,14 @@
                                     <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded post-img">
                                 </div>
                                 {% endif %}
+                                <div class="border border-dark px-3 py-3 rounded-3">
                                 <p>{{ post.body }}</p>
-                                <p><small>{{ post.created_on }}</small></p>
+                                <button class="btn btn-outline-danger btn-like" data-post-id="{{ post.id }}">
+                                    ❤️ <span class="like-count">{{ post.total_likes }}</span>
+                                </button> 
+                                </div>
                             </div>
+                            
                         </div>
                     
                         {% endif %}
@@ -162,8 +176,8 @@
                     </div> 
                 </div>
 
-
-                <div class="col-lg-4 col-md-5 center">
+                <!--Community achievements--> 
+                <div class="col-lg-4 col-md-5 center mt-4 mt-md-0">
                     {% if community_messages %}
                     <h1 class="mb-3">Achievements of community members</h1>
                     <div id="community-messages" class="mt-4 border border-light px-3 py-3 rounded-3">
@@ -177,7 +191,7 @@
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1 fw-bold">{{ msg.user }}</h6>
                                     <p class="mb-1 small text-break">{{ msg.message }}</p>
-                                    <small class="text-muted d-block">{{ msg.timestamp|date:"m/d/Y h:i A" }}</small>
+                                    <small class="text-muted d-block">{{ msg.timestamp|date:"F j, Y, g:i a" }}</small>
                                 </div>
                             </div>
                         </div>
@@ -188,6 +202,7 @@
             </div>
         </div>
     </section>
+
     <!-- Delete confirmation modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -215,11 +230,13 @@
         </div>
     </div>
 </div>
+<div class="arrow back-to-top d-none d-md-block"></div>
 {% endblock %}
 
 {% block postloadjs %}
 {{ block.super }}
 <script>
+    //Script render data from consumers to the community page
     document.addEventListener('DOMContentLoaded', () => {
         const messagesContainer = document.getElementById('community-messages');
         if (!messagesContainer) {
@@ -447,7 +464,32 @@
 
         });
     }
-
 </script>
+
+<script>
+    // Used Chat-GPT
+    // Get all the "like" buttons
+    document.querySelectorAll('.btn-like').forEach(button => {
+        button.addEventListener('click', function () {
+            const postId = this.dataset.postId;
+            const likeCountSpan = this.querySelector('.like-count');
+
+            fetch("{% url 'ajax_like_post' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `post_id=${postId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                likeCountSpan.textContent = data.likes_count;
+                this.classList.toggle('liked', data.liked);
+            });
+        });
+    });
+</script>
+
 
 {% endblock %}

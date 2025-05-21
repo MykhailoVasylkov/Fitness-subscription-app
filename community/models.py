@@ -21,6 +21,9 @@ class CommunityPost(models.Model):
     
     class Meta:
         ordering = ["-created_on"]
+    
+    def total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return f"Post by {self.author.username}"
