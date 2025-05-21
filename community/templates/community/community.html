@@ -188,6 +188,32 @@
             </div>
         </div>
     </section>
+    <!-- Delete confirmation modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-dark" id="deleteModalLabel">Delete post?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body text-dark">
+                Are you sure you want to delete your post?<br>
+                This action cannot be undone.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="deleteForm" method="POST" action="">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -400,6 +426,28 @@
             form.setAttribute("action", `edit/${postId}`);
         });
     }
+
+    /**
+     * Initializes deletion functionality for the provided delete buttons.
+     * 
+     * For each button in the `deleteButtons` collection:
+     * - Retrieves the associated review's ID upon click.
+     * - Updates the `deleteConfirm` link's href to point to the 
+     * deletion endpoint for the specific post.
+     * - Displays a confirmation modal (`deleteModal`) to prompt 
+     * the user for confirmation before deletion.
+     */
+
+    for (let button of deleteButtons) {
+        button.addEventListener("click", (e) => {
+            let postId = e.target.getAttribute("data-post-id");
+            deleteForm.setAttribute("action", `delete/${postId}`);
+
+            deleteModal.show();
+
+        });
+    }
+
 </script>
 
 {% endblock %}

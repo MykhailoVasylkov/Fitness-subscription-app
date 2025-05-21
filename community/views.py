@@ -81,3 +81,25 @@ def edit_post(request, pk):
           form = CommunityPostForm(instance=post)
 
      return redirect('community')
+
+
+def delete_post(request, pk):
+    """
+    Delete an existing instance of model:`community.CommunityPost`.
+
+    """
+    post = get_object_or_404(CommunityPost, pk=pk)
+    if request.method == "POST":
+        if post.author == request.user:
+            post.delete()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Your post has been deleted.'
+            )
+        else:
+            messages.add_message(
+                request, messages.ERROR,
+                'Error deleting post!'
+            )
+
+    return redirect('community')
