@@ -12,16 +12,169 @@
     <section class="pt-md-4 width-rule mt-5">
         <div class="container-fluid position-relative">
             <div class="row align-items-center">
-                <div class="col-lg-8 col-md-7 center"></div>
+                <div class="col-lg-6 center">
+                    <h2 class="display-6 mb-4 mt-5">Welcome to our Community</h2>
+                </div>
+                <div class="col-lg-12 center">
+                    <p class="fs-5">
+                        Celebrate your achievements, share your progress, and get motivated by others!
+                        Our community is a space to connect, inspire, and grow together.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr class="mb-1">
+    <section class="pt-md-4 width-rule mt-3">
+        <div class="container-fluid position-relative">
+            <div class="row align-items-start">
+                <div class="col-lg-8 col-md-7 center">
+                    <h1 class="mb-3">Stories of<br>community members</h1>
+
+                    <!--Code snippet from Project 4-->
+
+                    <form method="post" id="reviewForm" action="{% url 'community' %}" class="needs-validation mt-4 border border-light px-3 py-3 rounded-3"
+                        enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h2 class="mb-3 text-center">Share your story with us!</h2>
+                        {% if user_profile %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if user_profile.avatar %}
+                            <img src="{{ user_profile.avatar.url }}" alt="avatar" class="rounded-circle me-2" width="75"
+                                height="75" style="object-fit: cover;">
+                            {% else %}
+                            <img src="/media/avatars/default_avatar.jpg" alt="avatar" class="rounded-circle me-2"
+                                width="75" height="75" style="object-fit: cover;">
+                            {% endif %}
+                            <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
+                        </div>
+                        {% endif %}
+                        <!--Author -->
+                        {% if not user.is_authenticated %}
+                        <!-- If the user is not logged in, we display a link to registration or login -->
+                        <div class="mb-3">
+                            <p class="text-light">Please <a href="{% url 'account_signup' %}">register</a> or <a
+                                    href="{% url 'account_login' %}">login</a> to proceed.</p>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Image field -->
+                        <div class="mb-3">
+                            <label for="id_image" class="form-label">Upload an image (optional):</label>
+                            {{ form.image }}
+                        </div>
+
+                        <!--Body -->
+
+                        <div class="mb-3">
+                            <label for="review" class="form-label">Post</label>
+                            <textarea class="form-control" id="review" name="body" placeholder="Write your post here..."
+                                rows="3" required></textarea>
+                            <div class="invalid-feedback">Please share your story with us!</div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button id="submitButton" type="submit" class="btn btn-primary">Submit Post</button>
+                        </div>
+                    </form>
+
+                    <!-- User Reviews -->
+                    {% if user_posts %}
+                        <div class="mt-4 border border-light px-3 py-3 rounded-3">
+                            <div class="">
+                                <h2 class="text-center">Your Posts</h2>
+                                {% for post in user_posts %}
+                                <div class="card shadow-sm mt-3">
+                                    {% if user_profile %}
+                                    <div class="d-flex align-items-center mt-2 ms-2">
+                                        {% if user_profile.avatar %}
+                                        <img src="{{ user_profile.avatar.url }}" alt="user avatar"
+                                            class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
+                                        {% else %}
+                                        <img src="/media/avatars/default_avatar.jpg" alt="user avatar"
+                                            class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
+                                        {% endif %}
+                                        <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
+                                    </div>
+                                    {% endif %}
+                                    <div class="card-body me-2">
+                                        {% if post.author == user %}
+                                            <!-- Img -->
+                                            {% if post.image %}
+                                            <div class="mb-3">
+                                                <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded post-img">
+                                            </div>
+                                            {% endif %}
+                                            <!-- Body -->
+                                            <p id="body{{ post.id }}">{{ post.body }}</p>
+                                            <p><small>{{ post.created_on }}</small></p>                                            
+                                    
+                                            {% if not post.approved %}
+                                            <!-- Show pending review message only for the author -->
+                                            <p class="cancelled">This post is pending approval.</p>
+                                            {% endif %}
+                                            <div class="d-flex justify-content-start mt-2">
+                                                <button class="delete-btn btn btn-danger btn-sm me-2"
+                                                    data-post-id="{{ post.id }}">Delete</button>
+                                                <a href="#reviewForm">
+                                                    <button class="btn btn-warning btn-sm me-2"
+                                                        data-post-id="{{ post.id }}">Edit</button>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <!--All Reviews -->
+                    <div class="mt-4 border border-light px-3 py-3 rounded-3">
+                        <h2 class="mb-3 mt-2 text-center">Recent Posts</h2>
+                        {% for post in community_posts %}
+                        {% if post.approved and post.author != user %}
+                        <div class="card shadow-sm mt-3">
+
+                            <div class="d-flex align-items-center mt-2 ms-2">
+                                {% if post.author.userprofile.avatar %}
+                                <img src="{{ post.author.userprofile.avatar.url }}" alt="avatar"
+                                    class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
+                                {% else %}
+                                <img src="/media/avatars/default_avatar.jpg" alt="avatar"
+                                    class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
+                                {% endif %}
+                                <h5 class="mb-0">{{ post.author.userprofile.nickname|default:post.author }}</h5>
+                            </div>
+                            <div class="card-body me-2">
+                                {% if post.image %}
+                                <div class="mb-3">
+                                    <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded post-img">
+                                </div>
+                                {% endif %}
+                                <p>{{ post.body }}</p>
+                                <p><small>{{ post.created_on }}</small></p>
+                            </div>
+                        </div>
+                    
+                        {% endif %}
+                        {% empty %}
+                        <p>No posts yet!</p>
+                        {% endfor %}
+                    </div> 
+                </div>
+
+
                 <div class="col-lg-4 col-md-5 center">
-                    {% if сommunity_messages %}
-                    <h1 class="mb-3 mt-5">Achievements of community members</h1>
+                    {% if community_messages %}
+                    <h1 class="mb-3">Achievements of community members</h1>
                     <div id="community-messages" class="mt-4 border border-light px-3 py-3 rounded-3">
-                        {% for msg in сommunity_messages %}
+                        {% for msg in community_messages %}
                         <div class="card mb-2 p-2">
                             <div class="d-flex align-items-start gap-2 flex-wrap flex-md-nowrap">
                                 <div class="flex-shrink-0 rounded-circle overflow-hidden" style="width: 48px; height: 48px;">
-                                    <img src="{{ msg.avatar }}" alt="{{ msg.user }} avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="{{ msg.avatar }}" alt="{{ msg.user }} avatar"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1 fw-bold">{{ msg.user }}</h6>
@@ -31,10 +184,10 @@
                             </div>
                         </div>
                         {% endfor %}
-                    </div> 
+                    </div>
                     {% endif %}
                 </div>
-            </div>   
+            </div>
         </div>
     </section>
 </div>
@@ -56,9 +209,9 @@
         console.log("WebSocket URL:", wsUrl);
 
         window.socket = new WebSocket(wsUrl);
-        
 
-        socket.onmessage = function(event) {
+
+        socket.onmessage = function (event) {
             const data = JSON.parse(event.data);
             console.log("Received from server:", data);
 
@@ -114,18 +267,18 @@
 
             // Add to the container
             messagesContainer.prepend(card);
-            
+
         };
 
-        socket.onopen = function() {
+        socket.onopen = function () {
             console.log('WebSocket connected');
         };
 
-        socket.onclose = function() {
+        socket.onclose = function () {
             console.log('WebSocket disconnected');
         };
 
-        socket.onerror = function(error) {
+        socket.onerror = function (error) {
             console.error('WebSocket error:', error);
         };
 
