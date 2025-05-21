@@ -288,6 +288,77 @@
     });
 </script>
 
+<!-- Script to show img preview. Used Chat-GPT -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('new-image');
+        const previewImage = document.getElementById('avatar-preview');
+        const previewLink = document.getElementById('avatar-link');
 
+        // Preview of a photo are displayed if it is chosen by the user
+        if (fileInput) {
+            fileInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        if (previewImage) {
+                            previewImage.src = e.target.result;
+                        }
+                        if (previewLink) {
+                            previewLink.href = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+                toggleAvatar();
+            });
+        }
+    });
+</script>
+
+<!-- Script to handle removing avatar on the client side. Used Chat-GPT -->
+<script>
+    const avatarLink = document.getElementById('avatar-link');
+    const avatarImage = document.getElementById('avatar-preview');
+    const avatarLabel = document.getElementById('avatar-label');
+    const removeCheckbox = document.getElementById('remove-avatar');
+    const checkboxContainer = document.getElementById('remove-avatar-checkbox');
+    const fileInput = document.getElementById('new-image');
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                avatarImage.src = e.target.result;
+                avatarLink.href = e.target.result;
+                avatarLink.style.display = "inline-block";
+                avatarLabel.innerText = 'Selected Post Image';
+                checkboxContainer.style.display = "block";
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            avatarImage.src = "";
+            avatarLink.href = "#";
+            avatarLink.style.display = "none";
+            avatarLabel.innerText = 'No Post Image Set';
+            checkboxContainer.style.display = "none";
+        }
+    });
+
+    removeCheckbox.addEventListener('change', function () {
+        if (removeCheckbox.checked) {
+            avatarImage.src = "";
+            avatarLink.href = "#";
+            avatarLink.style.display = "none";
+            fileInput.value = "";
+            avatarLabel.innerText = 'No Post Image Set';
+            checkboxContainer.style.display = "none";
+            removeCheckbox.checked = false;
+        }
+    });
+
+
+</script>
 
 {% endblock %}
