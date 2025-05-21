@@ -10,18 +10,17 @@
 <!-- Hero Section -->
 <section class="hero-section position-relative">
     <div class="container h-100 d-flex flex-column justify-content-center align-items-center text-center text-white">
+        <div class="parallax-img"></div>
         <h1 class="display-3 fw-bold my-5">Transform Your Life with Fitness & Nutrition!</h1>
         <p class="display-6 text-lg-centre mb-5">Discover personalized plans, expert advice, and a supportive
             community—all in one place. Get started on your wellness journey today
         </p>
         <div class="d-flex gap-3">
-            <a href="{% url 'home' %}" class="btn btn-danger btn-lg">Start Your Journey</a>
-            <a href="{% url 'home' %}" class="btn btn-success btn-lg">View Plans</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-danger btn-lg">Start Your Journey</a>
+            <a href="{% url 'plans' %}" class="btn btn-success btn-lg">View Plans</a>
         </div>
     </div>
 </section>
-
-<hr class="mt-5">
 
 <!-- How it works section -->
 <section class="pt-md-4 width-rule mt-5">
@@ -32,23 +31,23 @@
             </div>
         </div>
         <div class="row align-items-center">
-            <div class="col-lg-3 col-md-4 offset-lg-9 offset-md-8 text-end" id="element-1">
-                <p class="fs-3">Sign Up and Create Your Profile</p>
+            <div class="col-lg-3 col-4 offset-lg-9 offset-8 text-end" id="element-1">
+                <p class="fs-3">Sign Up</p>
             </div>
         </div>
         <div class="row align-items-center">
-            <div class="col-lg-3 col-md-4 text-start" id="element-2">
+            <div class="col-lg-3 col-4 text-start" id="element-2">
                 <p class="fs-3">Choose Your Plan</p>
             </div>
         </div>
         <div class="row align-items-center">
-            <div class="col-lg-3 col-md-4 offset-lg-9 offset-md-8 text-end" id="element-3">
+            <div class="col-lg-3 col-4 offset-lg-9 offset-8 text-end" id="element-3">
                 <p class="fs-3">Start Your Journey</p>
             </div>
         </div>
         <div class="row align-items-center">
-            <div class="col-lg-3 col-md-4 text-start" id="element-4">
-                <p class="fs-3">Share Your Success and Connect</p>
+            <div class="col-lg-3 col-4 text-start" id="element-4">
+                <p class="fs-3">Share Your Success</p>
             </div>
         </div>
     </div>
@@ -88,21 +87,29 @@
 <!-- Featured Plans -->
 <section class="pt-md-4 width-rule mt-5">
     <div class="container-fluid position-relative">
-        <div class="row align-items-center">
-            <div class="col-lg-6 center">
-                <h2 class="display-6 mb-4">Featured Plans</h2>
+        <div class="row align-items-start">
+            <div class="col-sm-6 center">
+                <h2 class="display-6 mb-4">Featured Products</h2>
+                <p class="fs-5">
+                    Discover our top-rated products carefully selected to meet your needs. Whether you're looking for everyday essentials,
+                    exclusive bundles, or the latest arrivals, we have something for everyone. Shop our featured collection and find your next favorite item!
+                </p>
+                <div class="d-flex justify-content-center">
+                <a href="{% url 'products' %}" class="btn btn-danger btn-lg">View Shop</a>
+                </div>
             </div>
-            <div class="col-lg-12 center">
+            
+            <div class="col-sm-6 center">
+                <h2 class="display-6 mb-4">Featured Plans</h2>
                 <p class="fs-5">
                     Explore our hand-picked plans designed to help you reach your fitness and wellness goals. Whether
                     you're looking for an exercise plan or a balanced nutrition plan, our experts have created something
                     for everyone. Start your transformation with one of our popular plans!
                 </p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'plans' %}" class="btn btn-success btn-lg">View Plans</a>
+                </div>
             </div>
-        </div>
-
-        <div class="row align-items-center mt-5">
-
         </div>
     </div>
 </section>
@@ -120,6 +127,9 @@
                     past new milestones, here you’ll find inspiration, track your progress, and share your journey with
                     like-minded individuals.
                 </p>
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'community' %}" class="btn btn-success btn-lg">Visit Our Community</a>
+                </div>
             </div>
         </div>
 
@@ -136,7 +146,7 @@
 {% block postloadjs %}
 {{ block.super }}
 <script>
-
+    // Script with LeaderLine library for visual connection of elements on the page using lines
     var firstElement = document.getElementById('element-1');
     var secondElement = document.getElementById('element-2');
     var thirdElement = document.getElementById('element-3');
@@ -146,38 +156,37 @@
         firstElement,
         LeaderLine.pointAnchor(secondElement, { x: '100%', y: 10 }),
         {
-            color: 'red', // Начальный цвет линии
-            size: 6, // Толщина линии
-            startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+            color: 'red', // Initial line color
+            size: 6, // Line thickness
+            startPlugColor: '#a6f41d', // Initial plugin color (anchor point)
             gradient: {
-                startColor: 'blue', // Начальный цвет градиента
-                endColor: 'green' // Конечный цвет градиента
+                startColor: 'blue', // Initial gradient color
+                endColor: 'green' // Gradient final color
             }
         }
     );
-    var line1 = new LeaderLine(secondElement, LeaderLine.pointAnchor(thirdElement, { x: 0, y: 10 }),
+    var line2 = new LeaderLine(secondElement, LeaderLine.pointAnchor(thirdElement, { x: 0, y: 10 }),
         {
-            color: 'red', // Начальный цвет линии
-            size: 6, // Толщина линии
-            startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+            color: 'red',
+            size: 6,
+            startPlugColor: '#a6f41d',
             gradient: {
-                startColor: 'blue', // Начальный цвет градиента
-                endColor: 'green' // Конечный цвет градиента
+                startColor: 'blue',
+                endColor: 'green'
             }
         }
     );
-    var line1 = new LeaderLine(thirdElement, LeaderLine.pointAnchor(fourthElement, { x: '100%', y: 0 }),
+    var line3 = new LeaderLine(thirdElement, LeaderLine.pointAnchor(fourthElement, { x: '100%', y: 0 }),
         {
-            color: 'red', // Начальный цвет линии
-            size: 6, // Толщина линии
-            startPlugColor: '#a6f41d', // Цвет начального плагина (точки привязки)
+            color: 'red',
+            size: 6,
+            startPlugColor: '#a6f41d',
             gradient: {
-                startColor: 'blue', // Начальный цвет градиента
-                endColor: 'green' // Конечный цвет градиента
+                startColor: 'blue',
+                endColor: 'green'
             }
         }
     );
-
 </script>
 
 {% endblock %}
