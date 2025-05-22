@@ -2,7 +2,7 @@
 {% if widget.value %}
     <p>{{ widget.initial_text }}</p>
     <a id="avatar-link" href="{{ widget.value.url }}">
-        <img id="avatar-preview" src="{{ widget.value.url }}" class="rounded-circle shadow-sm" width="150" height="150" style="object-fit: cover;" alt="Avatar">
+        <img id="avatar-preview" src="{{ widget.value.url }}" class="rounded-circle shadow-sm" width="150" height="150" style="object-fit: cover;" alt="User profile avatar">
     </a>
     {% if not widget.required %}
         <div class="custom-control custom-checkbox mt-2">

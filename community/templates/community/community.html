@@ -39,10 +39,10 @@
                         {% if user_profile %}
                         <div class="d-flex align-items-center mb-3">
                             {% if user_profile.avatar %}
-                            <img src="{{ user_profile.avatar.url }}" alt="avatar" class="rounded-circle me-2" width="75"
+                            <img src="{{ user_profile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75"
                                 height="75" style="object-fit: cover;">
                             {% else %}
-                            <img src="/media/avatars/default_avatar.jpg" alt="avatar" class="rounded-circle me-2"
+                            <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2"
                                 width="75" height="75" style="object-fit: cover;">
                             {% endif %}
                             <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
@@ -87,10 +87,10 @@
                                     {% if user_profile %}
                                     <div class="d-flex align-items-center mt-2 ms-2">
                                         {% if user_profile.avatar %}
-                                        <img src="{{ user_profile.avatar.url }}" alt="user avatar"
+                                        <img src="{{ user_profile.avatar.url }}" alt="User profile avatar"
                                             class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                         {% else %}
-                                        <img src="/media/avatars/default_avatar.jpg" alt="user avatar"
+                                        <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar"
                                             class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                         {% endif %}
                                         <div>
@@ -149,10 +149,10 @@
 
                             <div class="d-flex align-items-center mt-2 ms-2">
                                 {% if post.author.userprofile.avatar %}
-                                <img src="{{ post.author.userprofile.avatar.url }}" alt="avatar"
+                                <img src="{{ post.author.userprofile.avatar.url }}" alt="User profile avatar"
                                     class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                 {% else %}
-                                <img src="/media/avatars/default_avatar.jpg" alt="avatar"
+                                <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar"
                                     class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                 {% endif %}
                                 <div>
