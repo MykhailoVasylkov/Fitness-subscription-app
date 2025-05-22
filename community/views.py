@@ -10,7 +10,7 @@ from .forms import CommunityPostForm
 
 
 def community(request):
-     """ 
+     """
      A view to return the community page, with community posts and messages.
      """
      community_posts = CommunityPost.objects.filter(approved=True).annotate(total_likes=Count('likes')).order_by("-created_on")

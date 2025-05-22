@@ -7,6 +7,7 @@
 
 {% block content %}
 
+
 <!-- Hero Section -->
 <section class="hero-section position-relative">
     <div class="container h-100 d-flex flex-column justify-content-center align-items-center text-center text-white">
@@ -22,106 +23,115 @@
     </div>
 </section>
 
-<!-- How it works section -->
-<section class="pt-md-4 width-rule mt-5">
-    <div class="container-fluid position-relative">
-        <div class="row align-items-center">
-            <div class="col-12 text-start">
-                <h2 class="display-6 mb-4 text-start">How It Works?</h2>
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-3 col-4 offset-lg-9 offset-8 text-end" id="element-1">
-                <p class="fs-3">Sign Up</p>
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-3 col-4 text-start" id="element-2">
-                <p class="fs-3">Choose Your Plan</p>
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-3 col-4 offset-lg-9 offset-8 text-end" id="element-3">
-                <p class="fs-3">Start Your Journey</p>
-            </div>
-        </div>
-        <div class="row align-items-center">
-            <div class="col-lg-3 col-4 text-start" id="element-4">
-                <p class="fs-3">Share Your Success</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<hr class="mt-5">
-
-<!-- Who we are section -->
-<section class="pt-md-4 width-rule mt-5">
-    <div class="container-fluid position-relative">
-        <div class="row align-items-center">
-            <div class="col-lg-6 offset-lg-6 center">
-                <h2 class="display-6 mb-4">Who We Are?</h2>
-            </div>
-            <div class="col-lg-6 center">
-                <p class="fs-5">
-                    At FitHub, we believe that fitness and wellness should be accessible and achievable for everyone.
-                    Whether you're looking to get in shape, improve your nutrition, or join a supportive community of
-                    like-minded individuals, we’re here to help you every step of the way. Our personalized plans,
-                    expert insights, and diverse range of products are designed to fit your unique needs and goals.
-                </p>
-            </div>
-        </div>
-
-        <div class="row align-items-center mt-5">
-            <div class="col-lg-6 offset-lg-6 center">
-                <p class="fs-5">From workout plans to nutrition guidance, we offer everything you need to succeed. Plus,
-                    our community of subscribers shares their experiences, tips, and successes to motivate and inspire
-                    each other. Join us today, and let’s reach your health and fitness goals together!
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-<hr class="mt-5">
-
-<!-- Featured Plans -->
-<section class="pt-md-4 width-rule mt-5">
-    <div class="container-fluid position-relative">
-        <div class="row align-items-start">
-            <div class="col-sm-6 center">
-                <h2 class="display-6 mb-4">Featured Products</h2>
-                <p class="fs-5">
-                    Discover our top-rated products carefully selected to meet your needs. Whether you're looking for everyday essentials,
-                    exclusive bundles, or the latest arrivals, we have something for everyone. Shop our featured collection and find your next favorite item!
-                </p>
-                <div class="d-flex justify-content-center">
-                <a href="{% url 'products' %}" class="btn btn-danger btn-lg">View Shop</a>
+<div class="container-fluid px-md-0">
+    <!-- How it works section -->
+    <section class="pt-md-4 width-rule mt-5">
+        <div class="container-fluid position-relative">
+            <div class="row align-items-center">
+                <div class="col-12 text-start">
+                    <h2 class="display-6 mb-4 text-start">How It Works?</h2>
                 </div>
             </div>
-            
-            <div class="col-sm-6 center">
-                <h2 class="display-6 mb-4">Featured Plans</h2>
-                <p class="fs-5">
-                    Explore our hand-picked plans designed to help you reach your fitness and wellness goals. Whether
-                    you're looking for an exercise plan or a balanced nutrition plan, our experts have created something
-                    for everyone. Start your transformation with one of our popular plans!
-                </p>
-                <div class="d-flex justify-content-center">
-                    <a href="{% url 'plans' %}" class="btn btn-success btn-lg">View Plans</a>
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-4 offset-lg-9 offset-8 text-end" id="element-1">
+                    <p class="fs-3">Sign Up</p>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-4 text-start" id="element-2">
+                    <p class="fs-3">Choose Your Plan</p>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-4 offset-lg-9 offset-8 text-end" id="element-3">
+                    <p class="fs-3">Start Your Journey</p>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-4 text-start" id="element-4">
+                    <p class="fs-3">Share Your Success</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <hr class="mt-5">
+
+    <!-- Who we are section -->
+    <section class="pt-md-4 width-rule mt-5">
+        <div class="container-fluid position-relative">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-6 center">
+                    <h2 class="display-6 mb-4">Who We Are?</h2>
+                </div>
+                <div class="col-lg-6 center">
+                    <p class="fs-5">
+                        At FitHub, we believe that fitness and wellness should be accessible and achievable for
+                        everyone.
+                        Whether you're looking to get in shape, improve your nutrition, or join a supportive community
+                        of
+                        like-minded individuals, we’re here to help you every step of the way. Our personalized plans,
+                        expert insights, and diverse range of products are designed to fit your unique needs and goals.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-lg-6 offset-lg-6 center">
+                    <p class="fs-5">From workout plans to nutrition guidance, we offer everything you need to succeed.
+                        Plus,
+                        our community of subscribers shares their experiences, tips, and successes to motivate and
+                        inspire
+                        each other. Join us today, and let’s reach your health and fitness goals together!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr class="mt-5">
+
+    <!-- Featured Plans -->
+    <section class="pt-md-4 width-rule mt-5">
+        <div class="container-fluid position-relative">
+            <div class="row align-items-start">
+                <div class="col-lg-6 center">
+                    <h2 class="display-6 mb-4">Featured Products</h2>
+                    <p class="fs-5">
+                        Discover our top-rated products carefully selected to meet your needs. Whether you're looking
+                        for everyday essentials,
+                        exclusive bundles, or the latest arrivals, we have something for everyone. Shop our featured
+                        collection and find your next favorite item!
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <a href="{% url 'products' %}" class="btn btn-danger btn-lg">View Shop</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-lg-6 offset-lg-6 center">
+                    <h2 class="display-6 mb-4">Featured Plans</h2>
+                    <p class="fs-5">
+                        Explore our hand-picked plans designed to help you reach your fitness and wellness goals.
+                        Whether
+                        you're looking for an exercise plan or a balanced nutrition plan, our experts have created
+                        something
+                        for everyone. Start your transformation with one of our popular plans!
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        <a href="{% url 'plans' %}" class="btn btn-success btn-lg">View Plans</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
 </section>
 <hr>
 <!-- Featured Plans -->
 <section class="pt-md-4 width-rule mt-5">
     <div class="container-fluid position-relative">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
+        <div class="row align-items-start">
+            <div class="col-lg-6 center">
                 <h2 class="display-6 mb-4">Join Our Community</h2>
-            </div>
-            <div class="col-lg-12 center">
                 <p class="fs-5">
                     Our community is built on motivation, success, and support. Whether you’re just starting or pushing
                     past new milestones, here you’ll find inspiration, track your progress, and share your journey with
@@ -132,12 +142,28 @@
                 </div>
             </div>
         </div>
+        <div class="row align-items-start">
+            <div class="col-lg-6 offset-lg-6 border border-light px-3 py-3 rounded-3 mt-4 mt-lg-0">
+                <h2 class="display-6 mb-4">Subscribe to Our Newsletter</h2>
+                <p class="mb-0 fs-5">
+                    Stay updated with our latest news, offers, and tips. Join our mailing list!
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <div class="row align-items-center mt-5">
 
         </div>
     </div>
 </section>
+</div>
 <div class="arrow back-to-top d-none d-md-block"></div>
 
 
