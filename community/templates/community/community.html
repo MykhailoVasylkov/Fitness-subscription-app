@@ -111,7 +111,14 @@
                                             <div class="border border-dark px-3 py-3 rounded-3">
                                                 <p id="body{{ post.id }}">{{ post.body }}</p>
                                                 <button class="btn btn-outline-danger btn-like" data-post-id="{{ post.id }}">
-                                                    ❤️ <span class="like-count">{{ post.total_likes }}</span>
+                                                    <span class="like-icon">
+                                                        {% if user in post.likes.all %}
+                                                            ❤️
+                                                        {% else %}
+                                                            🤍
+                                                        {% endif %}
+                                                    </span> 
+                                                    <span class="like-count">{{ post.total_likes }}</span>
                                                 </button>                                          
                                             </div>
                                             {% if not post.approved %}
@@ -162,7 +169,14 @@
                                 <div class="border border-dark px-3 py-3 rounded-3">
                                 <p>{{ post.body }}</p>
                                 <button class="btn btn-outline-danger btn-like" data-post-id="{{ post.id }}">
-                                    ❤️ <span class="like-count">{{ post.total_likes }}</span>
+                                    <span class="like-icon">
+                                        {% if user in post.likes.all %}
+                                            ❤️
+                                        {% else %}
+                                            🤍
+                                        {% endif %}
+                                    </span> 
+                                    <span class="like-count">{{ post.total_likes }}</span>
                                 </button> 
                                 </div>
                             </div>
@@ -467,29 +481,43 @@
 </script>
 
 <script>
+
     // Used Chat-GPT
     // Get all the "like" buttons
-    document.querySelectorAll('.btn-like').forEach(button => {
-        button.addEventListener('click', function () {
-            const postId = this.dataset.postId;
-            const likeCountSpan = this.querySelector('.like-count');
+    document.addEventListener('DOMContentLoaded', function () {
+        const isAuthenticated = document.body.dataset.authenticated === 'true';
 
-            fetch("{% url 'ajax_like_post' %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: `post_id=${postId}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                likeCountSpan.textContent = data.likes_count;
-                this.classList.toggle('liked', data.liked);
+        document.querySelectorAll('.btn-like').forEach(button => {
+            button.addEventListener('click', function () {
+
+                const postId = this.dataset.postId;
+                const likeCountSpan = this.querySelector('.like-count');
+
+                fetch("{% url 'ajax_like_post' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: `post_id=${postId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    likeCountSpan.textContent = data.likes_count;
+
+                    // Switching class liked
+                    this.classList.toggle('liked', data.liked);
+
+                    // Changing the icon
+                    const icon = this.querySelector('.like-icon');
+                    if (icon) {
+                        icon.classList.toggle('text-danger', data.liked);
+                        icon.textContent = data.liked ? '❤️' : '🤍';
+                    }
+                });
             });
         });
     });
 </script>
-
 
 {% endblock %}

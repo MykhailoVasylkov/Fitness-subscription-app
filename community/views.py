@@ -53,7 +53,7 @@ def community(request):
      }
      return render(request, 'community/community.html', context)
 
-
+@login_required
 def edit_post(request, pk):
      """
      Edit an existing instance of model:`community.CommunityPost`.
@@ -85,6 +85,7 @@ def edit_post(request, pk):
      return redirect('community')
 
 
+@login_required
 def delete_post(request, pk):
     """
     Delete an existing instance of model:`community.CommunityPost`.
