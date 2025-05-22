@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container mb-2 min-vh-100">
+    <div class="row">
+        <div class="col mt-5">
+            <hr>
+            <h2 class="logo-font mb-2">Thanks for subscribing to FitHub!</h2>
+        </div>
+        <div class="col-lg-12 center">
+            <p class="fs-5">
+                You're almost done. Please confirm your subscription by clicking the button below:
+            </p>
+            <p>
+                <a href="{{ confirmation_link }}"
+                    style="background: #28a745; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+                    Confirm Subscription
+                </a>
+            </p>
+            <p>If you didn’t request this, you can ignore this email.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+
+
+{% endblock %}
