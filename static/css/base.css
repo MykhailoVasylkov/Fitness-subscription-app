@@ -19,7 +19,6 @@ body {
                 radial-gradient(at 80% 30%, #350a6a, transparent),
                 radial-gradient(at 50% 80%, #7f0651, transparent),
                 radial-gradient(at 30% 70%, #d1411d, transparent);
-    background-color: #c1d828;
     min-height: 100vh;
     margin: 0;
     width: 100%;

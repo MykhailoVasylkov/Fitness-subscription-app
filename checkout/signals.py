@@ -28,6 +28,7 @@ def update_on_delete(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Order)
 def send_order_status_email(sender, instance, created, **kwargs):
+    print(f"🔥 SIGNAL TRIGGERED: Order ID {instance.id}, status: {instance.status}, created: {created}")
     if not created:
         # Check that the status has changed to the desired value
         if instance.status == 'shipped':
