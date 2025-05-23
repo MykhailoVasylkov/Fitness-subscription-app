@@ -6,6 +6,7 @@ from solo.admin import SingletonModelAdmin
 Register DeliverySettings model in admin panel.
 """
 
+
 @admin.register(DeliverySettings)
 class DeliverySettingsAdmin(SingletonModelAdmin):
     list_display = ('free_delivery_threshold', 'standard_delivery_percentage')

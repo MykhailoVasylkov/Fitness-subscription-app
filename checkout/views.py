@@ -1,7 +1,8 @@
 '''
 Code snippet from Boutique Ado
 '''
-from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.conf import settings
@@ -23,9 +24,14 @@ import json
 def cache_checkout_data(request):
     try:
         # Get secrets of payment intentions
-        product_pid = request.POST.get('product_client_secret', '').split('_secret')[0]
-        subscription_pid = request.POST.get('subscription_client_secret', '').split('_secret')[0]
-        
+        product_pid = request.POST.get(
+            'product_client_secret', ''
+        ).split('_secret')[0]
+
+        subscription_pid = request.POST.get(
+            'subscription_client_secret', ''
+        ).split('_secret')[0]
+
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         # Update metadata for products
@@ -49,7 +55,11 @@ def cache_checkout_data(request):
         return HttpResponse(status=200)
 
     except Exception as e:
-        messages.error(request, 'Sorry, your payment cannot be processed right now. Please try again later.')
+        messages.error(
+            request,
+            'Sorry, your payment cannot be processed right now.'
+            ' Please try again later.'
+        )
         return HttpResponse(content=e, status=400)
 
 
@@ -61,13 +71,23 @@ def checkout(request):
     plan_bag = request.session.get('plan_bag', {})
 
     if request.method == 'POST':
-        is_product_order = bool(product_bag) and 'product_client_secret' in request.POST
-        is_subscription_order = bool(plan_bag) and 'subscription_client_secret' in request.POST
-								
+        is_product_order = (
+            bool(product_bag)
+            and 'product_client_secret' in request.POST
+        )
+
+        is_subscription_order = (
+            bool(plan_bag)
+            and 'subscription_client_secret' in request.POST
+        )
+
         if not product_bag and not plan_bag:
-            messages.error(request, "There's nothing in your bag at the moment")
+            messages.error(
+                request,
+                "There's nothing in your bag at the moment"
+            )
             return redirect(reverse('home'))
-        
+
         if is_product_order:
             form_data = {
                 'full_name': request.POST['full_name'],
@@ -109,9 +129,11 @@ def checkout(request):
                                 )
                         order_line_item.save()
                     except Product.DoesNotExist:
-                        messages.error(request, (
-                            "One of the products in your bag wasn't found in our database. "
-                            "Please call us for assistance!")
+                        messages.error(
+                            request,
+                            "One of the products in your bag wasn't"
+                            " found in our database. "
+                            "Please call us for assistance!"
                         )
                         order.delete()
                         return redirect(reverse('view_bag'))
@@ -120,10 +142,16 @@ def checkout(request):
                 request.session['save_info'] = 'save-info' in request.POST
 
                 # Redirecting to the page of successful ordering
-                return redirect(reverse('order_success', args=[order.order_number]))
+                return redirect(
+                    reverse('order_success', args=[order.order_number])
+                )
 
             else:
-                messages.error(request, 'There was an error with your form. Please double check your information.')
+                messages.error(
+                    request,
+                    'There was an error with your form.'
+                    ' Please double check your information.'
+                )
 
         # Subscription processing
         elif is_subscription_order:
@@ -134,11 +162,18 @@ def checkout(request):
             subscription_form = SubscriptionForm(form_data)
 
             if subscription_form.is_valid():
-                pid = request.POST.get('subscription_client_secret', '').split('_secret')[0]
+                pid = request.POST.get(
+                    'subscription_client_secret', ''
+                ).split('_secret')[0]
+
                 original_bag = json.dumps(plan_bag)
                 print(plan_bag)
 
-                user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
+                user_profile = (
+                    UserProfile.objects.get(user=request.user)
+                    if request.user.is_authenticated
+                    else None
+                )
 
                 try:
                     # Create a subscription object
@@ -150,7 +185,9 @@ def checkout(request):
 
                     for item_id, item_data in plan_bag.items():
                         try:
-                            plan = clone_plan(SubscriptionPlan.objects.get(id=item_id))
+                            plan = clone_plan(
+                                SubscriptionPlan.objects.get(id=item_id)
+                            )
 
                             quantity = item_data.get('quantity', 1)
 
@@ -163,33 +200,52 @@ def checkout(request):
                             line_item.save()
 
                         except SubscriptionPlan.DoesNotExist:
-                            messages.error(request, (
-                                f"Plan with ID {item_id} wasn't found in our database. "
-                                "Please call us for assistance!")
+                            messages.error(
+                                request,
+                                f"Plan with ID {item_id} wasn't "
+                                f"found in our database. "
+                                f"Please call us for assistance!"
                             )
-                            subscription.delete()  # Rollback subscription if any plan is missing
+                            # Rollback subscription if any plan is missing
+                            subscription.delete()
                             return redirect(reverse('view_bag'))
 
                     # Get the subscription number
                     subscription_number = subscription.subscription_number
 
-                    # Update the total subscription amount after adding all lineitems
-                    subscription.subscription_total = subscription.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
+                    """
+                    Update the total subscription amount after adding all
+                    lineitems
+                    """
+                    subscription.subscription_total = subscription.lineitems.aggregate(
+                        Sum('lineitem_total')
+                        )['lineitem_total__sum'] or 0
                     subscription.save()
 
                     # Save user information (if necessary)
                     request.session['save_info'] = 'save-info' in request.POST
 
                     # Redirect to the successful subscription page
-                    return redirect(reverse('subscription_success', args=[subscription_number]))
+                    return redirect(
+                        reverse(
+                            'subscription_success',
+                            args=[subscription_number]
+                        )
+                    )
 
                 except Exception as e:
-                    messages.error(request, f"An error occurred while processing your order: {str(e)}")
+                    messages.error(
+                        request,
+                        f'An error occurred while'
+                        f' processing your order: {str(e)}'
+                    )
                     return redirect(reverse('view_bag'))
 
             else:
-                messages.error(request, 'There was an error with your form. Please double check your information.')
-
+                messages.error(
+                    request,
+                    'There was an error with your form.'
+                    ' Please double check your information.')
 
     # If the request is not post, prepare forms for the render
     if request.user.is_authenticated:
@@ -221,7 +277,11 @@ def checkout(request):
 
     # Checking Stripe key
     if not stripe_public_key:
-        messages.warning(request, 'Stripe public key is missing. Did you forget to set it in your environment?')
+        messages.warning(
+            request,
+            'Stripe public key is missing.'
+            ' Did you forget to set it in your environment?'
+        )
 
     current_bag = bag_contents(request)
     stripe.api_key = stripe_secret_key
@@ -252,15 +312,19 @@ def checkout(request):
         'order_form': order_form,
         'subscription_form': subscription_form,
         'stripe_public_key': stripe_public_key,
-        'product_client_secret': product_intent.client_secret if product_bag else '',
-        'subscription_client_secret': subscription_intent.client_secret if plan_bag else '',
+        'product_client_secret': (
+            product_intent.client_secret if product_bag else ''
+        ),
+        'subscription_client_secret': (
+            subscription_intent.client_secret if plan_bag else ''
+        ),
     }
 
     return render(request, 'checkout/checkout.html', context)
 
 
 def checkout_success(request, order_number=None, subscription_number=None):
-    
+
     context = {}
 
     if order_number:
@@ -286,7 +350,9 @@ def checkout_success(request, order_number=None, subscription_number=None):
                     'default_street_address2': order.street_address2,
                     'default_county': order.county,
                 }
-                user_profile_form = UserProfileForm(profile_data, instance=profile)
+                user_profile_form = UserProfileForm(
+                    profile_data, instance=profile
+                )
                 if user_profile_form.is_valid():
                     user_profile_form.save()
 
@@ -301,7 +367,9 @@ def checkout_success(request, order_number=None, subscription_number=None):
     elif subscription_number:
         save_info = request.session.get('save_info')
         # Successful subscription processing
-        subscription = get_object_or_404(Subscription, subscription_number=subscription_number)
+        subscription = get_object_or_404(
+            Subscription, subscription_number=subscription_number
+        )
         context['subscription'] = subscription
 
         if request.user.is_authenticated:

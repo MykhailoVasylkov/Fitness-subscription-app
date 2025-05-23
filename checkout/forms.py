@@ -1,4 +1,4 @@
-# Code snippet form Boutique Ado 
+# Code snippet form Boutique Ado
 from django import forms
 from .models import Order, Subscription
 
@@ -39,7 +39,7 @@ class OrderForm(forms.ModelForm):
             self.fields[field].widget.attrs['class'] = 'stripe-style-input'
             self.fields[field].label = False
 
-        
+
 class SubscriptionForm(forms.ModelForm):
     class Meta:
         model = Subscription

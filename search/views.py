@@ -15,8 +15,16 @@ def search(request):
     search_filter = Q(name__icontains=query) | Q(description__icontains=query)
 
     products = Product.objects.filter(search_filter)
-    nutrition_plans = SubscriptionPlan.objects.filter(category='nutrition').filter(search_filter)
-    exercises_plans = SubscriptionPlan.objects.filter(category='exercises').filter(search_filter)
+    nutrition_plans = (
+        SubscriptionPlan.objects
+        .filter(category='nutrition')
+        .filter(search_filter)
+    )
+    exercises_plans = (
+        SubscriptionPlan.objects
+        .filter(category='exercises')
+        .filter(search_filter)
+    )
 
     return render(request, 'search/search_results.html', {
         'search_term': query,

@@ -11,6 +11,7 @@ from .forms import UserProfileForm
 
 import json
 
+
 @login_required
 def profile(request):
     """ Display the user's profile. """
@@ -23,20 +24,31 @@ def profile(request):
             messages.success(request, 'Profile updated successfully')
             return redirect('profile')
         else:
-            messages.error(request, 'Update failed. Please ensure the form is valid.')
+            messages.error(
+                request,
+                'Update failed. Please ensure the form is valid.'
+            )
     else:
         form = UserProfileForm(instance=profile)
     orders = profile.orders.all()
     subscriptions = profile.subscriptions.all()
 
-    # Create achievements library for checking already existing items in the template
+    """
+    Create achievements library for checking already
+    existing items in the template
+    """
     achievements = Achievement.objects.filter(user=request.user).values(
         "plan_name", "week_number", "day_name", "content_item"
     )
 
     completed_tokens = []
     for a in achievements:
-        token = f"{a['plan_name']}|{a['week_number']}|{a['day_name']}|{a['content_item']}"
+        token = (
+            f"{a['plan_name']}|"
+            f"{a['week_number']}|"
+            f"{a['day_name']}|"
+            f"{a['content_item']}"
+        )
         completed_tokens.append(token)
 
     completed_tokens_json = json.dumps(completed_tokens, cls=DjangoJSONEncoder)
@@ -69,8 +81,12 @@ def order_history(request, order_number):
 
     return render(request, template, context)
 
+
 def plan_order_history(request, subscription_number):
-    subscription = get_object_or_404(Subscription, subscription_number=subscription_number)
+    subscription = get_object_or_404(
+        Subscription,
+        subscription_number=subscription_number
+    )
 
     messages.info(request, (
         f'This is a past confirmation for order number {subscription_number}. '

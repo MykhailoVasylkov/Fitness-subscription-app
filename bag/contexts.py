@@ -1,11 +1,11 @@
 from decimal import Decimal
 from django.shortcuts import get_object_or_404
-from django.contrib import messages
 from settings.models import DeliverySettings
 from products.models import Product
 from plans.models import SubscriptionPlan
 
-# I used code snippet form Boutique Ado 
+# I used code snippet form Boutique Ado
+
 
 def delivery_settings(request):
     settings = DeliverySettings.get_solo()
@@ -40,7 +40,7 @@ def bag_contents(request):
                 'quantity': item_data,
                 'product': product,
             })
-            
+
         else:
             product = get_object_or_404(Product, pk=item_id)
             for size, quantity in item_data['items_by_size'].items():
@@ -64,20 +64,24 @@ def bag_contents(request):
             'duration_weeks': plan.duration_weeks,
             'level': plan.level,
         })
-    
+
     total = total_product + total_plan
 
     if total_product < delivery_settings_data['FREE_DELIVERY_THRESHOLD']:
-        delivery = total_product * Decimal(delivery_settings_data['STANDARD_DELIVERY_PERCENTAGE'] / 100)
-        free_delivery_delta = delivery_settings_data['FREE_DELIVERY_THRESHOLD'] - total_product
+        delivery = total_product * Decimal(
+            delivery_settings_data['STANDARD_DELIVERY_PERCENTAGE'] / 100
+        )
+        free_delivery_delta = (
+            delivery_settings_data['FREE_DELIVERY_THRESHOLD'] - total_product
+        )
     else:
         delivery = 0
         free_delivery_delta = 0
-    
+
     grand_total = delivery + total
     grand_product_total = delivery + total_product
     grand_plan_total = total_plan
-    
+
     context = {
         'product_items': product_items,
         'plan_items': plan_items,
@@ -87,14 +91,16 @@ def bag_contents(request):
         'total_count': product_count + plan_count,
         'delivery': delivery,
         'free_delivery_delta': free_delivery_delta,
-        'free_delivery_threshold': delivery_settings_data['FREE_DELIVERY_THRESHOLD'],
+        'free_delivery_threshold': delivery_settings_data[
+            'FREE_DELIVERY_THRESHOLD'
+        ],
         'grand_total': grand_total,
         'grand_product_total': grand_product_total,
         'total_plan': total_plan,
         'total_product': total_product,
         'grand_plan_total': grand_plan_total,
         'product_bag': product_bag,
-        'plan_bag': plan_bag,    
+        'plan_bag': plan_bag,
     }
 
     return context

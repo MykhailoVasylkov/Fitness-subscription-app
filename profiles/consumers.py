@@ -9,6 +9,8 @@ from community.models import CommunityMessage
 '''
 Used Chat-GPT
 '''
+
+
 class ProfileDataConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user']
@@ -20,7 +22,10 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
-        print(f"User {self.user.username if self.user.is_authenticated else 'Anonymous'} connected to community")
+        print(
+            f"User {self.user.username if self.user.is_authenticated else 'Anonymous'} "
+            "connected to community"
+        )
 
     async def disconnect(self, close_code):
         # Leaving the group
@@ -28,7 +33,10 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        print(f"User {self.user.username if self.user.is_authenticated else 'Anonymous'} disconnected from community with code: {close_code}")
+        print(
+            f"User {self.user.username if self.user.is_authenticated else 'Anonymous'} "
+            f"disconnected from community with code: {close_code}"
+        )
 
     # Receiving a message from WebSocket (from profile page)
     async def receive(self, text_data):
@@ -44,17 +52,25 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
             now = date_format(timezone.now(), "N j, Y, P")
             day_name = timezone.now().strftime("%A")  # Get the full day name
 
-            print(f"Received data from {profile.nickname if profile else (user.username if user.is_authenticated else 'Anonymous')}: {data}")
-
             # Forming a message for broadcasting to the community
             community_message = {
-                "user": (profile.nickname if profile and profile.nickname else user.username) if user.is_authenticated else "Anonymous",
-                "message": f"The goal '{data.get('content_item', '')}' in plan '{data.get('plan_name', '')}' for week {data.get('week_number', '')} (on {day_name}) was {data.get('status', '')}",
+                "user": (
+                    profile.nickname
+                    if profile and profile.nickname
+                    else user.username
+                ) if user.is_authenticated else "Anonymous",
+                "message": (
+                    f"The goal '{data.get('content_item', '')}' "
+                    f"in plan '{data.get('plan_name', '')}' "
+                    f"for week {data.get('week_number', '')} "
+                    f"(on {day_name}) was {data.get('status', '')}"
+                ),
+
                 "timestamp": now,
-                "avatar": data.get('avatar', '/media/avatars/default_avatar.jpg') 
+                "avatar": data.get('avatar', '/media/avatars/default_avatar.jpg')
             }
 
-            # Save massage to db 
+            # Save massage to db
             # Save the message asynchronously
             await sync_to_async(CommunityMessage.objects.create)(
                 user=community_message["user"],
@@ -67,7 +83,7 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
-                    'type': 'community.message',  # Event type to handle in community
+                    'type': 'community.message',  # Event type
                     'user': community_message['user'],
                     'message': community_message['message'],
                     'timestamp': community_message['timestamp'],
@@ -78,7 +94,9 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", e)
 
-    # Event handler for community message (to send back to WebSocket Community page)
+    """
+    Event handler for community message (send back to WebSocket Community page)
+    """
     async def community_message(self, event):
         user = event['user']
         message = event['message']

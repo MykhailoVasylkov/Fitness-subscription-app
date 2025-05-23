@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Product, Category, ProductSize, Brand, ProductReview
 
-# Register your models here.
 """
 Register ProductSize model in admin panel.
 """
+
 
 class ProductSizeInline(admin.TabularInline):
     model = ProductSize
@@ -17,6 +17,7 @@ Add how product items is displaying.
 Add search functionality.
 Add filter functionality.
 """
+
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -33,10 +34,12 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('category', 'status', 'price')
     inlines = [ProductSizeInline]
 
+
 """
 Register Category model in admin panel.
 Add how category items is displaying.
 """
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
@@ -44,15 +47,18 @@ class CategoryAdmin(admin.ModelAdmin):
         'name',
     )
 
+
 """
 Register Brand model in admin panel.
 """
+
 
 class BrandAdmin(admin.ModelAdmin):
     list_display = (
         'friendly_name',
         'name',
     )
+
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
@@ -65,5 +71,6 @@ class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ('author', 'product', 'rating', 'created_on', 'approved',)
     search_fields = ['product', 'author', 'body', ]
     list_filter = ('product', 'rating', 'approved',)
+
 
 admin.site.register(ProductReview, ProductReviewAdmin)

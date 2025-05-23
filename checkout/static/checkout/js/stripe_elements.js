@@ -163,6 +163,6 @@ if (subscriptionCardElement) {
             });
         }).fail(function () {
             location.reload();
-        })
+        });
     });
 });

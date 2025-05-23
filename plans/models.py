@@ -11,7 +11,12 @@ class SubscriptionPlan(models.Model):
         ('nutrition', 'Nutrition'),
     ])
     description = models.TextField()
-    rating = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    rating = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
     price = models.DecimalField(max_digits=8, decimal_places=2)
     duration_weeks = models.PositiveIntegerField(default=1)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
@@ -22,38 +27,73 @@ class SubscriptionPlan(models.Model):
         (3, 'Advanced'),
         (4, 'Pro'),
     ])
-    next_plan = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    next_plan = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return self.name
-    
+
     def average_rating(self):
-        return self.plan_reviews.filter(approved=True).aggregate(Avg('rating'))['rating__avg'] or 0  
+        return (
+            self.plan_reviews
+            .filter(approved=True)
+            .aggregate(Avg('rating'))['rating__avg']
+            or 0
+        )
+
 
 class Week(models.Model):
-    plan = models.ForeignKey(SubscriptionPlan, related_name="weeks", on_delete=models.CASCADE)
+    plan = models.ForeignKey(
+        SubscriptionPlan,
+        related_name="weeks",
+        on_delete=models.CASCADE
+    )
     number = models.PositiveIntegerField()
 
+
 class Day(models.Model):
-    week = models.ForeignKey(Week, related_name="days", on_delete=models.CASCADE)
+    week = models.ForeignKey(
+        Week,
+        related_name="days",
+        on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=10, choices=[
         ('monday', 'Monday'), ('tuesday', 'Tuesday'),
         ('wednesday', 'Wednesday'), ('thursday', 'Thursday'),
         ('friday', 'Friday'), ('saturday', 'Saturday'), ('sunday', 'Sunday'),
     ])
 
+
 class DayContentItem(models.Model):
-    day = models.ForeignKey(Day, related_name="content_items", on_delete=models.CASCADE)
+    day = models.ForeignKey(
+        Day,
+        related_name="content_items",
+        on_delete=models.CASCADE
+    )
     key = models.CharField(max_length=50)
     value = models.TextField()
 
 
 class SubscriptionPlanSnapshot(models.Model):
-    original_plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    original_plan = models.ForeignKey(
+        SubscriptionPlan,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=20)
     description = models.TextField()
-    rating = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    rating = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
     price = models.DecimalField(max_digits=8, decimal_places=2)
     duration_weeks = models.PositiveIntegerField(default=1)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
@@ -66,17 +106,29 @@ class SubscriptionPlanSnapshot(models.Model):
 
 
 class WeekSnapshot(models.Model):
-    plan_snapshot = models.ForeignKey(SubscriptionPlanSnapshot, related_name="weeks", on_delete=models.CASCADE)
+    plan_snapshot = models.ForeignKey(
+        SubscriptionPlanSnapshot,
+        related_name="weeks",
+        on_delete=models.CASCADE
+    )
     number = models.PositiveIntegerField()
 
 
 class DaySnapshot(models.Model):
-    week_snapshot = models.ForeignKey(WeekSnapshot, related_name="days", on_delete=models.CASCADE)
+    week_snapshot = models.ForeignKey(
+        WeekSnapshot,
+        related_name="days",
+        on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=10)
 
 
 class DayContentItemSnapshot(models.Model):
-    day_snapshot = models.ForeignKey(DaySnapshot, related_name="content_items", on_delete=models.CASCADE)
+    day_snapshot = models.ForeignKey(
+        DaySnapshot,
+        related_name="content_items",
+        on_delete=models.CASCADE
+    )
     key = models.CharField(max_length=50)
     value = models.TextField()
 
@@ -120,12 +172,19 @@ def clone_plan(plan):
 
     return plan_snapshot
 
+
 """
 Plan Review model for storing user reviews with rating (1-5),
 body, approval status, and timestamps.
 """
+
+
 class PlanReview(models.Model):
-    plan = models.ForeignKey(SubscriptionPlan, related_name="plan_reviews", on_delete=models.CASCADE)
+    plan = models.ForeignKey(
+        SubscriptionPlan,
+        related_name="plan_reviews",
+        on_delete=models.CASCADE
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

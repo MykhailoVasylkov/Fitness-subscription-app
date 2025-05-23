@@ -235,7 +235,7 @@
     $('.update-link').click(function (e) {
         var form = $(this).prev('.update-form');
         form.submit();
-    })
+    });
 
     // Remove product item and reload on click
     $('.remove-product').click(function (e) {
@@ -249,7 +249,7 @@
             .done(function () {
                 location.reload();
             });
-    })
+    });
 
     // Remove plan item and reload on click
     $('.remove-plan').click(function (e) {
@@ -262,6 +262,6 @@
             .done(function () {
                 location.reload();
             });
-    })
+    });
 </script>
 {% endblock %}

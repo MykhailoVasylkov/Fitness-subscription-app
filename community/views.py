@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.db.models import Count
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+
+from profiles.models import UserProfile
 from .models import CommunityMessage, CommunityPost
 from .forms import CommunityPostForm
 
@@ -10,79 +12,83 @@ from .forms import CommunityPostForm
 
 
 def community(request):
-     """
-     A view to return the community page, with community posts and messages.
-     """
-     community_posts = CommunityPost.objects.filter(approved=True).annotate(total_likes=Count('likes')).order_by("-created_on")
-     community_messages = CommunityMessage.objects.order_by('-timestamp')[:10]
+    """
+    A view to return the community page, with community posts and messages.
+    """
+    community_posts = (
+        CommunityPost.objects.filter(approved=True)
+        .annotate(total_likes=Count("likes"))
+        .order_by("-created_on")
+    )
+    community_messages = CommunityMessage.objects.order_by("-timestamp")[:10]
 
-     user_posts = None
-     if request.user.is_authenticated:
-          user_posts = community_posts.filter(author=request.user)
+    user_posts = None
+    if request.user.is_authenticated:
+        user_posts = community_posts.filter(author=request.user)
 
-     user_profile = None
-     if request.user.is_authenticated:
-          try:
-               user_profile = request.user.userprofile
-          except UserProfile.DoesNotExist:
-               pass
-     
-     if request.method == 'POST':
-          if not request.user.is_authenticated:
-               messages.error(request, 'You must be logged in to submit a post.')
-               return redirect('account_login') 
-          
-          form = CommunityPostForm(request.POST, request.FILES)
-          if form.is_valid():
-               post = form.save(commit=False)
-               post.author = request.user
-               post.save()
-               messages.success(request, 'Post submitted!')
-               return redirect('community')
-          else:
-               messages.error(request, 'Failed to submit post!')
-     else:
-          form = CommunityPostForm()
+    user_profile = None
+    if request.user.is_authenticated:
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            pass
 
-     context = {
-          'community_messages': community_messages,
-          'community_posts': community_posts,
-          'user_posts': user_posts,
-          'user_profile': user_profile,
-          'form': form,
-     }
-     return render(request, 'community/community.html', context)
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            messages.error(request, "You must be logged in to submit a post.")
+            return redirect("account_login")
+
+        form = CommunityPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            messages.success(request, "Post submitted!")
+            return redirect("community")
+        else:
+            messages.error(request, "Failed to submit post!")
+    else:
+        form = CommunityPostForm()
+
+    context = {
+        "community_messages": community_messages,
+        "community_posts": community_posts,
+        "user_posts": user_posts,
+        "user_profile": user_profile,
+        "form": form,
+    }
+    return render(request, "community/community.html", context)
+
 
 @login_required
 def edit_post(request, pk):
-     """
-     Edit an existing instance of model:`community.CommunityPost`.
-     """
-     post = get_object_or_404(CommunityPost, pk=pk, author=request.user)
+    """
+    Edit an existing instance of model:`community.CommunityPost`.
+    """
+    post = get_object_or_404(CommunityPost, pk=pk, author=request.user)
 
-     if request.method == 'POST':
-          form = CommunityPostForm(request.POST, request.FILES, instance=post)
+    if request.method == "POST":
+        form = CommunityPostForm(request.POST, request.FILES, instance=post)
 
-          if form.is_valid():
-               # Delete image if user checks the box
-               if 'remove_image' in request.POST and post.image:
-                    post.image.delete(save=False)
-                    post.image = None
+        if form.is_valid():
+            # Delete image if user checks the box
+            if "remove_image" in request.POST and post.image:
+                post.image.delete(save=False)
+                post.image = None
 
-               form.save()
-               messages.success(request, 'Your post has been updated.')
-               return redirect('community')
-          else:
-               messages.add_message(
-                    request,
-                    messages.ERROR,
-                    'Error updating post!'
-               )
-          return redirect('community')
-     else:
-          form = CommunityPostForm(instance=post)
+            form.save()
+            messages.success(request, "Your post has been updated.")
+            return redirect("community")
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR, "Error updating post!"
+            )
+        return redirect("community")
+    else:
+        form = CommunityPostForm(instance=post)
 
-     return redirect('community')
+    return redirect("community")
 
 
 @login_required
@@ -96,36 +102,37 @@ def delete_post(request, pk):
         if post.author == request.user:
             post.delete()
             messages.add_message(
-                request, messages.SUCCESS,
-                'Your post has been deleted.'
+                request, messages.SUCCESS, "Your post has been deleted."
             )
         else:
             messages.add_message(
-                request, messages.ERROR,
-                'Error deleting post!'
+                request,
+                messages.ERROR, "Error deleting post!"
             )
 
-    return redirect('community')
+    return redirect("community")
 
 
 @login_required
 def ajax_like_post(request):
-     """ 
-     A view to add or delete like.
-     Used Chat-GPT
-     """
-     if request.method == 'POST':
-          post_id = request.POST.get('post_id')
-          post = get_object_or_404(CommunityPost, id=post_id)
+    """
+    A view to add or delete like.
+    Used Chat-GPT
+    """
+    if request.method == "POST":
+        post_id = request.POST.get("post_id")
+        post = get_object_or_404(CommunityPost, id=post_id)
 
-          liked = False
-          if request.user in post.likes.all():
-               post.likes.remove(request.user)
-          else:
-               post.likes.add(request.user)
-               liked = True
+        liked = False
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+            liked = True
 
-          return JsonResponse({
-               'liked': liked,
-               'likes_count': post.total_likes(),
-          })
+        return JsonResponse(
+            {
+                "liked": liked,
+                "likes_count": post.total_likes(),
+            }
+        )

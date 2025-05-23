@@ -1,17 +1,10 @@
-/*Set Up color variables*/
-:root {
-    --first-color: rgb(35, 36, 43);
-    --second-color: rgb(239, 168, 62);
-    --accent-color: rgb(120, 67, 54);
-    --third-color: rgb(255, 255, 255);
-} 
-  
+
   /*Prevent horizontal scrolling and disable overscroll behavior */
 html,
 body {
     overflow-x: hidden;
     overscroll-behavior: none;
-    width: 100%
+    width: 100%;
     overflow-y: auto !important;
 }
   
@@ -34,7 +27,7 @@ body {
 }
 
 main, footer {
-    color: var(--third-color);
+    color: #fff;
 }
 
 #topnav a {
@@ -85,7 +78,7 @@ a {
   }
 
   .form-text {
-    color: white;
+    color: #fff;
   }
 
   .badge:hover {

@@ -38,6 +38,7 @@ class SubscriptionPlanAdmin(nested_admin.NestedModelAdmin):
     list_filter = ('category', 'level', 'price')
     save_as = True
 
+
 admin.site.register(SubscriptionPlan, SubscriptionPlanAdmin)
 
 
@@ -47,5 +48,6 @@ class PlanReviewAdmin(admin.ModelAdmin):
     list_display = ('author', 'plan', 'rating', 'created_on', 'approved',)
     search_fields = ['plan', 'author', 'body', ]
     list_filter = ('plan', 'rating', 'approved',)
+
 
 admin.site.register(PlanReview, PlanReviewAdmin)

@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 
+from profiles.models import UserProfile
 from .models import Product, Category, ProductSize, Brand, ProductReview
-from .forms  import ProductForm, ProductReviewForm
+from .forms import ProductForm, ProductReviewForm
 
 
 # Create your views here.
@@ -36,7 +37,7 @@ def all_products(request):
                 if direction == 'desc':
                     sortkey = f'-{sortkey}'
             products = products.order_by(sortkey)
-        
+
         # Filtering by brand
         if 'brand' in request.GET and request.GET['brand']:
             brands = request.GET['brand'].split(',')
@@ -45,11 +46,14 @@ def all_products(request):
         else:
             selected_brands = []
 
-        # Filtering by category   
+        # Filtering by category
         if 'category' in request.GET and request.GET['category']:
             categories = request.GET['category'].split(',')
-            
-            # Determine what is transmitted in the GET request: ID (numbers) or names (rows)
+
+            """
+            Determine what is transmitted in the GET request:
+            ID (numbers) or names (rows)
+            """
             if categories[0].isdigit():
                 products = products.filter(category__id__in=categories)
                 categories = Category.objects.filter(id__in=categories)
@@ -58,12 +62,12 @@ def all_products(request):
                 categories = Category.objects.filter(name__in=categories)
         else:
             categories = Category.objects.all()
-        
+
         # Filtering by price range
         if 'min_price' in request.GET and request.GET['min_price']:
             min_price = int(request.GET['min_price'])
             products = products.filter(price__gte=min_price)
-        
+
         if 'max_price' in request.GET and request.GET['max_price']:
             max_price = int(request.GET['max_price'])
             products = products.filter(price__lte=max_price)
@@ -90,12 +94,19 @@ def all_products(request):
 
     return render(request, 'products/products.html', context)
 
+
 def product_detail(request, product_id):
-    """ A view to show individual product details, review form and existing reviews """
+    """
+    A view to show individual product details, review form and existing reviews
+    """
 
     product = get_object_or_404(Product, pk=product_id)
 
-    reviews = product.product_reviews.filter(approved=True).order_by("-created_on")
+    reviews = (
+        product.product_reviews
+        .filter(approved=True)
+        .order_by("-created_on")
+    )
 
     user_reviews = None
     if request.user.is_authenticated:
@@ -110,8 +121,11 @@ def product_detail(request, product_id):
 
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            messages.error(request, 'You must be logged in to submit a review.')
-            return redirect('account_login') 
+            messages.error(
+                request,
+                'You must be logged in to submit a review.'
+            )
+            return redirect('account_login')
         form = ProductReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
@@ -196,7 +210,12 @@ def add_product(request):
         messages.error(request, 'Sorry, only store owners can do that.')
         return redirect('home')
 
-    SizesFormset = inlineformset_factory(Product, ProductSize, fields=['size', 'quantity'], extra=0)
+    SizesFormset = inlineformset_factory(
+        Product,
+        ProductSize,
+        fields=['size', 'quantity'],
+        extra=0
+    )
 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -209,7 +228,10 @@ def add_product(request):
             messages.success(request, 'Successfully added product!')
             return redirect('product_detail', product_id=product.id)
         else:
-            messages.error(request, 'Failed to add product. Please ensure the form is valid.')
+            messages.error(
+                request,
+                'Failed to add product. Please ensure the form is valid.'
+            )
     else:
         form = ProductForm()
         formset = SizesFormset()
@@ -228,12 +250,12 @@ def edit_product(request, product_id):
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only store owners can do that.')
         return redirect(reverse('home'))
-    
+
     SizesFormset = inlineformset_factory(
-    Product, ProductSize,
-    fields=['size', 'quantity'],
-    extra=0,
-    can_delete=True
+        Product, ProductSize,
+        fields=['size', 'quantity'],
+        extra=0,
+        can_delete=True
     )
 
     product = get_object_or_404(Product, pk=product_id)
@@ -248,7 +270,10 @@ def edit_product(request, product_id):
             messages.success(request, 'Successfully updated product!')
             return redirect(reverse('product_detail', args=[product.id]))
         else:
-            messages.error(request, 'Failed to update product. Please ensure the form is valid.')
+            messages.error(
+                request,
+                'Failed to update product. Please ensure the form is valid.'
+            )
     else:
         form = ProductForm(instance=product)
         formset = SizesFormset(instance=product)
@@ -259,10 +284,10 @@ def edit_product(request, product_id):
         'form': form,
         'product': product,
         'formset': formset,
-        
     }
 
     return render(request, template, context)
+
 
 @login_required
 def delete_product(request, product_id):
@@ -270,7 +295,7 @@ def delete_product(request, product_id):
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only store owners can do that.')
         return redirect(reverse('home'))
-    
+
     product = get_object_or_404(Product, pk=product_id)
     product.delete()
     messages.success(request, 'Product deleted!')

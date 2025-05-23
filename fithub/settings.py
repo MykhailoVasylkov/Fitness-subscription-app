@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',
                  'localhost',
@@ -113,7 +113,7 @@ TEMPLATES = [
                 'crispy_forms.templatetags.crispy_forms_field',
             ],
             'libraries': {
-            'bag_tools': 'bag.templatetags.bag_tools',
+                'bag_tools': 'bag.templatetags.bag_tools',
             }
         },
     },
@@ -128,7 +128,6 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
-    
 ]
 
 SITE_ID = 1
@@ -138,8 +137,12 @@ DEFAULT_FROM_EMAIL = 'fithub@example.com'
 
 
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
-ACCOUNT_SIGNUP_FIELDS = ['username*', 'email*', 'email2*', 'password1*', 
-'password2*']
+ACCOUNT_SIGNUP_FIELDS = [
+    'username*',
+    'email*',
+    'email2*',
+    'password1*',
+    'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
@@ -148,7 +151,7 @@ LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = False
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
-SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
 
@@ -183,7 +186,7 @@ if 'DATABASE_URL' in os.environ:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
-else: 
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
