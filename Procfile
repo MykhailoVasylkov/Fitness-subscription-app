@@ -1,1 +1,1 @@
-web: gunicorn fithub.wsgi:application
+web: daphne -b 0.0.0.0 -p $PORT fithub.asgi:application

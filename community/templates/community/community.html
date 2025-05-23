@@ -141,6 +141,7 @@
                         </div>
                     {% endif %}
                     <!--All Reviews -->
+                    {% if community_posts %}
                     <div class="mt-4 border border-light px-3 py-3 rounded-3">
                         <h2 class="mb-3 mt-2 text-center">Recent Posts</h2>
                         {% for post in community_posts %}
@@ -188,6 +189,7 @@
                         <p>No posts yet!</p>
                         {% endfor %}
                     </div> 
+                    {% endif %}
                 </div>
 
                 <!--Community achievements--> 

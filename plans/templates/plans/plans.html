@@ -64,11 +64,13 @@
                             <form method="get" action="{% url 'plans' %}">
                                 <select name="duration_weeks" class="form-select d-inline-block w-100 w-md-auto" onchange="this.form.submit()">
                                     <option value="" {% if not selected_durations %}selected{% endif %}>All Durations</option>
+                                    {% if all_durations %}
                                     {% for duration in all_durations %}
                                         <option value="{{ duration }}" {% if duration in selected_durations %}selected{% endif %}>
                                             {{ duration }} Weeks
                                         </option>
                                     {% endfor %}
+                                    {% endif %}
                                 </select>
                                 {% for value in selected_levels %}
                                     <input type="hidden" name="level" value="{{ value }}">
