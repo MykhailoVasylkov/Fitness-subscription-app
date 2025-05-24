@@ -220,12 +220,12 @@
     </section>
 
     <!-- Delete confirmation modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal1" tabindex="-1" aria-labelledby="deleteModalLabel1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="deleteModalLabel">Delete post?</h5>
+                <h5 class="modal-title text-dark" id="deleteModalLabel1">Delete post?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -236,7 +236,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form id="deleteForm" method="POST" action="">
+                <form id="deleteForm1" method="POST" action="#">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
@@ -470,13 +470,15 @@
      * - Displays a confirmation modal (`deleteModal`) to prompt 
      * the user for confirmation before deletion.
      */
+    const deleteModal1 = new bootstrap.Modal(document.getElementById("deleteModal1"));
+    const deleteForm1 = document.getElementById("deleteForm1");
 
     for (let button of deleteButtons) {
         button.addEventListener("click", (e) => {
             let postId = e.target.getAttribute("data-post-id");
-            deleteForm.setAttribute("action", `delete/${postId}`);
+            deleteForm1.setAttribute("action", `delete/${postId}`);
 
-            deleteModal.show();
+            deleteModal1.show();
 
         });
     }

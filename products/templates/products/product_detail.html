@@ -67,7 +67,7 @@
                         <div class="col-12">
                             <p class="mt-3"><strong>Quantity:</strong></p>
                             <div class="form-group w-50">
-                                <div class="input-group rounded-3 border bg-white input-group-{{ product.id }}"">
+                                <div class="input-group rounded-3 border bg-white input-group-{{ product.id }}">
 
                                     <button class="btn btn-light decrement-qty decrement-qty_{{ product.id }}" type="button"
                                         data-item_id="{{ product.id }}">
@@ -141,7 +141,7 @@
 
                     </div>
                     <div class="invalid-feedback">Please select a rating.</div>
-                    <input type="hidden" name="rating" id="rating-value" value="0" required>
+                    <input type="hidden" name="rating" id="rating-value" value="0">
 
                     <!--Body -->
 
@@ -245,12 +245,12 @@
         </div>
     </div>
     <!-- Delete confirmation modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal3" tabindex="-1" aria-labelledby="deleteModalLabel3" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="deleteModalLabel">Delete review?</h5>
+                <h5 class="modal-title text-dark" id="deleteModalLabel3">Delete review?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -261,7 +261,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form id="deleteForm" method="POST" action="">
+                <form id="deleteForm3" method="POST" action="#">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
@@ -403,14 +403,16 @@
      * - Displays a confirmation modal (`deleteModal`) to prompt 
      * the user for confirmation before deletion.
      */
+    const deleteModal3 = new bootstrap.Modal(document.getElementById("deleteModal3"));
+    const deleteForm3 = document.getElementById("deleteForm3");
 
     for (let button of deleteButtons) {
         button.addEventListener("click", (e) => {
             let reviewId = e.target.getAttribute("data-review-id");
             let productId = e.target.getAttribute("data-product-id");
-            deleteForm.setAttribute("action", `/shop/${productId}/delete/${reviewId}`);
+            deleteForm3.setAttribute("action", `/shop/${productId}/delete/${reviewId}`);
 
-            deleteModal.show();
+            deleteModal3.show();
 
         });
     }
