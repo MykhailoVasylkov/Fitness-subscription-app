@@ -153,13 +153,13 @@
                 </div>
                 {% for plan in nutrition_plans %}
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                    <div class="card h-100 border-0">
+                    <div class="card h-100 border-0 image-wrapper">
                         {% if plan.image %}
-                        <a href="{% url 'plan_detail' plan.id %}">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
                         </a>
                         {% else %}
-                        <a href="{% url 'plan_detail' plan.id %}">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
                                 alt="{{ plan.name }}">
                         </a>
@@ -261,11 +261,11 @@
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 border-0">
                         {% if plan.image %}
-                        <a href="{% url 'plan_detail' plan.id %}">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
                         </a>
                         {% else %}
-                        <a href="{% url 'plan_detail' plan.id %}">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
                                 alt="{{ plan.name }}">
                         </a>
