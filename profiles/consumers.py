@@ -67,7 +67,7 @@ class ProfileDataConsumer(AsyncWebsocketConsumer):
                 ),
 
                 "timestamp": now,
-                "avatar": data.get('avatar', '/media/avatars/default_avatar.jpg')
+                "avatar": data.get('avatar', 'avatars/default_avatar.jpg')
             }
 
             # Save massage to db

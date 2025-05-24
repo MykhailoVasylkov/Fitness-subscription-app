@@ -42,7 +42,7 @@
                             <img src="{{ user_profile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75"
                                 height="75" style="object-fit: cover;">
                             {% else %}
-                            <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2"
+                            <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2"
                                 width="75" height="75" style="object-fit: cover;">
                             {% endif %}
                             <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
@@ -90,7 +90,7 @@
                                         <img src="{{ user_profile.avatar.url }}" alt="User profile avatar"
                                             class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                         {% else %}
-                                        <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar"
+                                        <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar"
                                             class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                         {% endif %}
                                         <div>
@@ -153,7 +153,7 @@
                                 <img src="{{ post.author.userprofile.avatar.url }}" alt="User profile avatar"
                                     class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                 {% else %}
-                                <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar"
+                                <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar"
                                     class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                                 {% endif %}
                                 <div>

@@ -116,7 +116,7 @@
                     {% if user_profile.avatar %}
                         <img src="{{ user_profile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                     {% else %}
-                        <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
+                        <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                     {% endif %}
                         <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
                     </div>
@@ -172,7 +172,7 @@
                         {% if user_profile.avatar %}
                             <img src="{{ user_profile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                         {% else %}
-                            <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
+                            <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                         {% endif %}
                             <h5 class="mb-0">{{ user_profile.nickname|default:user.username }}</h5>
                         </div>
@@ -222,7 +222,7 @@
                         {% if review.author.userprofile.avatar %}
                             <img src="{{ review.author.userprofile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75">
                         {% else %}
-                            <img src="/media/avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75">
+                            <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75">
                         {% endif %}
                             <h5 class="mb-0">{{ review.author.userprofile.nickname|default:review.author }}</h5>
                         </div>

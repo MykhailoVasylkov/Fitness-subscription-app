@@ -4,7 +4,6 @@
 {% block extra_css %}
 {% endblock %}
 {% block extra_js %}
-    <script src="{% static 'path/to/your/websocet.js' %}"></script>
 {% endblock %}
 
 {% block page_header %}
@@ -242,7 +241,8 @@
 
     <!-- Script to handle removing avatar on the client side. Used Chat-GPT -->
     <script>
-        const defaultAvatar = "/media/avatars/default_avatar.jpg";
+        const defaultAvatar = "{{ MEDIA_URL }}avatars/default_avatar.jpg";
+        console.log("show:", defaultAvatar);
 
         function toggleAvatar() {
             let avatarLabel = document.getElementById('avatar-label');
