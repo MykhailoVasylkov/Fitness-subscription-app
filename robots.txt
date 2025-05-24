@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /accounts/
+Disallow: /profile/
+Disallow: /bag/
+
+Sitemap: https://fit-hub-project-5fab9d2a0d84.herokuapp.com//sitemap.xml
