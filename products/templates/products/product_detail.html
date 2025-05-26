@@ -6,6 +6,7 @@
 
 {% block content %}
 <div class="container-fluid">
+    
     <div class="row">
         <div class="col-12 col-md-6 col-lg-4 offset-lg-2">
             <div class="image-container my-5">
@@ -28,14 +29,14 @@
                 <p class="small mt-1 mb-0">
                     <a class="text-light"
                         href="{% url 'products' %}?brand={{ product.brand.name }}">
-                        <i class="fas fa-tag mr-1"></i>{{ product.brand.friendly_name }}
+                        <i class="fas fa-tag mr-1"></i> Brand: {{ product.brand.friendly_name }}
                     </a>
                 </p>
                 {% endif %}
                 {% if product.category %}
                 <p class="small mt-1 mb-0">
                     <a class="text-light" href="{% url 'products' %}?category={{ product.category.name }}">
-                        <i class="fas fa-tag mr-1"></i>{{ product.category.friendly_name }}
+                        <i class="fas fa-tag mr-1"></i> Category: {{ product.category.friendly_name }}
                     </a>
                 </p>
                 {% endif %}
@@ -193,7 +194,7 @@
                             <p class="cancelled">This review is pending approval.</p>
                             {% endif %}
                             <div class="d-flex justify-content-start mt-2">
-                                <button class="delete-btn btn btn-danger btn-sm me-2"
+                                <button class="delete-btn-product btn btn-danger btn-sm me-2"
                                 data-product-id="{{ product.id }}"
                                 data-review-id="{{ review.id }}">Delete
                             </button>
@@ -220,9 +221,9 @@
                         
                         <div class="d-flex align-items-center mt-2 ms-2">
                         {% if review.author.userprofile.avatar %}
-                            <img src="{{ review.author.userprofile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75">
+                            <img src="{{ review.author.userprofile.avatar.url }}" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                         {% else %}
-                            <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75">
+                            <img src="{{ MEDIA_URL }}avatars/default_avatar.jpg" alt="User profile avatar" class="rounded-circle me-2" width="75" height="75" style="object-fit: cover;">
                         {% endif %}
                             <h5 class="mb-0">{{ review.author.userprofile.nickname|default:review.author }}</h5>
                         </div>
@@ -403,10 +404,11 @@
      * - Displays a confirmation modal (`deleteModal`) to prompt 
      * the user for confirmation before deletion.
      */
+    const deleteProductButtons = document.getElementsByClassName("delete-btn-product");
     const deleteModal3 = new bootstrap.Modal(document.getElementById("deleteModal3"));
     const deleteForm3 = document.getElementById("deleteForm3");
 
-    for (let button of deleteButtons) {
+    for (let button of deleteProductButtons) {
         button.addEventListener("click", (e) => {
             let reviewId = e.target.getAttribute("data-review-id");
             let productId = e.target.getAttribute("data-product-id");

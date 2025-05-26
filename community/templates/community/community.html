@@ -126,7 +126,7 @@
                                             <p class="cancelled">This post is pending approval.</p>
                                             {% endif %}
                                             <div class="d-flex justify-content-start mt-2">
-                                                <button class="delete-btn btn btn-danger btn-sm me-2"
+                                                <button class="delete-btn-community btn btn-danger btn-sm me-2"
                                                     data-post-id="{{ post.id }}">Delete</button>
                                                 <a href="#reviewForm">
                                                     <button class="btn btn-warning btn-sm me-2"
@@ -470,10 +470,11 @@
      * - Displays a confirmation modal (`deleteModal`) to prompt 
      * the user for confirmation before deletion.
      */
+    const deleteButtonsCommunity = document.getElementsByClassName("delete-btn-community");
     const deleteModal1 = new bootstrap.Modal(document.getElementById("deleteModal1"));
     const deleteForm1 = document.getElementById("deleteForm1");
 
-    for (let button of deleteButtons) {
+    for (let button of deleteButtonsCommunity) {
         button.addEventListener("click", (e) => {
             let postId = e.target.getAttribute("data-post-id");
             deleteForm1.setAttribute("action", `delete/${postId}`);

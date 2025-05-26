@@ -29,10 +29,8 @@
                 <p class="lead mb-0 text-left font-weight-bold">${{ plan.price }}</p>
                 <!-- Category -->
                 {% if plan.category %}
-                <p class="small mt-1 mb-0">
-                    <a class="text-light" href="{% url 'plans' %}?category={{ plan.category }}">
+                <p class="small mt-1 mb-0 text-light">
                         <i class="fas fa-tag mr-1"></i> Category: {{ plan.get_category_display }}
-                    </a>
                 </p>
                 {% endif %}
                 <!-- Level -->
@@ -62,7 +60,7 @@
                 <!-- Duration -->
                 {% if plan.duration_weeks %}
                 <p class="small mt-1 mb-0">
-                    <a class="text-light" href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
+                    <a class="text-light" href="{% url 'plans' %}?duration_weeks={{ plan.duration_weeks }}">
                         <i class="fas fa-tag mr-1"></i> Duration: {{ plan.duration_weeks }}{% if plan.duration_weeks|length == 1 %}
                         Week
                         {% else %}
@@ -226,13 +224,13 @@
                             <p class="cancelled">This review is pending approval.</p>
                             {% endif %}
                             <div class="d-flex justify-content-start mt-2">
-                                <button class="delete-btn btn btn-danger btn-sm me-2"
+                                <button class="delete-btn-plan btn btn-danger btn-sm me-2"
                                 data-plan-id="{{ plan.id }}"
-                                    data-review-id="{{ review.id }}">Delete</button>
+                                    data-plan-review-id="{{ review.id }}">Delete</button>
                                 <a href="#reviewForm">
                                     <button class="btn btn-warning btn-sm me-2"
                                     data-plan-id="{{ plan.id }}"
-                                        data-review-id="{{ review.id }}">Edit</button>
+                                        data-plan-review-id="{{ review.id }}">Edit</button>
                                 </a>
                             </div>
                             {% endif %}
@@ -404,24 +402,24 @@
     for (let button of editButtons) {
         button.addEventListener("click", (e) => {
             // Get the review ID from the data-review_id attribute
-            let reviewId = e.target.getAttribute("data-review-id");
+            let planReviewId = e.target.getAttribute("data-plan-review-id");
             let planId = e.target.getAttribute("data-plan-id");
 
             // Fill in the form fields using the review data
-            let reviewRatingValue = document.getElementById(`rating-value-${reviewId}`).value;
+            let reviewRatingValue = document.getElementById(`rating-value-${planReviewId}`).value;
             ratingInput.value = reviewRatingValue;
 
             // Call updateStars to visually fill the stars based on the rating
             updateStars(reviewRatingValue);
 
-            let reviewBodyValue = document.getElementById(`body${reviewId}`).innerText;
+            let reviewBodyValue = document.getElementById(`body${planReviewId}`).innerText;
             reviewBody.value = reviewBodyValue;
 
             // Update the text on the button
             submitButton.innerText = "Update";
 
             // Update the form action for editing
-            form.setAttribute("action", `/plans/${planId}/edit/${reviewId}`);
+            form.setAttribute("action", `/plans/${planId}/edit/${planReviewId}`);
         });
     }
 
@@ -435,14 +433,15 @@
      * - Displays a confirmation modal (`deleteModal`) to prompt 
      * the user for confirmation before deletion.
      */
+    const deletePlanButtons = document.getElementsByClassName("delete-btn-plan");
     const deleteModal2 = new bootstrap.Modal(document.getElementById("deleteModal2"));
     const deleteForm2 = document.getElementById("deleteForm2");
 
-    for (let button of deleteButtons) {
+    for (let button of deletePlanButtons) {
         button.addEventListener("click", (e) => {
-            let reviewId = e.target.getAttribute("data-review-id");
+            let planReviewId = e.target.getAttribute("data-plan-review-id");
             let planId = e.target.getAttribute("data-plan-id");
-            deleteForm2.setAttribute("action", `/plans/${planId}/delete/${reviewId}`);
+            deleteForm2.setAttribute("action", `/plans/${planId}/delete/${planReviewId}`);
 
             deleteModal2.show();
 

@@ -154,11 +154,11 @@
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 border-0 image-wrapper">
                         {% if plan.image %}
-                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="max-height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
                         </a>
                         {% else %}
-                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="max-height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
                                 alt="{{ plan.name }}">
                         </a>
@@ -188,7 +188,7 @@
                                     {% if plan.duration_weeks %}
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
-                                            href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
+                                            href="{% url 'plans' %}?duration_weeks={{ plan.duration_weeks }}">
                                             Duration: {{ plan.duration_weeks }} weeks
                                         </a>
                                     </p>
@@ -260,11 +260,11 @@
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 border-0">
                         {% if plan.image %}
-                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="max-height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ plan.image.url }}" alt="{{ plan.name }}">
                         </a>
                         {% else %}
-                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="height: 400px;">
+                        <a href="{% url 'plan_detail' plan.id %}" class="d-block overflow-hidden" style="max-height: 400px;">
                             <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}noimage.png"
                                 alt="{{ plan.name }}">
                         </a>
@@ -294,7 +294,7 @@
                                     {% if plan.duration_weeks %}
                                     <p class="small mt-1 mb-0">
                                         <a class="text-muted"
-                                            href="{% url 'plans' %}?duration={{ plan.duration_weeks }}">
+                                            href="{% url 'plans' %}?duration_weeks={{ plan.duration_weeks }}">
                                             Duration: {{ plan.duration_weeks}} weeks
                                         </a>
                                     </p>

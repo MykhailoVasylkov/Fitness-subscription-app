@@ -72,7 +72,7 @@ a {
   }
 
   .arrow:hover {
-    background-color: var(--third-color);
+    background-color: rgb(251, 233, 205);
     transform: scale(1.1);
   }
 
@@ -283,6 +283,7 @@ select option[value=""] {
     .custom-border-left-lg {
       border-left: 1px solid #ffffff;
     }
+
 }
 
 /* Turn off parallax on iOS */
